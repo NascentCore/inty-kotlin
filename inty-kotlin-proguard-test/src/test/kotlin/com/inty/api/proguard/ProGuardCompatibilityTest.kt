@@ -6,7 +6,10 @@ import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.inty.api.client.okhttp.IntyOkHttpClient
 import com.inty.api.core.jsonMapper
 import com.inty.api.models.api.v1.auth.AuthCreateGuestResponse
+import com.inty.api.models.api.v1.chats.agents.AgentUpdateChatSettingsResponse
+import com.inty.api.models.api.v1.chats.agents.ChatSettings
 import com.inty.api.models.api.v1.users.profile.Gender
+import java.time.OffsetDateTime
 import kotlin.reflect.full.memberFunctions
 import kotlin.reflect.jvm.javaMethod
 import org.assertj.core.api.Assertions.assertThat
@@ -74,6 +77,41 @@ internal class ProGuardCompatibilityTest {
             )
 
         assertThat(roundtrippedAuthCreateGuestResponse).isEqualTo(authCreateGuestResponse)
+    }
+
+    @Test
+    fun agentUpdateChatSettingsResponseRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val agentUpdateChatSettingsResponse =
+            AgentUpdateChatSettingsResponse.ofApiResponseChatSettings(
+                AgentUpdateChatSettingsResponse.ApiResponseChatSettings.builder()
+                    .code(0L)
+                    .data(
+                        ChatSettings.builder()
+                            .id("id")
+                            .agentId("agent_id")
+                            .chatId("chat_id")
+                            .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .userId("user_id")
+                            .language("language")
+                            .premiumMode(true)
+                            .stylePrompt("style_prompt")
+                            .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .voiceEnabled(true)
+                            .build()
+                    )
+                    .message("message")
+                    .build()
+            )
+
+        val roundtrippedAgentUpdateChatSettingsResponse =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(agentUpdateChatSettingsResponse),
+                jacksonTypeRef<AgentUpdateChatSettingsResponse>(),
+            )
+
+        assertThat(roundtrippedAgentUpdateChatSettingsResponse)
+            .isEqualTo(agentUpdateChatSettingsResponse)
     }
 
     @Test
