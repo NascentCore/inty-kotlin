@@ -13,11 +13,16 @@ import com.inty.api.core.http.HttpRequest
 import com.inty.api.core.http.HttpResponse
 import com.inty.api.core.http.HttpResponse.Handler
 import com.inty.api.core.http.HttpResponseFor
+import com.inty.api.core.http.json
 import com.inty.api.core.http.parseable
 import com.inty.api.core.prepare
+import com.inty.api.models.api.v1.chats.agents.AgentGenerateMessageVoiceParams
+import com.inty.api.models.api.v1.chats.agents.AgentGenerateMessageVoiceResponse
 import com.inty.api.models.api.v1.chats.agents.AgentGetMessagesParams
 import com.inty.api.models.api.v1.chats.agents.AgentGetMessagesResponse
 import com.inty.api.models.api.v1.chats.agents.AgentGetSettingsParams
+import com.inty.api.models.api.v1.chats.agents.AgentUpdateChatSettingsParams
+import com.inty.api.models.api.v1.chats.agents.AgentUpdateChatSettingsResponse
 import com.inty.api.models.api.v1.chats.agents.ChatSettings
 
 class AgentServiceImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -31,6 +36,13 @@ class AgentServiceImpl internal constructor(private val clientOptions: ClientOpt
 
     override fun withOptions(modifier: (ClientOptions.Builder) -> Unit): AgentService =
         AgentServiceImpl(clientOptions.toBuilder().apply(modifier).build())
+
+    override fun generateMessageVoice(
+        params: AgentGenerateMessageVoiceParams,
+        requestOptions: RequestOptions,
+    ): AgentGenerateMessageVoiceResponse =
+        // post /api/v1/chats/agents/{agent_id}/messages/{message_id}/voice
+        withRawResponse().generateMessageVoice(params, requestOptions).parse()
 
     override fun getMessages(
         params: AgentGetMessagesParams,
@@ -46,6 +58,13 @@ class AgentServiceImpl internal constructor(private val clientOptions: ClientOpt
         // get /api/v1/chats/agents/{agent_id}/settings
         withRawResponse().getSettings(params, requestOptions).parse()
 
+    override fun updateChatSettings(
+        params: AgentUpdateChatSettingsParams,
+        requestOptions: RequestOptions,
+    ): AgentUpdateChatSettingsResponse =
+        // put /api/v1/chats/agents/{agent_id}/settings
+        withRawResponse().updateChatSettings(params, requestOptions).parse()
+
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         AgentService.WithRawResponse {
 
@@ -56,6 +75,46 @@ class AgentServiceImpl internal constructor(private val clientOptions: ClientOpt
             modifier: (ClientOptions.Builder) -> Unit
         ): AgentService.WithRawResponse =
             AgentServiceImpl.WithRawResponseImpl(clientOptions.toBuilder().apply(modifier).build())
+
+        private val generateMessageVoiceHandler: Handler<AgentGenerateMessageVoiceResponse> =
+            jsonHandler<AgentGenerateMessageVoiceResponse>(clientOptions.jsonMapper)
+
+        override fun generateMessageVoice(
+            params: AgentGenerateMessageVoiceParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<AgentGenerateMessageVoiceResponse> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("messageId", params.messageId())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments(
+                        "api",
+                        "v1",
+                        "chats",
+                        "agents",
+                        params._pathParam(0),
+                        "messages",
+                        params._pathParam(1),
+                        "voice",
+                    )
+                    .apply { params._body()?.let { body(json(clientOptions.jsonMapper, it)) } }
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response
+                    .use { generateMessageVoiceHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+            }
+        }
 
         private val getMessagesHandler: Handler<AgentGetMessagesResponse> =
             jsonHandler<AgentGetMessagesResponse>(clientOptions.jsonMapper)
@@ -123,6 +182,44 @@ class AgentServiceImpl internal constructor(private val clientOptions: ClientOpt
             return errorHandler.handle(response).parseable {
                 response
                     .use { getSettingsHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+            }
+        }
+
+        private val updateChatSettingsHandler: Handler<AgentUpdateChatSettingsResponse> =
+            jsonHandler<AgentUpdateChatSettingsResponse>(clientOptions.jsonMapper)
+
+        override fun updateChatSettings(
+            params: AgentUpdateChatSettingsParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<AgentUpdateChatSettingsResponse> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("agentId", params.agentId())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.PUT)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments(
+                        "api",
+                        "v1",
+                        "chats",
+                        "agents",
+                        params._pathParam(0),
+                        "settings",
+                    )
+                    .body(json(clientOptions.jsonMapper, params._body()))
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response
+                    .use { updateChatSettingsHandler.handle(it) }
                     .also {
                         if (requestOptions.responseValidation!!) {
                             it.validate()
