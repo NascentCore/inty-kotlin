@@ -199,7 +199,6 @@ private constructor(
     /** 购买验证响应 */
     class Data
     private constructor(
-        private val isValid: JsonField<Boolean>,
         private val isVerified: JsonField<Boolean>,
         private val message: JsonField<String>,
         private val errorCode: JsonField<String>,
@@ -209,9 +208,6 @@ private constructor(
 
         @JsonCreator
         private constructor(
-            @JsonProperty("is_valid")
-            @ExcludeMissing
-            isValid: JsonField<Boolean> = JsonMissing.of(),
             @JsonProperty("is_verified")
             @ExcludeMissing
             isVerified: JsonField<Boolean> = JsonMissing.of(),
@@ -222,15 +218,7 @@ private constructor(
             @JsonProperty("subscription")
             @ExcludeMissing
             subscription: JsonField<UserSubscription> = JsonMissing.of(),
-        ) : this(isValid, isVerified, message, errorCode, subscription, mutableMapOf())
-
-        /**
-         * 是否有效，使用 is_verified 代替
-         *
-         * @throws IntyInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        @Deprecated("deprecated") fun isValid(): Boolean = isValid.getRequired("is_valid")
+        ) : this(isVerified, message, errorCode, subscription, mutableMapOf())
 
         /**
          * 是否有效
@@ -263,16 +251,6 @@ private constructor(
          *   server responded with an unexpected value).
          */
         fun subscription(): UserSubscription? = subscription.getNullable("subscription")
-
-        /**
-         * Returns the raw JSON value of [isValid].
-         *
-         * Unlike [isValid], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @Deprecated("deprecated")
-        @JsonProperty("is_valid")
-        @ExcludeMissing
-        fun _isValid(): JsonField<Boolean> = isValid
 
         /**
          * Returns the raw JSON value of [isVerified].
@@ -326,7 +304,6 @@ private constructor(
              *
              * The following fields are required:
              * ```kotlin
-             * .isValid()
              * .isVerified()
              * .message()
              * ```
@@ -337,7 +314,6 @@ private constructor(
         /** A builder for [Data]. */
         class Builder internal constructor() {
 
-            private var isValid: JsonField<Boolean>? = null
             private var isVerified: JsonField<Boolean>? = null
             private var message: JsonField<String>? = null
             private var errorCode: JsonField<String> = JsonMissing.of()
@@ -345,26 +321,12 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             internal fun from(data: Data) = apply {
-                isValid = data.isValid
                 isVerified = data.isVerified
                 message = data.message
                 errorCode = data.errorCode
                 subscription = data.subscription
                 additionalProperties = data.additionalProperties.toMutableMap()
             }
-
-            /** 是否有效，使用 is_verified 代替 */
-            @Deprecated("deprecated") fun isValid(isValid: Boolean) = isValid(JsonField.of(isValid))
-
-            /**
-             * Sets [Builder.isValid] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.isValid] with a well-typed [Boolean] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            @Deprecated("deprecated")
-            fun isValid(isValid: JsonField<Boolean>) = apply { this.isValid = isValid }
 
             /** 是否有效 */
             fun isVerified(isVerified: Boolean) = isVerified(JsonField.of(isVerified))
@@ -443,7 +405,6 @@ private constructor(
              *
              * The following fields are required:
              * ```kotlin
-             * .isValid()
              * .isVerified()
              * .message()
              * ```
@@ -452,7 +413,6 @@ private constructor(
              */
             fun build(): Data =
                 Data(
-                    checkRequired("isValid", isValid),
                     checkRequired("isVerified", isVerified),
                     checkRequired("message", message),
                     errorCode,
@@ -468,7 +428,6 @@ private constructor(
                 return@apply
             }
 
-            isValid()
             isVerified()
             message()
             errorCode()
@@ -491,8 +450,7 @@ private constructor(
          * Used for best match union deserialization.
          */
         internal fun validity(): Int =
-            (if (isValid.asKnown() == null) 0 else 1) +
-                (if (isVerified.asKnown() == null) 0 else 1) +
+            (if (isVerified.asKnown() == null) 0 else 1) +
                 (if (message.asKnown() == null) 0 else 1) +
                 (if (errorCode.asKnown() == null) 0 else 1) +
                 (subscription.asKnown()?.validity() ?: 0)
@@ -503,7 +461,6 @@ private constructor(
             }
 
             return other is Data &&
-                isValid == other.isValid &&
                 isVerified == other.isVerified &&
                 message == other.message &&
                 errorCode == other.errorCode &&
@@ -512,20 +469,13 @@ private constructor(
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(
-                isValid,
-                isVerified,
-                message,
-                errorCode,
-                subscription,
-                additionalProperties,
-            )
+            Objects.hash(isVerified, message, errorCode, subscription, additionalProperties)
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Data{isValid=$isValid, isVerified=$isVerified, message=$message, errorCode=$errorCode, subscription=$subscription, additionalProperties=$additionalProperties}"
+            "Data{isVerified=$isVerified, message=$message, errorCode=$errorCode, subscription=$subscription, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
