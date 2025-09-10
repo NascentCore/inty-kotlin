@@ -20,7 +20,6 @@ internal class SubscriptionVerifyResponseTest {
                 .code(0L)
                 .data(
                     SubscriptionVerifyResponse.Data.builder()
-                        .isValid(true)
                         .isVerified(true)
                         .message("message")
                         .errorCode("error_code")
@@ -79,7 +78,6 @@ internal class SubscriptionVerifyResponseTest {
         assertThat(subscriptionVerifyResponse.data())
             .isEqualTo(
                 SubscriptionVerifyResponse.Data.builder()
-                    .isValid(true)
                     .isVerified(true)
                     .message("message")
                     .errorCode("error_code")
@@ -142,7 +140,6 @@ internal class SubscriptionVerifyResponseTest {
                 .code(0L)
                 .data(
                     SubscriptionVerifyResponse.Data.builder()
-                        .isValid(true)
                         .isVerified(true)
                         .message("message")
                         .errorCode("error_code")

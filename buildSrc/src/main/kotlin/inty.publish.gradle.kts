@@ -11,7 +11,7 @@ configure<PublishingExtension> {
             pom {
                 name.set("inty-backend")
                 description.set("InTy")
-                url.set("https://www.github.com/stainless-sdks/inty-kotlin")
+                url.set("https://www.github.com/NascentCore/inty-kotlin")
 
                 licenses {
                     license {
@@ -26,9 +26,9 @@ configure<PublishingExtension> {
                 }
 
                 scm {
-                    connection.set("scm:git:git://github.com/stainless-sdks/inty-kotlin.git")
-                    developerConnection.set("scm:git:git://github.com/stainless-sdks/inty-kotlin.git")
-                    url.set("https://github.com/stainless-sdks/inty-kotlin")
+                    connection.set("scm:git:git://github.com/NascentCore/inty-kotlin.git")
+                    developerConnection.set("scm:git:git://github.com/NascentCore/inty-kotlin.git")
+                    url.set("https://github.com/NascentCore/inty-kotlin")
                 }
 
                 versionMapping {

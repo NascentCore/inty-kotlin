@@ -61,6 +61,7 @@ internal class AgentTest {
                 )
                 .creatorId("creator_id")
                 .creatorNotes("creator_notes")
+                .deletedAt(0L)
                 .extensions(
                     Agent.Extensions.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -86,6 +87,7 @@ internal class AgentTest {
                 .messageExample("message_example")
                 .modePrompt("mode_prompt")
                 .opening("opening")
+                .openingAudioUrl("opening_audio_url")
                 .personality("personality")
                 .addPhoto("string")
                 .postHistoryInstructions("post_history_instructions")
@@ -148,6 +150,7 @@ internal class AgentTest {
             )
         assertThat(agent.creatorId()).isEqualTo("creator_id")
         assertThat(agent.creatorNotes()).isEqualTo("creator_notes")
+        assertThat(agent.deletedAt()).isEqualTo(0L)
         assertThat(agent.extensions())
             .isEqualTo(
                 Agent.Extensions.builder()
@@ -175,6 +178,7 @@ internal class AgentTest {
         assertThat(agent.messageExample()).isEqualTo("message_example")
         assertThat(agent.modePrompt()).isEqualTo("mode_prompt")
         assertThat(agent.opening()).isEqualTo("opening")
+        assertThat(agent.openingAudioUrl()).isEqualTo("opening_audio_url")
         assertThat(agent.personality()).isEqualTo("personality")
         assertThat(agent.photos()).containsExactly("string")
         assertThat(agent.postHistoryInstructions()).isEqualTo("post_history_instructions")
@@ -239,6 +243,7 @@ internal class AgentTest {
                 )
                 .creatorId("creator_id")
                 .creatorNotes("creator_notes")
+                .deletedAt(0L)
                 .extensions(
                     Agent.Extensions.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -264,6 +269,7 @@ internal class AgentTest {
                 .messageExample("message_example")
                 .modePrompt("mode_prompt")
                 .opening("opening")
+                .openingAudioUrl("opening_audio_url")
                 .personality("personality")
                 .addPhoto("string")
                 .postHistoryInstructions("post_history_instructions")
