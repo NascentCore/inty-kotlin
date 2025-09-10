@@ -64,6 +64,7 @@ internal class AgentListResponseTest {
                         )
                         .creatorId("creator_id")
                         .creatorNotes("creator_notes")
+                        .deletedAt(0L)
                         .extensions(
                             Agent.Extensions.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -89,6 +90,7 @@ internal class AgentListResponseTest {
                         .messageExample("message_example")
                         .modePrompt("mode_prompt")
                         .opening("opening")
+                        .openingAudioUrl("opening_audio_url")
                         .personality("personality")
                         .addPhoto("string")
                         .postHistoryInstructions("post_history_instructions")
@@ -156,6 +158,7 @@ internal class AgentListResponseTest {
                     )
                     .creatorId("creator_id")
                     .creatorNotes("creator_notes")
+                    .deletedAt(0L)
                     .extensions(
                         Agent.Extensions.builder()
                             .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -181,6 +184,7 @@ internal class AgentListResponseTest {
                     .messageExample("message_example")
                     .modePrompt("mode_prompt")
                     .opening("opening")
+                    .openingAudioUrl("opening_audio_url")
                     .personality("personality")
                     .addPhoto("string")
                     .postHistoryInstructions("post_history_instructions")
@@ -252,6 +256,7 @@ internal class AgentListResponseTest {
                         )
                         .creatorId("creator_id")
                         .creatorNotes("creator_notes")
+                        .deletedAt(0L)
                         .extensions(
                             Agent.Extensions.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -277,6 +282,7 @@ internal class AgentListResponseTest {
                         .messageExample("message_example")
                         .modePrompt("mode_prompt")
                         .opening("opening")
+                        .openingAudioUrl("opening_audio_url")
                         .personality("personality")
                         .addPhoto("string")
                         .postHistoryInstructions("post_history_instructions")

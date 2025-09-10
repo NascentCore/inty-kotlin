@@ -40,6 +40,7 @@ private constructor(
     private val creator: JsonField<User>,
     private val creatorId: JsonField<String>,
     private val creatorNotes: JsonField<String>,
+    private val deletedAt: JsonField<Long>,
     private val extensions: JsonField<Extensions>,
     private val followerCount: JsonField<Long>,
     private val intro: JsonField<String>,
@@ -49,6 +50,7 @@ private constructor(
     private val messageExample: JsonField<String>,
     private val modePrompt: JsonField<String>,
     private val opening: JsonField<String>,
+    private val openingAudioUrl: JsonField<String>,
     private val personality: JsonField<String>,
     private val photos: JsonField<List<String>>,
     private val postHistoryInstructions: JsonField<String>,
@@ -100,6 +102,7 @@ private constructor(
         @JsonProperty("creator_notes")
         @ExcludeMissing
         creatorNotes: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("deleted_at") @ExcludeMissing deletedAt: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("extensions")
         @ExcludeMissing
         extensions: JsonField<Extensions> = JsonMissing.of(),
@@ -123,6 +126,9 @@ private constructor(
         @ExcludeMissing
         modePrompt: JsonField<String> = JsonMissing.of(),
         @JsonProperty("opening") @ExcludeMissing opening: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("opening_audio_url")
+        @ExcludeMissing
+        openingAudioUrl: JsonField<String> = JsonMissing.of(),
         @JsonProperty("personality")
         @ExcludeMissing
         personality: JsonField<String> = JsonMissing.of(),
@@ -158,6 +164,7 @@ private constructor(
         creator,
         creatorId,
         creatorNotes,
+        deletedAt,
         extensions,
         followerCount,
         intro,
@@ -167,6 +174,7 @@ private constructor(
         messageExample,
         modePrompt,
         opening,
+        openingAudioUrl,
         personality,
         photos,
         postHistoryInstructions,
@@ -298,6 +306,12 @@ private constructor(
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
      *   responded with an unexpected value).
      */
+    fun deletedAt(): Long? = deletedAt.getNullable("deleted_at")
+
+    /**
+     * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
+     *   responded with an unexpected value).
+     */
     fun extensions(): Extensions? = extensions.getNullable("extensions")
 
     /**
@@ -355,6 +369,12 @@ private constructor(
      *   responded with an unexpected value).
      */
     fun opening(): String? = opening.getNullable("opening")
+
+    /**
+     * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
+     *   responded with an unexpected value).
+     */
+    fun openingAudioUrl(): String? = openingAudioUrl.getNullable("opening_audio_url")
 
     /**
      * 角色性格特点 (推荐)
@@ -570,6 +590,13 @@ private constructor(
     fun _creatorNotes(): JsonField<String> = creatorNotes
 
     /**
+     * Returns the raw JSON value of [deletedAt].
+     *
+     * Unlike [deletedAt], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("deleted_at") @ExcludeMissing fun _deletedAt(): JsonField<Long> = deletedAt
+
+    /**
      * Returns the raw JSON value of [extensions].
      *
      * Unlike [extensions], this method doesn't throw if the JSON field has an unexpected type.
@@ -637,6 +664,15 @@ private constructor(
      * Unlike [opening], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("opening") @ExcludeMissing fun _opening(): JsonField<String> = opening
+
+    /**
+     * Returns the raw JSON value of [openingAudioUrl].
+     *
+     * Unlike [openingAudioUrl], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("opening_audio_url")
+    @ExcludeMissing
+    fun _openingAudioUrl(): JsonField<String> = openingAudioUrl
 
     /**
      * Returns the raw JSON value of [personality].
@@ -767,6 +803,7 @@ private constructor(
         private var creator: JsonField<User> = JsonMissing.of()
         private var creatorId: JsonField<String> = JsonMissing.of()
         private var creatorNotes: JsonField<String> = JsonMissing.of()
+        private var deletedAt: JsonField<Long> = JsonMissing.of()
         private var extensions: JsonField<Extensions> = JsonMissing.of()
         private var followerCount: JsonField<Long> = JsonMissing.of()
         private var intro: JsonField<String> = JsonMissing.of()
@@ -776,6 +813,7 @@ private constructor(
         private var messageExample: JsonField<String> = JsonMissing.of()
         private var modePrompt: JsonField<String> = JsonMissing.of()
         private var opening: JsonField<String> = JsonMissing.of()
+        private var openingAudioUrl: JsonField<String> = JsonMissing.of()
         private var personality: JsonField<String> = JsonMissing.of()
         private var photos: JsonField<MutableList<String>>? = null
         private var postHistoryInstructions: JsonField<String> = JsonMissing.of()
@@ -807,6 +845,7 @@ private constructor(
             creator = agent.creator
             creatorId = agent.creatorId
             creatorNotes = agent.creatorNotes
+            deletedAt = agent.deletedAt
             extensions = agent.extensions
             followerCount = agent.followerCount
             intro = agent.intro
@@ -816,6 +855,7 @@ private constructor(
             messageExample = agent.messageExample
             modePrompt = agent.modePrompt
             opening = agent.opening
+            openingAudioUrl = agent.openingAudioUrl
             personality = agent.personality
             photos = agent.photos.map { it.toMutableList() }
             postHistoryInstructions = agent.postHistoryInstructions
@@ -1065,6 +1105,23 @@ private constructor(
             this.creatorNotes = creatorNotes
         }
 
+        fun deletedAt(deletedAt: Long?) = deletedAt(JsonField.ofNullable(deletedAt))
+
+        /**
+         * Alias for [Builder.deletedAt].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun deletedAt(deletedAt: Long) = deletedAt(deletedAt as Long?)
+
+        /**
+         * Sets [Builder.deletedAt] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.deletedAt] with a well-typed [Long] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun deletedAt(deletedAt: JsonField<Long>) = apply { this.deletedAt = deletedAt }
+
         fun extensions(extensions: Extensions?) = extensions(JsonField.ofNullable(extensions))
 
         /**
@@ -1170,6 +1227,20 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun opening(opening: JsonField<String>) = apply { this.opening = opening }
+
+        fun openingAudioUrl(openingAudioUrl: String?) =
+            openingAudioUrl(JsonField.ofNullable(openingAudioUrl))
+
+        /**
+         * Sets [Builder.openingAudioUrl] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.openingAudioUrl] with a well-typed [String] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun openingAudioUrl(openingAudioUrl: JsonField<String>) = apply {
+            this.openingAudioUrl = openingAudioUrl
+        }
 
         /** 角色性格特点 (推荐) */
         fun personality(personality: String?) = personality(JsonField.ofNullable(personality))
@@ -1375,6 +1446,7 @@ private constructor(
                 creator,
                 creatorId,
                 creatorNotes,
+                deletedAt,
                 extensions,
                 followerCount,
                 intro,
@@ -1384,6 +1456,7 @@ private constructor(
                 messageExample,
                 modePrompt,
                 opening,
+                openingAudioUrl,
                 personality,
                 (photos ?: JsonMissing.of()).map { it.toImmutable() },
                 postHistoryInstructions,
@@ -1423,6 +1496,7 @@ private constructor(
         creator()?.validate()
         creatorId()
         creatorNotes()
+        deletedAt()
         extensions()?.validate()
         followerCount()
         intro()
@@ -1432,6 +1506,7 @@ private constructor(
         messageExample()
         modePrompt()
         opening()
+        openingAudioUrl()
         personality()
         photos()
         postHistoryInstructions()
@@ -1477,6 +1552,7 @@ private constructor(
             (creator.asKnown()?.validity() ?: 0) +
             (if (creatorId.asKnown() == null) 0 else 1) +
             (if (creatorNotes.asKnown() == null) 0 else 1) +
+            (if (deletedAt.asKnown() == null) 0 else 1) +
             (extensions.asKnown()?.validity() ?: 0) +
             (if (followerCount.asKnown() == null) 0 else 1) +
             (if (intro.asKnown() == null) 0 else 1) +
@@ -1486,6 +1562,7 @@ private constructor(
             (if (messageExample.asKnown() == null) 0 else 1) +
             (if (modePrompt.asKnown() == null) 0 else 1) +
             (if (opening.asKnown() == null) 0 else 1) +
+            (if (openingAudioUrl.asKnown() == null) 0 else 1) +
             (if (personality.asKnown() == null) 0 else 1) +
             (photos.asKnown()?.size ?: 0) +
             (if (postHistoryInstructions.asKnown() == null) 0 else 1) +
@@ -1943,6 +2020,7 @@ private constructor(
             creator == other.creator &&
             creatorId == other.creatorId &&
             creatorNotes == other.creatorNotes &&
+            deletedAt == other.deletedAt &&
             extensions == other.extensions &&
             followerCount == other.followerCount &&
             intro == other.intro &&
@@ -1952,6 +2030,7 @@ private constructor(
             messageExample == other.messageExample &&
             modePrompt == other.modePrompt &&
             opening == other.opening &&
+            openingAudioUrl == other.openingAudioUrl &&
             personality == other.personality &&
             photos == other.photos &&
             postHistoryInstructions == other.postHistoryInstructions &&
@@ -1985,6 +2064,7 @@ private constructor(
             creator,
             creatorId,
             creatorNotes,
+            deletedAt,
             extensions,
             followerCount,
             intro,
@@ -1994,6 +2074,7 @@ private constructor(
             messageExample,
             modePrompt,
             opening,
+            openingAudioUrl,
             personality,
             photos,
             postHistoryInstructions,
@@ -2011,5 +2092,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Agent{id=$id, createdAt=$createdAt, gender=$gender, name=$name, readableId=$readableId, status=$status, alternateGreetings=$alternateGreetings, avatar=$avatar, background=$background, backgroundImages=$backgroundImages, category=$category, characterBook=$characterBook, characterCardSpec=$characterCardSpec, characterVersion=$characterVersion, connectorCount=$connectorCount, creator=$creator, creatorId=$creatorId, creatorNotes=$creatorNotes, extensions=$extensions, followerCount=$followerCount, intro=$intro, isFollowed=$isFollowed, llmConfig=$llmConfig, mainPrompt=$mainPrompt, messageExample=$messageExample, modePrompt=$modePrompt, opening=$opening, personality=$personality, photos=$photos, postHistoryInstructions=$postHistoryInstructions, prompt=$prompt, scenario=$scenario, settings=$settings, tags=$tags, updatedAt=$updatedAt, visibility=$visibility, voiceId=$voiceId, additionalProperties=$additionalProperties}"
+        "Agent{id=$id, createdAt=$createdAt, gender=$gender, name=$name, readableId=$readableId, status=$status, alternateGreetings=$alternateGreetings, avatar=$avatar, background=$background, backgroundImages=$backgroundImages, category=$category, characterBook=$characterBook, characterCardSpec=$characterCardSpec, characterVersion=$characterVersion, connectorCount=$connectorCount, creator=$creator, creatorId=$creatorId, creatorNotes=$creatorNotes, deletedAt=$deletedAt, extensions=$extensions, followerCount=$followerCount, intro=$intro, isFollowed=$isFollowed, llmConfig=$llmConfig, mainPrompt=$mainPrompt, messageExample=$messageExample, modePrompt=$modePrompt, opening=$opening, openingAudioUrl=$openingAudioUrl, personality=$personality, photos=$photos, postHistoryInstructions=$postHistoryInstructions, prompt=$prompt, scenario=$scenario, settings=$settings, tags=$tags, updatedAt=$updatedAt, visibility=$visibility, voiceId=$voiceId, additionalProperties=$additionalProperties}"
 }

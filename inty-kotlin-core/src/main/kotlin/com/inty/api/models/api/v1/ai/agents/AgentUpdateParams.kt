@@ -144,6 +144,12 @@ private constructor(
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
      *   responded with an unexpected value).
      */
+    fun openingAudioUrl(): String? = body.openingAudioUrl()
+
+    /**
+     * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
+     *   responded with an unexpected value).
+     */
     fun personality(): String? = body.personality()
 
     /**
@@ -327,6 +333,13 @@ private constructor(
      * Unlike [opening], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _opening(): JsonField<String> = body._opening()
+
+    /**
+     * Returns the raw JSON value of [openingAudioUrl].
+     *
+     * Unlike [openingAudioUrl], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _openingAudioUrl(): JsonField<String> = body._openingAudioUrl()
 
     /**
      * Returns the raw JSON value of [personality].
@@ -676,6 +689,21 @@ private constructor(
          */
         fun opening(opening: JsonField<String>) = apply { body.opening(opening) }
 
+        fun openingAudioUrl(openingAudioUrl: String?) = apply {
+            body.openingAudioUrl(openingAudioUrl)
+        }
+
+        /**
+         * Sets [Builder.openingAudioUrl] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.openingAudioUrl] with a well-typed [String] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun openingAudioUrl(openingAudioUrl: JsonField<String>) = apply {
+            body.openingAudioUrl(openingAudioUrl)
+        }
+
         fun personality(personality: String?) = apply { body.personality(personality) }
 
         /**
@@ -959,6 +987,7 @@ private constructor(
         private val modePrompt: JsonField<String>,
         private val name: JsonField<String>,
         private val opening: JsonField<String>,
+        private val openingAudioUrl: JsonField<String>,
         private val personality: JsonField<String>,
         private val photos: JsonField<List<String>>,
         private val postHistoryInstructions: JsonField<String>,
@@ -1017,6 +1046,9 @@ private constructor(
             modePrompt: JsonField<String> = JsonMissing.of(),
             @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
             @JsonProperty("opening") @ExcludeMissing opening: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("opening_audio_url")
+            @ExcludeMissing
+            openingAudioUrl: JsonField<String> = JsonMissing.of(),
             @JsonProperty("personality")
             @ExcludeMissing
             personality: JsonField<String> = JsonMissing.of(),
@@ -1057,6 +1089,7 @@ private constructor(
             modePrompt,
             name,
             opening,
+            openingAudioUrl,
             personality,
             photos,
             postHistoryInstructions,
@@ -1179,6 +1212,12 @@ private constructor(
          *   server responded with an unexpected value).
          */
         fun opening(): String? = opening.getNullable("opening")
+
+        /**
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun openingAudioUrl(): String? = openingAudioUrl.getNullable("opening_audio_url")
 
         /**
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -1397,6 +1436,16 @@ private constructor(
         @JsonProperty("opening") @ExcludeMissing fun _opening(): JsonField<String> = opening
 
         /**
+         * Returns the raw JSON value of [openingAudioUrl].
+         *
+         * Unlike [openingAudioUrl], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("opening_audio_url")
+        @ExcludeMissing
+        fun _openingAudioUrl(): JsonField<String> = openingAudioUrl
+
+        /**
          * Returns the raw JSON value of [personality].
          *
          * Unlike [personality], this method doesn't throw if the JSON field has an unexpected type.
@@ -1508,6 +1557,7 @@ private constructor(
             private var modePrompt: JsonField<String> = JsonMissing.of()
             private var name: JsonField<String> = JsonMissing.of()
             private var opening: JsonField<String> = JsonMissing.of()
+            private var openingAudioUrl: JsonField<String> = JsonMissing.of()
             private var personality: JsonField<String> = JsonMissing.of()
             private var photos: JsonField<MutableList<String>>? = null
             private var postHistoryInstructions: JsonField<String> = JsonMissing.of()
@@ -1538,6 +1588,7 @@ private constructor(
                 modePrompt = body.modePrompt
                 name = body.name
                 opening = body.opening
+                openingAudioUrl = body.openingAudioUrl
                 personality = body.personality
                 photos = body.photos.map { it.toMutableList() }
                 postHistoryInstructions = body.postHistoryInstructions
@@ -1796,6 +1847,20 @@ private constructor(
              */
             fun opening(opening: JsonField<String>) = apply { this.opening = opening }
 
+            fun openingAudioUrl(openingAudioUrl: String?) =
+                openingAudioUrl(JsonField.ofNullable(openingAudioUrl))
+
+            /**
+             * Sets [Builder.openingAudioUrl] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.openingAudioUrl] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun openingAudioUrl(openingAudioUrl: JsonField<String>) = apply {
+                this.openingAudioUrl = openingAudioUrl
+            }
+
             fun personality(personality: String?) = personality(JsonField.ofNullable(personality))
 
             /**
@@ -1977,6 +2042,7 @@ private constructor(
                     modePrompt,
                     name,
                     opening,
+                    openingAudioUrl,
                     personality,
                     (photos ?: JsonMissing.of()).map { it.toImmutable() },
                     postHistoryInstructions,
@@ -2015,6 +2081,7 @@ private constructor(
             modePrompt()
             name()
             opening()
+            openingAudioUrl()
             personality()
             photos()
             postHistoryInstructions()
@@ -2060,6 +2127,7 @@ private constructor(
                 (if (modePrompt.asKnown() == null) 0 else 1) +
                 (if (name.asKnown() == null) 0 else 1) +
                 (if (opening.asKnown() == null) 0 else 1) +
+                (if (openingAudioUrl.asKnown() == null) 0 else 1) +
                 (if (personality.asKnown() == null) 0 else 1) +
                 (photos.asKnown()?.size ?: 0) +
                 (if (postHistoryInstructions.asKnown() == null) 0 else 1) +
@@ -2094,6 +2162,7 @@ private constructor(
                 modePrompt == other.modePrompt &&
                 name == other.name &&
                 opening == other.opening &&
+                openingAudioUrl == other.openingAudioUrl &&
                 personality == other.personality &&
                 photos == other.photos &&
                 postHistoryInstructions == other.postHistoryInstructions &&
@@ -2126,6 +2195,7 @@ private constructor(
                 modePrompt,
                 name,
                 opening,
+                openingAudioUrl,
                 personality,
                 photos,
                 postHistoryInstructions,
@@ -2142,7 +2212,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{alternateGreetings=$alternateGreetings, avatar=$avatar, background=$background, backgroundImages=$backgroundImages, category=$category, characterBook=$characterBook, characterCardSpec=$characterCardSpec, characterVersion=$characterVersion, creatorNotes=$creatorNotes, extensions=$extensions, gender=$gender, intro=$intro, llmConfig=$llmConfig, mainPrompt=$mainPrompt, messageExample=$messageExample, modePrompt=$modePrompt, name=$name, opening=$opening, personality=$personality, photos=$photos, postHistoryInstructions=$postHistoryInstructions, prompt=$prompt, scenario=$scenario, settings=$settings, tags=$tags, visibility=$visibility, voiceId=$voiceId, additionalProperties=$additionalProperties}"
+            "Body{alternateGreetings=$alternateGreetings, avatar=$avatar, background=$background, backgroundImages=$backgroundImages, category=$category, characterBook=$characterBook, characterCardSpec=$characterCardSpec, characterVersion=$characterVersion, creatorNotes=$creatorNotes, extensions=$extensions, gender=$gender, intro=$intro, llmConfig=$llmConfig, mainPrompt=$mainPrompt, messageExample=$messageExample, modePrompt=$modePrompt, name=$name, opening=$opening, openingAudioUrl=$openingAudioUrl, personality=$personality, photos=$photos, postHistoryInstructions=$postHistoryInstructions, prompt=$prompt, scenario=$scenario, settings=$settings, tags=$tags, visibility=$visibility, voiceId=$voiceId, additionalProperties=$additionalProperties}"
     }
 
     class CharacterBook

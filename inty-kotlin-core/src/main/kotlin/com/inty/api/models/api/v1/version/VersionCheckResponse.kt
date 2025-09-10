@@ -10,7 +10,9 @@ import com.inty.api.core.ExcludeMissing
 import com.inty.api.core.JsonField
 import com.inty.api.core.JsonMissing
 import com.inty.api.core.JsonValue
+import com.inty.api.core.checkKnown
 import com.inty.api.core.checkRequired
+import com.inty.api.core.toImmutable
 import com.inty.api.errors.IntyInvalidDataException
 import java.util.Collections
 import java.util.Objects
@@ -206,6 +208,7 @@ private constructor(
         private val updateRequired: JsonField<Boolean>,
         private val changelog: JsonField<String>,
         private val error: JsonField<String>,
+        private val forceUpdateReasons: JsonField<List<String>>,
         private val latestVersionCode: JsonField<Long>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
@@ -235,6 +238,9 @@ private constructor(
             @ExcludeMissing
             changelog: JsonField<String> = JsonMissing.of(),
             @JsonProperty("error") @ExcludeMissing error: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("force_update_reasons")
+            @ExcludeMissing
+            forceUpdateReasons: JsonField<List<String>> = JsonMissing.of(),
             @JsonProperty("latest_version_code")
             @ExcludeMissing
             latestVersionCode: JsonField<Long> = JsonMissing.of(),
@@ -248,6 +254,7 @@ private constructor(
             updateRequired,
             changelog,
             error,
+            forceUpdateReasons,
             latestVersionCode,
             mutableMapOf(),
         )
@@ -323,6 +330,15 @@ private constructor(
          *   server responded with an unexpected value).
          */
         fun error(): String? = error.getNullable("error")
+
+        /**
+         * 强制更新的具体原因列表
+         *
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun forceUpdateReasons(): List<String>? =
+            forceUpdateReasons.getNullable("force_update_reasons")
 
         /**
          * 最新版本代码
@@ -412,6 +428,16 @@ private constructor(
         @JsonProperty("error") @ExcludeMissing fun _error(): JsonField<String> = error
 
         /**
+         * Returns the raw JSON value of [forceUpdateReasons].
+         *
+         * Unlike [forceUpdateReasons], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("force_update_reasons")
+        @ExcludeMissing
+        fun _forceUpdateReasons(): JsonField<List<String>> = forceUpdateReasons
+
+        /**
          * Returns the raw JSON value of [latestVersionCode].
          *
          * Unlike [latestVersionCode], this method doesn't throw if the JSON field has an unexpected
@@ -464,6 +490,7 @@ private constructor(
             private var updateRequired: JsonField<Boolean>? = null
             private var changelog: JsonField<String> = JsonMissing.of()
             private var error: JsonField<String> = JsonMissing.of()
+            private var forceUpdateReasons: JsonField<MutableList<String>>? = null
             private var latestVersionCode: JsonField<Long> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -477,6 +504,7 @@ private constructor(
                 updateRequired = data.updateRequired
                 changelog = data.changelog
                 error = data.error
+                forceUpdateReasons = data.forceUpdateReasons.map { it.toMutableList() }
                 latestVersionCode = data.latestVersionCode
                 additionalProperties = data.additionalProperties.toMutableMap()
             }
@@ -604,6 +632,33 @@ private constructor(
              */
             fun error(error: JsonField<String>) = apply { this.error = error }
 
+            /** 强制更新的具体原因列表 */
+            fun forceUpdateReasons(forceUpdateReasons: List<String>?) =
+                forceUpdateReasons(JsonField.ofNullable(forceUpdateReasons))
+
+            /**
+             * Sets [Builder.forceUpdateReasons] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.forceUpdateReasons] with a well-typed `List<String>`
+             * value instead. This method is primarily for setting the field to an undocumented or
+             * not yet supported value.
+             */
+            fun forceUpdateReasons(forceUpdateReasons: JsonField<List<String>>) = apply {
+                this.forceUpdateReasons = forceUpdateReasons.map { it.toMutableList() }
+            }
+
+            /**
+             * Adds a single [String] to [forceUpdateReasons].
+             *
+             * @throws IllegalStateException if the field was previously set to a non-list.
+             */
+            fun addForceUpdateReason(forceUpdateReason: String) = apply {
+                forceUpdateReasons =
+                    (forceUpdateReasons ?: JsonField.of(mutableListOf())).also {
+                        checkKnown("forceUpdateReasons", it).add(forceUpdateReason)
+                    }
+            }
+
             /** 最新版本代码 */
             fun latestVersionCode(latestVersionCode: Long?) =
                 latestVersionCode(JsonField.ofNullable(latestVersionCode))
@@ -675,6 +730,7 @@ private constructor(
                     checkRequired("updateRequired", updateRequired),
                     changelog,
                     error,
+                    (forceUpdateReasons ?: JsonMissing.of()).map { it.toImmutable() },
                     latestVersionCode,
                     additionalProperties.toMutableMap(),
                 )
@@ -696,6 +752,7 @@ private constructor(
             updateRequired()
             changelog()
             error()
+            forceUpdateReasons()
             latestVersionCode()
             validated = true
         }
@@ -724,6 +781,7 @@ private constructor(
                 (if (updateRequired.asKnown() == null) 0 else 1) +
                 (if (changelog.asKnown() == null) 0 else 1) +
                 (if (error.asKnown() == null) 0 else 1) +
+                (forceUpdateReasons.asKnown()?.size ?: 0) +
                 (if (latestVersionCode.asKnown() == null) 0 else 1)
 
         override fun equals(other: Any?): Boolean {
@@ -741,6 +799,7 @@ private constructor(
                 updateRequired == other.updateRequired &&
                 changelog == other.changelog &&
                 error == other.error &&
+                forceUpdateReasons == other.forceUpdateReasons &&
                 latestVersionCode == other.latestVersionCode &&
                 additionalProperties == other.additionalProperties
         }
@@ -756,6 +815,7 @@ private constructor(
                 updateRequired,
                 changelog,
                 error,
+                forceUpdateReasons,
                 latestVersionCode,
                 additionalProperties,
             )
@@ -764,7 +824,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Data{currentVersion=$currentVersion, downloadUrl=$downloadUrl, forceUpdate=$forceUpdate, latestVersion=$latestVersion, message=$message, minimumVersion=$minimumVersion, updateRequired=$updateRequired, changelog=$changelog, error=$error, latestVersionCode=$latestVersionCode, additionalProperties=$additionalProperties}"
+            "Data{currentVersion=$currentVersion, downloadUrl=$downloadUrl, forceUpdate=$forceUpdate, latestVersion=$latestVersion, message=$message, minimumVersion=$minimumVersion, updateRequired=$updateRequired, changelog=$changelog, error=$error, forceUpdateReasons=$forceUpdateReasons, latestVersionCode=$latestVersionCode, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
