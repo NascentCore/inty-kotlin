@@ -20,10 +20,6 @@ import com.inty.api.models.api.v1.chats.agents.AgentGenerateMessageVoiceParams
 import com.inty.api.models.api.v1.chats.agents.AgentGenerateMessageVoiceResponse
 import com.inty.api.models.api.v1.chats.agents.AgentGetMessagesParams
 import com.inty.api.models.api.v1.chats.agents.AgentGetMessagesResponse
-import com.inty.api.models.api.v1.chats.agents.AgentGetSettingsParams
-import com.inty.api.models.api.v1.chats.agents.AgentUpdateChatSettingsParams
-import com.inty.api.models.api.v1.chats.agents.AgentUpdateChatSettingsResponse
-import com.inty.api.models.api.v1.chats.agents.ChatSettings
 
 class AgentServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
     AgentServiceAsync {
@@ -50,20 +46,6 @@ class AgentServiceAsyncImpl internal constructor(private val clientOptions: Clie
     ): AgentGetMessagesResponse =
         // get /api/v1/chats/agents/{agent_id}/messages
         withRawResponse().getMessages(params, requestOptions).parse()
-
-    override suspend fun getSettings(
-        params: AgentGetSettingsParams,
-        requestOptions: RequestOptions,
-    ): ChatSettings =
-        // get /api/v1/chats/agents/{agent_id}/settings
-        withRawResponse().getSettings(params, requestOptions).parse()
-
-    override suspend fun updateChatSettings(
-        params: AgentUpdateChatSettingsParams,
-        requestOptions: RequestOptions,
-    ): AgentUpdateChatSettingsResponse =
-        // put /api/v1/chats/agents/{agent_id}/settings
-        withRawResponse().updateChatSettings(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         AgentServiceAsync.WithRawResponse {
@@ -147,81 +129,6 @@ class AgentServiceAsyncImpl internal constructor(private val clientOptions: Clie
             return errorHandler.handle(response).parseable {
                 response
                     .use { getMessagesHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
-        }
-
-        private val getSettingsHandler: Handler<ChatSettings> =
-            jsonHandler<ChatSettings>(clientOptions.jsonMapper)
-
-        override suspend fun getSettings(
-            params: AgentGetSettingsParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<ChatSettings> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("agentId", params.agentId())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "api",
-                        "v1",
-                        "chats",
-                        "agents",
-                        params._pathParam(0),
-                        "settings",
-                    )
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.executeAsync(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { getSettingsHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
-        }
-
-        private val updateChatSettingsHandler: Handler<AgentUpdateChatSettingsResponse> =
-            jsonHandler<AgentUpdateChatSettingsResponse>(clientOptions.jsonMapper)
-
-        override suspend fun updateChatSettings(
-            params: AgentUpdateChatSettingsParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<AgentUpdateChatSettingsResponse> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("agentId", params.agentId())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.PUT)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "api",
-                        "v1",
-                        "chats",
-                        "agents",
-                        params._pathParam(0),
-                        "settings",
-                    )
-                    .body(json(clientOptions.jsonMapper, params._body()))
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.executeAsync(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { updateChatSettingsHandler.handle(it) }
                     .also {
                         if (requestOptions.responseValidation!!) {
                             it.validate()
