@@ -6,9 +6,7 @@ import com.google.errorprone.annotations.MustBeClosed
 import com.inty.api.core.ClientOptions
 import com.inty.api.core.RequestOptions
 import com.inty.api.core.http.HttpResponseFor
-import com.inty.api.models.api.v1.report.ApiResponseDict
 import com.inty.api.models.api.v1.report.ReportCreateParams
-import com.inty.api.models.api.v1.report.ReportUploadImageParams
 import com.inty.api.models.api.v1.users.device.ApiResponse
 
 interface ReportService {
@@ -31,12 +29,6 @@ interface ReportService {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): ApiResponse
 
-    /** Used by app to upload image in their report of app content: AI characters, images, etc. */
-    fun uploadImage(
-        params: ReportUploadImageParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): ApiResponseDict
-
     /** A view of [ReportService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
 
@@ -56,15 +48,5 @@ interface ReportService {
             params: ReportCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<ApiResponse>
-
-        /**
-         * Returns a raw HTTP response for `post /api/v1/report/upload-image`, but is otherwise the
-         * same as [ReportService.uploadImage].
-         */
-        @MustBeClosed
-        fun uploadImage(
-            params: ReportUploadImageParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<ApiResponseDict>
     }
 }
