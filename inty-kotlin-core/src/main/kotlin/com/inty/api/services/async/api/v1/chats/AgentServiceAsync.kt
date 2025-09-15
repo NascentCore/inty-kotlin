@@ -10,6 +10,10 @@ import com.inty.api.models.api.v1.chats.agents.AgentGenerateMessageVoiceParams
 import com.inty.api.models.api.v1.chats.agents.AgentGenerateMessageVoiceResponse
 import com.inty.api.models.api.v1.chats.agents.AgentGetMessagesParams
 import com.inty.api.models.api.v1.chats.agents.AgentGetMessagesResponse
+import com.inty.api.models.api.v1.chats.agents.AgentGetSettingsParams
+import com.inty.api.models.api.v1.chats.agents.AgentUpdateSettingsParams
+import com.inty.api.models.api.v1.chats.agents.AgentUpdateSettingsResponse
+import com.inty.api.models.api.v1.chats.agents.ChatSettings
 
 interface AgentServiceAsync {
 
@@ -59,6 +63,50 @@ interface AgentServiceAsync {
         requestOptions: RequestOptions,
     ): AgentGetMessagesResponse =
         getMessages(agentId, AgentGetMessagesParams.none(), requestOptions)
+
+    /**
+     * [Deprecated, use /chats/{chat_id}/settings instead] Get chat settings by Agent ID, bause we
+     * only support 1 chat per agent, so we do not use chat_id to get settings
+     */
+    suspend fun getSettings(
+        agentId: String,
+        params: AgentGetSettingsParams = AgentGetSettingsParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): ChatSettings = getSettings(params.toBuilder().agentId(agentId).build(), requestOptions)
+
+    /** @see getSettings */
+    suspend fun getSettings(
+        params: AgentGetSettingsParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): ChatSettings
+
+    /** @see getSettings */
+    suspend fun getSettings(agentId: String, requestOptions: RequestOptions): ChatSettings =
+        getSettings(agentId, AgentGetSettingsParams.none(), requestOptions)
+
+    /**
+     * We do not use chat_id to get settings, because we only support 1 chat per agent.TODO: We
+     * should switch to /chats/{chat_id}/settings
+     */
+    suspend fun updateSettings(
+        agentId: String,
+        params: AgentUpdateSettingsParams = AgentUpdateSettingsParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): AgentUpdateSettingsResponse =
+        updateSettings(params.toBuilder().agentId(agentId).build(), requestOptions)
+
+    /** @see updateSettings */
+    suspend fun updateSettings(
+        params: AgentUpdateSettingsParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): AgentUpdateSettingsResponse
+
+    /** @see updateSettings */
+    suspend fun updateSettings(
+        agentId: String,
+        requestOptions: RequestOptions,
+    ): AgentUpdateSettingsResponse =
+        updateSettings(agentId, AgentUpdateSettingsParams.none(), requestOptions)
 
     /** A view of [AgentServiceAsync] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -118,5 +166,59 @@ interface AgentServiceAsync {
             requestOptions: RequestOptions,
         ): HttpResponseFor<AgentGetMessagesResponse> =
             getMessages(agentId, AgentGetMessagesParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `get /api/v1/chats/agents/{agent_id}/settings`, but is
+         * otherwise the same as [AgentServiceAsync.getSettings].
+         */
+        @MustBeClosed
+        suspend fun getSettings(
+            agentId: String,
+            params: AgentGetSettingsParams = AgentGetSettingsParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<ChatSettings> =
+            getSettings(params.toBuilder().agentId(agentId).build(), requestOptions)
+
+        /** @see getSettings */
+        @MustBeClosed
+        suspend fun getSettings(
+            params: AgentGetSettingsParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<ChatSettings>
+
+        /** @see getSettings */
+        @MustBeClosed
+        suspend fun getSettings(
+            agentId: String,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<ChatSettings> =
+            getSettings(agentId, AgentGetSettingsParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `put /api/v1/chats/agents/{agent_id}/settings`, but is
+         * otherwise the same as [AgentServiceAsync.updateSettings].
+         */
+        @MustBeClosed
+        suspend fun updateSettings(
+            agentId: String,
+            params: AgentUpdateSettingsParams = AgentUpdateSettingsParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<AgentUpdateSettingsResponse> =
+            updateSettings(params.toBuilder().agentId(agentId).build(), requestOptions)
+
+        /** @see updateSettings */
+        @MustBeClosed
+        suspend fun updateSettings(
+            params: AgentUpdateSettingsParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<AgentUpdateSettingsResponse>
+
+        /** @see updateSettings */
+        @MustBeClosed
+        suspend fun updateSettings(
+            agentId: String,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<AgentUpdateSettingsResponse> =
+            updateSettings(agentId, AgentUpdateSettingsParams.none(), requestOptions)
     }
 }

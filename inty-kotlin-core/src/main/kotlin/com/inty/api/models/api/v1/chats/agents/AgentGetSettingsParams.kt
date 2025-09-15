@@ -1,27 +1,24 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package com.inty.api.models.api.v1.texttospeech
+package com.inty.api.models.api.v1.chats.agents
 
-import com.inty.api.core.JsonValue
 import com.inty.api.core.Params
 import com.inty.api.core.http.Headers
 import com.inty.api.core.http.QueryParams
-import com.inty.api.core.toImmutable
 import java.util.Objects
 
-/** Generate voice for a message */
-class TextToSpeechGenerateSpeechParams
+/**
+ * [Deprecated, use /chats/{chat_id}/settings instead] Get chat settings by Agent ID, bause we only
+ * support 1 chat per agent, so we do not use chat_id to get settings
+ */
+class AgentGetSettingsParams
 private constructor(
-    private val messageId: String?,
+    private val agentId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
-    private val additionalBodyProperties: Map<String, JsonValue>,
 ) : Params {
 
-    fun messageId(): String? = messageId
-
-    /** Additional body properties to send with the request. */
-    fun _additionalBodyProperties(): Map<String, JsonValue> = additionalBodyProperties
+    fun agentId(): String? = agentId
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -33,34 +30,26 @@ private constructor(
 
     companion object {
 
-        fun none(): TextToSpeechGenerateSpeechParams = builder().build()
+        fun none(): AgentGetSettingsParams = builder().build()
 
-        /**
-         * Returns a mutable builder for constructing an instance of
-         * [TextToSpeechGenerateSpeechParams].
-         */
+        /** Returns a mutable builder for constructing an instance of [AgentGetSettingsParams]. */
         fun builder() = Builder()
     }
 
-    /** A builder for [TextToSpeechGenerateSpeechParams]. */
+    /** A builder for [AgentGetSettingsParams]. */
     class Builder internal constructor() {
 
-        private var messageId: String? = null
+        private var agentId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
-        private var additionalBodyProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(textToSpeechGenerateSpeechParams: TextToSpeechGenerateSpeechParams) =
-            apply {
-                messageId = textToSpeechGenerateSpeechParams.messageId
-                additionalHeaders = textToSpeechGenerateSpeechParams.additionalHeaders.toBuilder()
-                additionalQueryParams =
-                    textToSpeechGenerateSpeechParams.additionalQueryParams.toBuilder()
-                additionalBodyProperties =
-                    textToSpeechGenerateSpeechParams.additionalBodyProperties.toMutableMap()
-            }
+        internal fun from(agentGetSettingsParams: AgentGetSettingsParams) = apply {
+            agentId = agentGetSettingsParams.agentId
+            additionalHeaders = agentGetSettingsParams.additionalHeaders.toBuilder()
+            additionalQueryParams = agentGetSettingsParams.additionalQueryParams.toBuilder()
+        }
 
-        fun messageId(messageId: String?) = apply { this.messageId = messageId }
+        fun agentId(agentId: String?) = apply { this.agentId = agentId }
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -160,47 +149,22 @@ private constructor(
             additionalQueryParams.removeAll(keys)
         }
 
-        fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
-            this.additionalBodyProperties.clear()
-            putAllAdditionalBodyProperties(additionalBodyProperties)
-        }
-
-        fun putAdditionalBodyProperty(key: String, value: JsonValue) = apply {
-            additionalBodyProperties.put(key, value)
-        }
-
-        fun putAllAdditionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) =
-            apply {
-                this.additionalBodyProperties.putAll(additionalBodyProperties)
-            }
-
-        fun removeAdditionalBodyProperty(key: String) = apply {
-            additionalBodyProperties.remove(key)
-        }
-
-        fun removeAllAdditionalBodyProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalBodyProperty)
-        }
-
         /**
-         * Returns an immutable instance of [TextToSpeechGenerateSpeechParams].
+         * Returns an immutable instance of [AgentGetSettingsParams].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          */
-        fun build(): TextToSpeechGenerateSpeechParams =
-            TextToSpeechGenerateSpeechParams(
-                messageId,
+        fun build(): AgentGetSettingsParams =
+            AgentGetSettingsParams(
+                agentId,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
-                additionalBodyProperties.toImmutable(),
             )
     }
 
-    fun _body(): Map<String, JsonValue>? = additionalBodyProperties.ifEmpty { null }
-
     fun _pathParam(index: Int): String =
         when (index) {
-            0 -> messageId ?: ""
+            0 -> agentId ?: ""
             else -> ""
         }
 
@@ -213,16 +177,14 @@ private constructor(
             return true
         }
 
-        return other is TextToSpeechGenerateSpeechParams &&
-            messageId == other.messageId &&
+        return other is AgentGetSettingsParams &&
+            agentId == other.agentId &&
             additionalHeaders == other.additionalHeaders &&
-            additionalQueryParams == other.additionalQueryParams &&
-            additionalBodyProperties == other.additionalBodyProperties
+            additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int =
-        Objects.hash(messageId, additionalHeaders, additionalQueryParams, additionalBodyProperties)
+    override fun hashCode(): Int = Objects.hash(agentId, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "TextToSpeechGenerateSpeechParams{messageId=$messageId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams, additionalBodyProperties=$additionalBodyProperties}"
+        "AgentGetSettingsParams{agentId=$agentId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }
