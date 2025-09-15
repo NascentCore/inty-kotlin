@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.6.0 (2025-09-15)
+
+Full Changelog: [v0.5.0...v0.6.0](https://github.com/NascentCore/inty-kotlin/compare/v0.5.0...v0.6.0)
+
+### Features
+
+* Fix ([811a135](https://github.com/NascentCore/inty-kotlin/commit/811a135064227ce27b0eb1561f8e237da20ebfa3))
+* Remove config_path from stainless workflow ([f057017](https://github.com/NascentCore/inty-kotlin/commit/f057017d98b69f86f763a1ac55d45ef215e46959))
+
 ## 0.5.0 (2025-09-15)
 
 Full Changelog: [v0.4.0...v0.5.0](https://github.com/NascentCore/inty-kotlin/compare/v0.4.0...v0.5.0)
