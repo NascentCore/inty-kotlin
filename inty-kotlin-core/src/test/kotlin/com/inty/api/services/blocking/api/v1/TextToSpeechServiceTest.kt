@@ -14,21 +14,6 @@ internal class TextToSpeechServiceTest {
 
     @Disabled("Prism tests are disabled")
     @Test
-    fun generateSpeech() {
-        val client =
-            IntyOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
-        val textToSpeechService = client.api().v1().textToSpeech()
-
-        val response = textToSpeechService.generateSpeech("message_id")
-
-        response.validate()
-    }
-
-    @Disabled("Prism tests are disabled")
-    @Test
     fun listVoices() {
         val client =
             IntyOkHttpClient.builder()
