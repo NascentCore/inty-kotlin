@@ -254,11 +254,10 @@ internal class AgentServiceAsyncTest {
         val apiResponsePaginationDataAgent =
             agentServiceAsync.recommend(
                 AgentRecommendParams.builder()
-                    .count(1L)
-                    .index(1L)
                     .page(1L)
                     .pageSize(1L)
                     .sort(AgentRecommendParams.Sort.CREATED_ASC)
+                    .sortSeed("sort_seed")
                     .build()
             )
 
