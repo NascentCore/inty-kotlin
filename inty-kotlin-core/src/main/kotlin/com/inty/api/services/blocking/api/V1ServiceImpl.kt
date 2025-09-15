@@ -31,6 +31,8 @@ import com.inty.api.services.blocking.api.v1.SettingService
 import com.inty.api.services.blocking.api.v1.SettingServiceImpl
 import com.inty.api.services.blocking.api.v1.SubscriptionService
 import com.inty.api.services.blocking.api.v1.SubscriptionServiceImpl
+import com.inty.api.services.blocking.api.v1.TextToSpeechService
+import com.inty.api.services.blocking.api.v1.TextToSpeechServiceImpl
 import com.inty.api.services.blocking.api.v1.UserService
 import com.inty.api.services.blocking.api.v1.UserServiceImpl
 import com.inty.api.services.blocking.api.v1.VersionService
@@ -58,6 +60,8 @@ class V1ServiceImpl internal constructor(private val clientOptions: ClientOption
 
     private val chats: ChatService by lazy { ChatServiceImpl(clientOptions) }
 
+    private val textToSpeech: TextToSpeechService by lazy { TextToSpeechServiceImpl(clientOptions) }
+
     override fun withRawResponse(): V1Service.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: (ClientOptions.Builder) -> Unit): V1Service =
@@ -78,6 +82,8 @@ class V1ServiceImpl internal constructor(private val clientOptions: ClientOption
     override fun version(): VersionService = version
 
     override fun chats(): ChatService = chats
+
+    override fun textToSpeech(): TextToSpeechService = textToSpeech
 
     override fun listNotifications(
         params: V1ListNotificationsParams,
@@ -131,6 +137,10 @@ class V1ServiceImpl internal constructor(private val clientOptions: ClientOption
             ChatServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val textToSpeech: TextToSpeechService.WithRawResponse by lazy {
+            TextToSpeechServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: (ClientOptions.Builder) -> Unit
         ): V1Service.WithRawResponse =
@@ -151,6 +161,8 @@ class V1ServiceImpl internal constructor(private val clientOptions: ClientOption
         override fun version(): VersionService.WithRawResponse = version
 
         override fun chats(): ChatService.WithRawResponse = chats
+
+        override fun textToSpeech(): TextToSpeechService.WithRawResponse = textToSpeech
 
         private val listNotificationsHandler: Handler<V1ListNotificationsResponse> =
             jsonHandler<V1ListNotificationsResponse>(clientOptions.jsonMapper)

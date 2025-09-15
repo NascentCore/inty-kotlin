@@ -1,33 +1,31 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package com.inty.api.models.api.v1.ai.agents
+package com.inty.api.models.api.v1.texttospeech
 
 import com.inty.api.core.http.QueryParams
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-internal class AgentRecommendParamsTest {
+internal class TextToSpeechListVoicesParamsTest {
 
     @Test
     fun create() {
-        AgentRecommendParams.builder()
-            .count(1L)
-            .index(1L)
-            .page(1L)
+        TextToSpeechListVoicesParams.builder()
+            .category("category")
             .pageSize(1L)
-            .sort(AgentRecommendParams.Sort.CREATED_ASC)
+            .search("search")
+            .voiceType("voice_type")
             .build()
     }
 
     @Test
     fun queryParams() {
         val params =
-            AgentRecommendParams.builder()
-                .count(1L)
-                .index(1L)
-                .page(1L)
+            TextToSpeechListVoicesParams.builder()
+                .category("category")
                 .pageSize(1L)
-                .sort(AgentRecommendParams.Sort.CREATED_ASC)
+                .search("search")
+                .voiceType("voice_type")
                 .build()
 
         val queryParams = params._queryParams()
@@ -35,18 +33,17 @@ internal class AgentRecommendParamsTest {
         assertThat(queryParams)
             .isEqualTo(
                 QueryParams.builder()
-                    .put("count", "1")
-                    .put("index", "1")
-                    .put("page", "1")
+                    .put("category", "category")
                     .put("page_size", "1")
-                    .put("sort", "created_asc")
+                    .put("search", "search")
+                    .put("voice_type", "voice_type")
                     .build()
             )
     }
 
     @Test
     fun queryParamsWithoutOptionalFields() {
-        val params = AgentRecommendParams.builder().build()
+        val params = TextToSpeechListVoicesParams.builder().build()
 
         val queryParams = params._queryParams()
 

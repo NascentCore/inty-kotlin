@@ -16,6 +16,7 @@ import com.inty.api.services.async.api.v1.ChatServiceAsync
 import com.inty.api.services.async.api.v1.ReportServiceAsync
 import com.inty.api.services.async.api.v1.SettingServiceAsync
 import com.inty.api.services.async.api.v1.SubscriptionServiceAsync
+import com.inty.api.services.async.api.v1.TextToSpeechServiceAsync
 import com.inty.api.services.async.api.v1.UserServiceAsync
 import com.inty.api.services.async.api.v1.VersionServiceAsync
 
@@ -48,6 +49,8 @@ interface V1ServiceAsync {
     fun version(): VersionServiceAsync
 
     fun chats(): ChatServiceAsync
+
+    fun textToSpeech(): TextToSpeechServiceAsync
 
     /** 分页查询用户的消息列表；返回用户收到的通知。 */
     suspend fun listNotifications(
@@ -90,6 +93,8 @@ interface V1ServiceAsync {
         fun version(): VersionServiceAsync.WithRawResponse
 
         fun chats(): ChatServiceAsync.WithRawResponse
+
+        fun textToSpeech(): TextToSpeechServiceAsync.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `get /api/v1/notifications/`, but is otherwise the same
