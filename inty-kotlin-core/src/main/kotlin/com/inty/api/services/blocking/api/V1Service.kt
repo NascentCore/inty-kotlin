@@ -16,6 +16,7 @@ import com.inty.api.services.blocking.api.v1.ChatService
 import com.inty.api.services.blocking.api.v1.ReportService
 import com.inty.api.services.blocking.api.v1.SettingService
 import com.inty.api.services.blocking.api.v1.SubscriptionService
+import com.inty.api.services.blocking.api.v1.TextToSpeechService
 import com.inty.api.services.blocking.api.v1.UserService
 import com.inty.api.services.blocking.api.v1.VersionService
 
@@ -48,6 +49,8 @@ interface V1Service {
     fun version(): VersionService
 
     fun chats(): ChatService
+
+    fun textToSpeech(): TextToSpeechService
 
     /** 分页查询用户的消息列表；返回用户收到的通知。 */
     fun listNotifications(
@@ -90,6 +93,8 @@ interface V1Service {
         fun version(): VersionService.WithRawResponse
 
         fun chats(): ChatService.WithRawResponse
+
+        fun textToSpeech(): TextToSpeechService.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `get /api/v1/notifications/`, but is otherwise the same

@@ -31,6 +31,8 @@ import com.inty.api.services.async.api.v1.SettingServiceAsync
 import com.inty.api.services.async.api.v1.SettingServiceAsyncImpl
 import com.inty.api.services.async.api.v1.SubscriptionServiceAsync
 import com.inty.api.services.async.api.v1.SubscriptionServiceAsyncImpl
+import com.inty.api.services.async.api.v1.TextToSpeechServiceAsync
+import com.inty.api.services.async.api.v1.TextToSpeechServiceAsyncImpl
 import com.inty.api.services.async.api.v1.UserServiceAsync
 import com.inty.api.services.async.api.v1.UserServiceAsyncImpl
 import com.inty.api.services.async.api.v1.VersionServiceAsync
@@ -61,6 +63,10 @@ class V1ServiceAsyncImpl internal constructor(private val clientOptions: ClientO
 
     private val chats: ChatServiceAsync by lazy { ChatServiceAsyncImpl(clientOptions) }
 
+    private val textToSpeech: TextToSpeechServiceAsync by lazy {
+        TextToSpeechServiceAsyncImpl(clientOptions)
+    }
+
     override fun withRawResponse(): V1ServiceAsync.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: (ClientOptions.Builder) -> Unit): V1ServiceAsync =
@@ -81,6 +87,8 @@ class V1ServiceAsyncImpl internal constructor(private val clientOptions: ClientO
     override fun version(): VersionServiceAsync = version
 
     override fun chats(): ChatServiceAsync = chats
+
+    override fun textToSpeech(): TextToSpeechServiceAsync = textToSpeech
 
     override suspend fun listNotifications(
         params: V1ListNotificationsParams,
@@ -134,6 +142,10 @@ class V1ServiceAsyncImpl internal constructor(private val clientOptions: ClientO
             ChatServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val textToSpeech: TextToSpeechServiceAsync.WithRawResponse by lazy {
+            TextToSpeechServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: (ClientOptions.Builder) -> Unit
         ): V1ServiceAsync.WithRawResponse =
@@ -156,6 +168,8 @@ class V1ServiceAsyncImpl internal constructor(private val clientOptions: ClientO
         override fun version(): VersionServiceAsync.WithRawResponse = version
 
         override fun chats(): ChatServiceAsync.WithRawResponse = chats
+
+        override fun textToSpeech(): TextToSpeechServiceAsync.WithRawResponse = textToSpeech
 
         private val listNotificationsHandler: Handler<V1ListNotificationsResponse> =
             jsonHandler<V1ListNotificationsResponse>(clientOptions.jsonMapper)
