@@ -2,12 +2,7 @@
 
 package com.inty.api.client
 
-import com.google.errorprone.annotations.MustBeClosed
 import com.inty.api.core.ClientOptions
-import com.inty.api.core.RequestOptions
-import com.inty.api.core.http.HttpResponseFor
-import com.inty.api.models.ClientHealthCheckParams
-import com.inty.api.models.ClientHealthCheckResponse
 import com.inty.api.services.blocking.ApiService
 
 /**
@@ -48,16 +43,6 @@ interface IntyClient {
 
     fun api(): ApiService
 
-    /** 健康检查接口 */
-    fun healthCheck(
-        params: ClientHealthCheckParams = ClientHealthCheckParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): ClientHealthCheckResponse
-
-    /** @see healthCheck */
-    fun healthCheck(requestOptions: RequestOptions): ClientHealthCheckResponse =
-        healthCheck(ClientHealthCheckParams.none(), requestOptions)
-
     /**
      * Closes this client, relinquishing any underlying resources.
      *
@@ -82,22 +67,5 @@ interface IntyClient {
         fun withOptions(modifier: (ClientOptions.Builder) -> Unit): IntyClient.WithRawResponse
 
         fun api(): ApiService.WithRawResponse
-
-        /**
-         * Returns a raw HTTP response for `get /`, but is otherwise the same as
-         * [IntyClient.healthCheck].
-         */
-        @MustBeClosed
-        fun healthCheck(
-            params: ClientHealthCheckParams = ClientHealthCheckParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<ClientHealthCheckResponse>
-
-        /** @see healthCheck */
-        @MustBeClosed
-        fun healthCheck(
-            requestOptions: RequestOptions
-        ): HttpResponseFor<ClientHealthCheckResponse> =
-            healthCheck(ClientHealthCheckParams.none(), requestOptions)
     }
 }
