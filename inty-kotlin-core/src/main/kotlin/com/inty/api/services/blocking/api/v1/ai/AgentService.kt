@@ -134,12 +134,8 @@ interface AgentService {
         following(AgentFollowingParams.none(), requestOptions)
 
     /**
-     * Get recommended AI agents list (public and approved agents)
-     *
-     * Sorting options:
-     * - created_desc: Most recent first (default)
-     * - created_asc: Oldest first
-     * - random: Random order
+     * Get recommended AI agents list (public and approved agents), sort_seed is required when sort
+     * is random, which is used to ensure deterministic order for the random sort option
      */
     fun recommend(
         params: AgentRecommendParams = AgentRecommendParams.none(),

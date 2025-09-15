@@ -11,11 +11,10 @@ internal class AgentRecommendParamsTest {
     @Test
     fun create() {
         AgentRecommendParams.builder()
-            .count(1L)
-            .index(1L)
             .page(1L)
             .pageSize(1L)
             .sort(AgentRecommendParams.Sort.CREATED_ASC)
+            .sortSeed("sort_seed")
             .build()
     }
 
@@ -23,11 +22,10 @@ internal class AgentRecommendParamsTest {
     fun queryParams() {
         val params =
             AgentRecommendParams.builder()
-                .count(1L)
-                .index(1L)
                 .page(1L)
                 .pageSize(1L)
                 .sort(AgentRecommendParams.Sort.CREATED_ASC)
+                .sortSeed("sort_seed")
                 .build()
 
         val queryParams = params._queryParams()
@@ -35,11 +33,10 @@ internal class AgentRecommendParamsTest {
         assertThat(queryParams)
             .isEqualTo(
                 QueryParams.builder()
-                    .put("count", "1")
-                    .put("index", "1")
                     .put("page", "1")
                     .put("page_size", "1")
                     .put("sort", "created_asc")
+                    .put("sort_seed", "sort_seed")
                     .build()
             )
     }

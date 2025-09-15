@@ -12,27 +12,18 @@ import com.inty.api.errors.IntyInvalidDataException
 import java.util.Objects
 
 /**
- * Get recommended AI agents list (public and approved agents)
- *
- * Sorting options:
- * - created_desc: Most recent first (default)
- * - created_asc: Oldest first
- * - random: Random order
+ * Get recommended AI agents list (public and approved agents), sort_seed is required when sort is
+ * random, which is used to ensure deterministic order for the random sort option
  */
 class AgentRecommendParams
 private constructor(
-    private val count: Long?,
-    private val index: Long?,
     private val page: Long?,
     private val pageSize: Long?,
     private val sort: Sort?,
+    private val sortSeed: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
-
-    fun count(): Long? = count
-
-    fun index(): Long? = index
 
     /** Page number, starting from 1 */
     fun page(): Long? = page
@@ -42,6 +33,9 @@ private constructor(
 
     /** Sort order: created_asc, created_desc, random */
     fun sort(): Sort? = sort
+
+    /** sort seed [not yet used] */
+    fun sortSeed(): String? = sortSeed
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -62,41 +56,21 @@ private constructor(
     /** A builder for [AgentRecommendParams]. */
     class Builder internal constructor() {
 
-        private var count: Long? = null
-        private var index: Long? = null
         private var page: Long? = null
         private var pageSize: Long? = null
         private var sort: Sort? = null
+        private var sortSeed: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         internal fun from(agentRecommendParams: AgentRecommendParams) = apply {
-            count = agentRecommendParams.count
-            index = agentRecommendParams.index
             page = agentRecommendParams.page
             pageSize = agentRecommendParams.pageSize
             sort = agentRecommendParams.sort
+            sortSeed = agentRecommendParams.sortSeed
             additionalHeaders = agentRecommendParams.additionalHeaders.toBuilder()
             additionalQueryParams = agentRecommendParams.additionalQueryParams.toBuilder()
         }
-
-        fun count(count: Long?) = apply { this.count = count }
-
-        /**
-         * Alias for [Builder.count].
-         *
-         * This unboxed primitive overload exists for backwards compatibility.
-         */
-        fun count(count: Long) = count(count as Long?)
-
-        fun index(index: Long?) = apply { this.index = index }
-
-        /**
-         * Alias for [Builder.index].
-         *
-         * This unboxed primitive overload exists for backwards compatibility.
-         */
-        fun index(index: Long) = index(index as Long?)
 
         /** Page number, starting from 1 */
         fun page(page: Long?) = apply { this.page = page }
@@ -120,6 +94,9 @@ private constructor(
 
         /** Sort order: created_asc, created_desc, random */
         fun sort(sort: Sort?) = apply { this.sort = sort }
+
+        /** sort seed [not yet used] */
+        fun sortSeed(sortSeed: String?) = apply { this.sortSeed = sortSeed }
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -226,11 +203,10 @@ private constructor(
          */
         fun build(): AgentRecommendParams =
             AgentRecommendParams(
-                count,
-                index,
                 page,
                 pageSize,
                 sort,
+                sortSeed,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
@@ -241,11 +217,10 @@ private constructor(
     override fun _queryParams(): QueryParams =
         QueryParams.builder()
             .apply {
-                count?.let { put("count", it.toString()) }
-                index?.let { put("index", it.toString()) }
                 page?.let { put("page", it.toString()) }
                 pageSize?.let { put("page_size", it.toString()) }
                 sort?.let { put("sort", it.toString()) }
+                sortSeed?.let { put("sort_seed", it) }
                 putAll(additionalQueryParams)
             }
             .build()
@@ -387,18 +362,17 @@ private constructor(
         }
 
         return other is AgentRecommendParams &&
-            count == other.count &&
-            index == other.index &&
             page == other.page &&
             pageSize == other.pageSize &&
             sort == other.sort &&
+            sortSeed == other.sortSeed &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(count, index, page, pageSize, sort, additionalHeaders, additionalQueryParams)
+        Objects.hash(page, pageSize, sort, sortSeed, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "AgentRecommendParams{count=$count, index=$index, page=$page, pageSize=$pageSize, sort=$sort, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "AgentRecommendParams{page=$page, pageSize=$pageSize, sort=$sort, sortSeed=$sortSeed, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }
