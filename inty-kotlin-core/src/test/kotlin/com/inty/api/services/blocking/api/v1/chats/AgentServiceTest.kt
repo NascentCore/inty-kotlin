@@ -6,6 +6,7 @@ import com.inty.api.TestServerExtension
 import com.inty.api.client.okhttp.IntyOkHttpClient
 import com.inty.api.models.api.v1.chats.agents.AgentGenerateMessageVoiceParams
 import com.inty.api.models.api.v1.chats.agents.AgentGetMessagesParams
+import com.inty.api.models.api.v1.chats.agents.AgentUpdateSettingsParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -52,6 +53,45 @@ internal class AgentServiceTest {
                     .limit(1L)
                     .offset(0L)
                     .order("desc")
+                    .build()
+            )
+
+        response.validate()
+    }
+
+    @Disabled("Prism tests are disabled")
+    @Test
+    fun getSettings() {
+        val client =
+            IntyOkHttpClient.builder()
+                .baseUrl(TestServerExtension.BASE_URL)
+                .apiKey("My API Key")
+                .build()
+        val agentService = client.api().v1().chats().agents()
+
+        val chatSettings = agentService.getSettings("agent_id")
+
+        chatSettings.validate()
+    }
+
+    @Disabled("Prism tests are disabled")
+    @Test
+    fun updateSettings() {
+        val client =
+            IntyOkHttpClient.builder()
+                .baseUrl(TestServerExtension.BASE_URL)
+                .apiKey("My API Key")
+                .build()
+        val agentService = client.api().v1().chats().agents()
+
+        val response =
+            agentService.updateSettings(
+                AgentUpdateSettingsParams.builder()
+                    .agentId("agent_id")
+                    .language("language")
+                    .premiumMode(true)
+                    .stylePrompt("style_prompt")
+                    .voiceEnabled(true)
                     .build()
             )
 
