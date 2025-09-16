@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.6.1 (2025-09-16)
+
+Full Changelog: [v0.6.0...v0.6.1](https://github.com/NascentCore/inty-kotlin/compare/v0.6.0...v0.6.1)
+
+### Bug Fixes
+
+* **client:** incorrect `getPackageVersion` impl ([efb5a1e](https://github.com/NascentCore/inty-kotlin/commit/efb5a1e60aea76e4e2c7bf359fea66534bd035be))
+
 ## 0.6.0 (2025-09-15)
 
 Full Changelog: [v0.5.0...v0.6.0](https://github.com/NascentCore/inty-kotlin/compare/v0.5.0...v0.6.0)
