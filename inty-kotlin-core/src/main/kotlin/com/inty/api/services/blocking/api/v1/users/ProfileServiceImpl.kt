@@ -18,7 +18,7 @@ import com.inty.api.core.prepare
 import com.inty.api.models.api.v1.users.profile.ProfileRetrieveParams
 import com.inty.api.models.api.v1.users.profile.ProfileRetrieveResponse
 import com.inty.api.models.api.v1.users.profile.ProfileUpdateParams
-import com.inty.api.models.api.v1.users.profile.User
+import com.inty.api.models.api.v1.users.profile.ProfileUpdateResponse
 
 class ProfileServiceImpl internal constructor(private val clientOptions: ClientOptions) :
     ProfileService {
@@ -39,7 +39,10 @@ class ProfileServiceImpl internal constructor(private val clientOptions: ClientO
         // get /api/v1/users/profile
         withRawResponse().retrieve(params, requestOptions).parse()
 
-    override fun update(params: ProfileUpdateParams, requestOptions: RequestOptions): User =
+    override fun update(
+        params: ProfileUpdateParams,
+        requestOptions: RequestOptions,
+    ): ProfileUpdateResponse =
         // put /api/v1/users/profile
         withRawResponse().update(params, requestOptions).parse()
 
@@ -83,12 +86,13 @@ class ProfileServiceImpl internal constructor(private val clientOptions: ClientO
             }
         }
 
-        private val updateHandler: Handler<User> = jsonHandler<User>(clientOptions.jsonMapper)
+        private val updateHandler: Handler<ProfileUpdateResponse> =
+            jsonHandler<ProfileUpdateResponse>(clientOptions.jsonMapper)
 
         override fun update(
             params: ProfileUpdateParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<User> {
+        ): HttpResponseFor<ProfileUpdateResponse> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.PUT)
