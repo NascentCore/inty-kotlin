@@ -9,7 +9,7 @@ import com.inty.api.core.http.HttpResponseFor
 import com.inty.api.models.api.v1.users.profile.ProfileRetrieveParams
 import com.inty.api.models.api.v1.users.profile.ProfileRetrieveResponse
 import com.inty.api.models.api.v1.users.profile.ProfileUpdateParams
-import com.inty.api.models.api.v1.users.profile.User
+import com.inty.api.models.api.v1.users.profile.ProfileUpdateResponse
 
 interface ProfileServiceAsync {
 
@@ -39,10 +39,10 @@ interface ProfileServiceAsync {
     suspend fun update(
         params: ProfileUpdateParams = ProfileUpdateParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): User
+    ): ProfileUpdateResponse
 
     /** @see update */
-    suspend fun update(requestOptions: RequestOptions): User =
+    suspend fun update(requestOptions: RequestOptions): ProfileUpdateResponse =
         update(ProfileUpdateParams.none(), requestOptions)
 
     /**
@@ -84,11 +84,11 @@ interface ProfileServiceAsync {
         suspend fun update(
             params: ProfileUpdateParams = ProfileUpdateParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<User>
+        ): HttpResponseFor<ProfileUpdateResponse>
 
         /** @see update */
         @MustBeClosed
-        suspend fun update(requestOptions: RequestOptions): HttpResponseFor<User> =
+        suspend fun update(requestOptions: RequestOptions): HttpResponseFor<ProfileUpdateResponse> =
             update(ProfileUpdateParams.none(), requestOptions)
     }
 }
