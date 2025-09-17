@@ -7,6 +7,7 @@ import com.inty.api.core.ClientOptions
 import com.inty.api.core.RequestOptions
 import com.inty.api.core.http.HttpResponseFor
 import com.inty.api.models.api.v1.users.profile.ProfileRetrieveParams
+import com.inty.api.models.api.v1.users.profile.ProfileRetrieveResponse
 import com.inty.api.models.api.v1.users.profile.ProfileUpdateParams
 import com.inty.api.models.api.v1.users.profile.User
 
@@ -28,10 +29,10 @@ interface ProfileServiceAsync {
     suspend fun retrieve(
         params: ProfileRetrieveParams = ProfileRetrieveParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): User
+    ): ProfileRetrieveResponse
 
     /** @see retrieve */
-    suspend fun retrieve(requestOptions: RequestOptions): User =
+    suspend fun retrieve(requestOptions: RequestOptions): ProfileRetrieveResponse =
         retrieve(ProfileRetrieveParams.none(), requestOptions)
 
     /** Update current user profile. */
@@ -66,11 +67,13 @@ interface ProfileServiceAsync {
         suspend fun retrieve(
             params: ProfileRetrieveParams = ProfileRetrieveParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<User>
+        ): HttpResponseFor<ProfileRetrieveResponse>
 
         /** @see retrieve */
         @MustBeClosed
-        suspend fun retrieve(requestOptions: RequestOptions): HttpResponseFor<User> =
+        suspend fun retrieve(
+            requestOptions: RequestOptions
+        ): HttpResponseFor<ProfileRetrieveResponse> =
             retrieve(ProfileRetrieveParams.none(), requestOptions)
 
         /**

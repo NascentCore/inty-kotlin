@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.7.0 (2025-09-17)
+
+Full Changelog: [v0.6.1...v0.7.0](https://github.com/NascentCore/inty-kotlin/compare/v0.6.1...v0.7.0)
+
+### Features
+
+* update user profile api ([8e8b006](https://github.com/NascentCore/inty-kotlin/commit/8e8b0068c3da130ef65de9d4003152cc2cdbb29e))
+
 ## 0.6.1 (2025-09-16)
 
 Full Changelog: [v0.6.0...v0.6.1](https://github.com/NascentCore/inty-kotlin/compare/v0.6.0...v0.6.1)
