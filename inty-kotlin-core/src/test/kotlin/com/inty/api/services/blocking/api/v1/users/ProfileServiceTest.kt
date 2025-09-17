@@ -38,7 +38,7 @@ internal class ProfileServiceTest {
                 .build()
         val profileService = client.api().v1().users().profile()
 
-        val user =
+        val profile =
             profileService.update(
                 ProfileUpdateParams.builder()
                     .ageGroup("age_group")
@@ -52,6 +52,6 @@ internal class ProfileServiceTest {
                     .build()
             )
 
-        user.validate()
+        profile.validate()
     }
 }
