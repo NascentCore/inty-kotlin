@@ -16,6 +16,7 @@ import com.inty.api.core.http.json
 import com.inty.api.core.http.parseable
 import com.inty.api.core.prepareAsync
 import com.inty.api.models.api.v1.users.profile.ProfileRetrieveParams
+import com.inty.api.models.api.v1.users.profile.ProfileRetrieveResponse
 import com.inty.api.models.api.v1.users.profile.ProfileUpdateParams
 import com.inty.api.models.api.v1.users.profile.User
 
@@ -34,7 +35,7 @@ class ProfileServiceAsyncImpl internal constructor(private val clientOptions: Cl
     override suspend fun retrieve(
         params: ProfileRetrieveParams,
         requestOptions: RequestOptions,
-    ): User =
+    ): ProfileRetrieveResponse =
         // get /api/v1/users/profile
         withRawResponse().retrieve(params, requestOptions).parse()
 
@@ -55,12 +56,13 @@ class ProfileServiceAsyncImpl internal constructor(private val clientOptions: Cl
                 clientOptions.toBuilder().apply(modifier).build()
             )
 
-        private val retrieveHandler: Handler<User> = jsonHandler<User>(clientOptions.jsonMapper)
+        private val retrieveHandler: Handler<ProfileRetrieveResponse> =
+            jsonHandler<ProfileRetrieveResponse>(clientOptions.jsonMapper)
 
         override suspend fun retrieve(
             params: ProfileRetrieveParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<User> {
+        ): HttpResponseFor<ProfileRetrieveResponse> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)

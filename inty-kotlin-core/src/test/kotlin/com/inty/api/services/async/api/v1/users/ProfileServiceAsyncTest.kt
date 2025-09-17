@@ -23,9 +23,9 @@ internal class ProfileServiceAsyncTest {
                 .build()
         val profileServiceAsync = client.api().v1().users().profile()
 
-        val user = profileServiceAsync.retrieve()
+        val profile = profileServiceAsync.retrieve()
 
-        user.validate()
+        profile.validate()
     }
 
     @Disabled("Prism tests are disabled")
