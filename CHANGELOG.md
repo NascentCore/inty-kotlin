@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.9.0 (2025-09-20)
+
+Full Changelog: [v0.8.0...v0.9.0](https://github.com/NascentCore/inty-kotlin/compare/v0.8.0...v0.9.0)
+
+### Features
+
+* **client:** expose sleeper option ([d07aa2d](https://github.com/NascentCore/inty-kotlin/commit/d07aa2d55c70a2fcdd686454a2687d0076cd6920))
+
+
+### Bug Fixes
+
+* **client:** ensure single timer is created per client ([d07aa2d](https://github.com/NascentCore/inty-kotlin/commit/d07aa2d55c70a2fcdd686454a2687d0076cd6920))
+
 ## 0.8.0 (2025-09-17)
 
 Full Changelog: [v0.7.0...v0.8.0](https://github.com/NascentCore/inty-kotlin/compare/v0.7.0...v0.8.0)
