@@ -18,7 +18,7 @@ import com.inty.api.errors.IntyInvalidDataException
 import java.util.Collections
 import java.util.Objects
 
-/** 注册或更新设备 token */
+/** 注册或更新设备token */
 class DeviceRegisterParams
 private constructor(
     private val body: Body,
@@ -237,7 +237,7 @@ private constructor(
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
-    /** 设备 token 注册请求 */
+    /** 设备token注册请求 */
     class Body
     private constructor(
         private val token: JsonField<String>,

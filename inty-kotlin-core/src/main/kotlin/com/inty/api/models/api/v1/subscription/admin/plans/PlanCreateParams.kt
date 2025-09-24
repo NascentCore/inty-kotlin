@@ -28,7 +28,7 @@ private constructor(
 ) : Params {
 
     /**
-     * Google Play 产品 ID
+     * Google Play产品ID
      *
      * @throws IntyInvalidDataException if the JSON field has an unexpected type or is unexpectedly
      *   missing or null (e.g. if the server responded with an unexpected value).
@@ -60,7 +60,7 @@ private constructor(
     fun price(): Double = body.price()
 
     /**
-     * Agent 创建数量限制
+     * Agent创建数量限制
      *
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
      *   responded with an unexpected value).
@@ -68,7 +68,7 @@ private constructor(
     fun agentCreationLimit(): Long? = body.agentCreationLimit()
 
     /**
-     * 每日背景图生成次数限制，-1 为无限制
+     * 每日背景图生成次数限制，-1为无限制
      *
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
      *   responded with an unexpected value).
@@ -76,7 +76,7 @@ private constructor(
     fun backgroundGenerationLimitPerDay(): Long? = body.backgroundGenerationLimitPerDay()
 
     /**
-     * 每日聊天次数限制，-1 为无限制
+     * 每日聊天次数限制，-1为无限制
      *
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
      *   responded with an unexpected value).
@@ -100,7 +100,7 @@ private constructor(
     fun description(): String? = body.description()
 
     /**
-     * 价格折扣率，范围 0-1，1 表示无折扣
+     * 价格折扣率，范围0-1，1表示无折扣
      *
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
      *   responded with an unexpected value).
@@ -279,7 +279,7 @@ private constructor(
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
-        /** Google Play 产品 ID */
+        /** Google Play产品ID */
         fun googlePlayProductId(googlePlayProductId: String) = apply {
             body.googlePlayProductId(googlePlayProductId)
         }
@@ -329,7 +329,7 @@ private constructor(
          */
         fun price(price: JsonField<Double>) = apply { body.price(price) }
 
-        /** Agent 创建数量限制 */
+        /** Agent创建数量限制 */
         fun agentCreationLimit(agentCreationLimit: Long) = apply {
             body.agentCreationLimit(agentCreationLimit)
         }
@@ -345,7 +345,7 @@ private constructor(
             body.agentCreationLimit(agentCreationLimit)
         }
 
-        /** 每日背景图生成次数限制，-1 为无限制 */
+        /** 每日背景图生成次数限制，-1为无限制 */
         fun backgroundGenerationLimitPerDay(backgroundGenerationLimitPerDay: Long) = apply {
             body.backgroundGenerationLimitPerDay(backgroundGenerationLimitPerDay)
         }
@@ -362,7 +362,7 @@ private constructor(
                 body.backgroundGenerationLimitPerDay(backgroundGenerationLimitPerDay)
             }
 
-        /** 每日聊天次数限制，-1 为无限制 */
+        /** 每日聊天次数限制，-1为无限制 */
         fun chatLimitPerDay(chatLimitPerDay: Long) = apply { body.chatLimitPerDay(chatLimitPerDay) }
 
         /**
@@ -399,7 +399,7 @@ private constructor(
          */
         fun description(description: JsonField<String>) = apply { body.description(description) }
 
-        /** 价格折扣率，范围 0-1，1 表示无折扣 */
+        /** 价格折扣率，范围0-1，1表示无折扣 */
         fun discountRate(discountRate: Double) = apply { body.discountRate(discountRate) }
 
         /**
@@ -664,7 +664,7 @@ private constructor(
         )
 
         /**
-         * Google Play 产品 ID
+         * Google Play产品ID
          *
          * @throws IntyInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -697,7 +697,7 @@ private constructor(
         fun price(): Double = price.getRequired("price")
 
         /**
-         * Agent 创建数量限制
+         * Agent创建数量限制
          *
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
@@ -705,7 +705,7 @@ private constructor(
         fun agentCreationLimit(): Long? = agentCreationLimit.getNullable("agent_creation_limit")
 
         /**
-         * 每日背景图生成次数限制，-1 为无限制
+         * 每日背景图生成次数限制，-1为无限制
          *
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
@@ -714,7 +714,7 @@ private constructor(
             backgroundGenerationLimitPerDay.getNullable("background_generation_limit_per_day")
 
         /**
-         * 每日聊天次数限制，-1 为无限制
+         * 每日聊天次数限制，-1为无限制
          *
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
@@ -738,7 +738,7 @@ private constructor(
         fun description(): String? = description.getNullable("description")
 
         /**
-         * 价格折扣率，范围 0-1，1 表示无折扣
+         * 价格折扣率，范围0-1，1表示无折扣
          *
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
@@ -942,7 +942,7 @@ private constructor(
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
-            /** Google Play 产品 ID */
+            /** Google Play产品ID */
             fun googlePlayProductId(googlePlayProductId: String) =
                 googlePlayProductId(JsonField.of(googlePlayProductId))
 
@@ -995,7 +995,7 @@ private constructor(
              */
             fun price(price: JsonField<Double>) = apply { this.price = price }
 
-            /** Agent 创建数量限制 */
+            /** Agent创建数量限制 */
             fun agentCreationLimit(agentCreationLimit: Long) =
                 agentCreationLimit(JsonField.of(agentCreationLimit))
 
@@ -1010,7 +1010,7 @@ private constructor(
                 this.agentCreationLimit = agentCreationLimit
             }
 
-            /** 每日背景图生成次数限制，-1 为无限制 */
+            /** 每日背景图生成次数限制，-1为无限制 */
             fun backgroundGenerationLimitPerDay(backgroundGenerationLimitPerDay: Long) =
                 backgroundGenerationLimitPerDay(JsonField.of(backgroundGenerationLimitPerDay))
 
@@ -1026,7 +1026,7 @@ private constructor(
                     this.backgroundGenerationLimitPerDay = backgroundGenerationLimitPerDay
                 }
 
-            /** 每日聊天次数限制，-1 为无限制 */
+            /** 每日聊天次数限制，-1为无限制 */
             fun chatLimitPerDay(chatLimitPerDay: Long) =
                 chatLimitPerDay(JsonField.of(chatLimitPerDay))
 
@@ -1067,7 +1067,7 @@ private constructor(
                 this.description = description
             }
 
-            /** 价格折扣率，范围 0-1，1 表示无折扣 */
+            /** 价格折扣率，范围0-1，1表示无折扣 */
             fun discountRate(discountRate: Double) = discountRate(JsonField.of(discountRate))
 
             /**

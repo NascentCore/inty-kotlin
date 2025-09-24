@@ -239,7 +239,7 @@ private constructor(
         fun success(): Boolean = success.getRequired("success")
 
         /**
-         * 用户 ID
+         * 用户ID
          *
          * @throws IntyInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -255,7 +255,7 @@ private constructor(
         fun anonymizedFields(): List<String>? = anonymizedFields.getNullable("anonymized_fields")
 
         /**
-         * 删除日志 ID
+         * 删除日志ID
          *
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
@@ -373,7 +373,7 @@ private constructor(
              */
             fun success(success: JsonField<Boolean>) = apply { this.success = success }
 
-            /** 用户 ID */
+            /** 用户ID */
             fun userId(userId: String) = userId(JsonField.of(userId))
 
             /**
@@ -412,7 +412,7 @@ private constructor(
                     }
             }
 
-            /** 删除日志 ID */
+            /** 删除日志ID */
             fun deletionLogId(deletionLogId: String?) =
                 deletionLogId(JsonField.ofNullable(deletionLogId))
 

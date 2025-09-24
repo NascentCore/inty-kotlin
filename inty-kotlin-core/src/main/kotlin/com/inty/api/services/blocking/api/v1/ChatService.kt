@@ -63,7 +63,7 @@ interface ChatService {
     fun delete(chatId: String, requestOptions: RequestOptions): Chat =
         delete(chatId, ChatDeleteParams.none(), requestOptions)
 
-    /** 基于 Agent ID 的 OpenAI 风格聊天接口 如果用户还没有和该 Agent 创建会话，则自动创建 */
+    /** 基于Agent ID的OpenAI风格聊天接口 如果用户还没有和该Agent创建会话，则自动创建 */
     fun createCompletion(
         agentId: String,
         params: ChatCreateCompletionParams,

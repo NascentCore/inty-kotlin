@@ -19,7 +19,7 @@ import com.inty.api.models.api.v1.users.profile.User
 import java.util.Collections
 import java.util.Objects
 
-/** AI 角色 */
+/** AI角色 */
 class Agent
 private constructor(
     private val id: JsonField<String>,
@@ -219,7 +219,7 @@ private constructor(
     fun readableId(): String = readableId.getRequired("readable_id")
 
     /**
-     * AI 角色状态
+     * AI角色状态
      *
      * @throws IntyInvalidDataException if the JSON field has an unexpected type or is unexpectedly
      *   missing or null (e.g. if the server responded with an unexpected value).
@@ -333,7 +333,7 @@ private constructor(
     fun isFollowed(): Boolean? = isFollowed.getNullable("is_followed")
 
     /**
-     * AI 模型配置
+     * AI模型配置
      *
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
      *   responded with an unexpected value).
@@ -341,7 +341,7 @@ private constructor(
     fun llmConfig(): ModelConfig? = llmConfig.getNullable("llm_config")
 
     /**
-     * 主提示词 - 作为第一个 system message，覆盖全局默认主提示词
+     * 主提示词 - 作为第一个system message，覆盖全局默认主提示词
      *
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
      *   responded with an unexpected value).
@@ -398,7 +398,7 @@ private constructor(
         postHistoryInstructions.getNullable("post_history_instructions")
 
     /**
-     * 已废弃 - 请使用 personality 字段代替
+     * 已废弃 - 请使用personality字段代替
      *
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
      *   responded with an unexpected value).
@@ -920,7 +920,7 @@ private constructor(
          */
         fun readableId(readableId: JsonField<String>) = apply { this.readableId = readableId }
 
-        /** AI 角色状态 */
+        /** AI角色状态 */
         fun status(status: Status) = status(JsonField.of(status))
 
         /**
@@ -1167,7 +1167,7 @@ private constructor(
          */
         fun isFollowed(isFollowed: JsonField<Boolean>) = apply { this.isFollowed = isFollowed }
 
-        /** AI 模型配置 */
+        /** AI模型配置 */
         fun llmConfig(llmConfig: ModelConfig?) = llmConfig(JsonField.ofNullable(llmConfig))
 
         /**
@@ -1179,7 +1179,7 @@ private constructor(
          */
         fun llmConfig(llmConfig: JsonField<ModelConfig>) = apply { this.llmConfig = llmConfig }
 
-        /** 主提示词 - 作为第一个 system message，覆盖全局默认主提示词 */
+        /** 主提示词 - 作为第一个system message，覆盖全局默认主提示词 */
         fun mainPrompt(mainPrompt: String?) = mainPrompt(JsonField.ofNullable(mainPrompt))
 
         /**
@@ -1293,7 +1293,7 @@ private constructor(
             this.postHistoryInstructions = postHistoryInstructions
         }
 
-        /** 已废弃 - 请使用 personality 字段代替 */
+        /** 已废弃 - 请使用personality字段代替 */
         @Deprecated("deprecated") fun prompt(prompt: String?) = prompt(JsonField.ofNullable(prompt))
 
         /**
@@ -1574,7 +1574,7 @@ private constructor(
             (visibility.asKnown()?.validity() ?: 0) +
             (if (voiceId.asKnown() == null) 0 else 1)
 
-    /** AI 角色状态 */
+    /** AI角色状态 */
     class Status @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**

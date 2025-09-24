@@ -257,7 +257,7 @@ private constructor(
         )
 
         /**
-         * 创建的 Agent 数量
+         * 创建的Agent数量
          *
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
@@ -265,7 +265,7 @@ private constructor(
         fun agentCount(): Long? = agentCount.getNullable("agent_count")
 
         /**
-         * Agent 创建限制
+         * Agent创建限制
          *
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
@@ -273,7 +273,7 @@ private constructor(
         fun agentLimit(): Long? = agentLimit.getNullable("agent_limit")
 
         /**
-         * 24 小时内聊天次数（免费用户）
+         * 24小时内聊天次数（免费用户）
          *
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
@@ -281,7 +281,7 @@ private constructor(
         fun chat24hCount(): Long? = chat24hCount.getNullable("chat_24h_count")
 
         /**
-         * 24 小时内聊天次数限制（免费用户）
+         * 24小时内聊天次数限制（免费用户）
          *
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
@@ -454,7 +454,7 @@ private constructor(
                 additionalProperties = data.additionalProperties.toMutableMap()
             }
 
-            /** 创建的 Agent 数量 */
+            /** 创建的Agent数量 */
             fun agentCount(agentCount: Long) = agentCount(JsonField.of(agentCount))
 
             /**
@@ -466,7 +466,7 @@ private constructor(
              */
             fun agentCount(agentCount: JsonField<Long>) = apply { this.agentCount = agentCount }
 
-            /** Agent 创建限制 */
+            /** Agent创建限制 */
             fun agentLimit(agentLimit: Long) = agentLimit(JsonField.of(agentLimit))
 
             /**
@@ -478,7 +478,7 @@ private constructor(
              */
             fun agentLimit(agentLimit: JsonField<Long>) = apply { this.agentLimit = agentLimit }
 
-            /** 24 小时内聊天次数（免费用户） */
+            /** 24小时内聊天次数（免费用户） */
             fun chat24hCount(chat24hCount: Long?) = chat24hCount(JsonField.ofNullable(chat24hCount))
 
             /**
@@ -499,7 +499,7 @@ private constructor(
                 this.chat24hCount = chat24hCount
             }
 
-            /** 24 小时内聊天次数限制（免费用户） */
+            /** 24小时内聊天次数限制（免费用户） */
             fun chat24hLimit(chat24hLimit: Long?) = chat24hLimit(JsonField.ofNullable(chat24hLimit))
 
             /**

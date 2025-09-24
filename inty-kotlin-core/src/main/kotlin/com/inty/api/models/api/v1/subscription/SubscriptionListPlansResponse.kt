@@ -252,7 +252,7 @@ private constructor(
         fun hasEverSubscribed(): Boolean? = hasEverSubscribed.getNullable("has_ever_subscribed")
 
         /**
-         * 最新的订阅计划 ID
+         * 最新的订阅计划ID
          *
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
@@ -396,7 +396,7 @@ private constructor(
                 this.hasEverSubscribed = hasEverSubscribed
             }
 
-            /** 最新的订阅计划 ID */
+            /** 最新的订阅计划ID */
             fun previousPlanId(previousPlanId: String?) =
                 previousPlanId(JsonField.ofNullable(previousPlanId))
 

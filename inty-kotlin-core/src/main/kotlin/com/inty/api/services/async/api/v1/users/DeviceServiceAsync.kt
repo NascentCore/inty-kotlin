@@ -23,7 +23,7 @@ interface DeviceServiceAsync {
      */
     fun withOptions(modifier: (ClientOptions.Builder) -> Unit): DeviceServiceAsync
 
-    /** 注册或更新设备 token */
+    /** 注册或更新设备token */
     suspend fun register(
         params: DeviceRegisterParams,
         requestOptions: RequestOptions = RequestOptions.none(),
