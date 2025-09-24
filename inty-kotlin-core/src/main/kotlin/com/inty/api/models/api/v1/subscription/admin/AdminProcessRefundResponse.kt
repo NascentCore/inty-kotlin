@@ -240,7 +240,7 @@ private constructor(
         fun refundAmount(): Double = refundAmount.getRequired("refund_amount")
 
         /**
-         * 订阅 ID
+         * 订阅ID
          *
          * @throws IntyInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -379,7 +379,7 @@ private constructor(
                 this.refundAmount = refundAmount
             }
 
-            /** 订阅 ID */
+            /** 订阅ID */
             fun subscriptionId(subscriptionId: String) =
                 subscriptionId(JsonField.of(subscriptionId))
 

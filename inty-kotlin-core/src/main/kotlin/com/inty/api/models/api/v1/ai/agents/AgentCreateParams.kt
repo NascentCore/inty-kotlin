@@ -109,7 +109,7 @@ private constructor(
     fun intro(): String? = body.intro()
 
     /**
-     * AI 模型配置
+     * AI模型配置
      *
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
      *   responded with an unexpected value).
@@ -117,7 +117,7 @@ private constructor(
     fun llmConfig(): ModelConfig? = body.llmConfig()
 
     /**
-     * 主提示词 - 作为第一个 system message，覆盖全局默认主提示词
+     * 主提示词 - 作为第一个system message，覆盖全局默认主提示词
      *
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
      *   responded with an unexpected value).
@@ -173,7 +173,7 @@ private constructor(
     fun postHistoryInstructions(): String? = body.postHistoryInstructions()
 
     /**
-     * 已废弃 - 请使用 personality 字段代替
+     * 已废弃 - 请使用personality字段代替
      *
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
      *   responded with an unexpected value).
@@ -645,7 +645,7 @@ private constructor(
          */
         fun intro(intro: JsonField<String>) = apply { body.intro(intro) }
 
-        /** AI 模型配置 */
+        /** AI模型配置 */
         fun llmConfig(llmConfig: ModelConfig?) = apply { body.llmConfig(llmConfig) }
 
         /**
@@ -657,7 +657,7 @@ private constructor(
          */
         fun llmConfig(llmConfig: JsonField<ModelConfig>) = apply { body.llmConfig(llmConfig) }
 
-        /** 主提示词 - 作为第一个 system message，覆盖全局默认主提示词 */
+        /** 主提示词 - 作为第一个system message，覆盖全局默认主提示词 */
         fun mainPrompt(mainPrompt: String?) = apply { body.mainPrompt(mainPrompt) }
 
         /**
@@ -765,7 +765,7 @@ private constructor(
             body.postHistoryInstructions(postHistoryInstructions)
         }
 
-        /** 已废弃 - 请使用 personality 字段代替 */
+        /** 已废弃 - 请使用personality字段代替 */
         @Deprecated("deprecated") fun prompt(prompt: String?) = apply { body.prompt(prompt) }
 
         /**
@@ -986,16 +986,16 @@ private constructor(
     override fun _queryParams(): QueryParams = additionalQueryParams
 
     /**
-     * 创建 AI 角色
+     * 创建AI角色
      *
      * 推荐使用方式：
-     * 1. 使用 personality + scenario 字段构建角色
-     * 2. 添加 first_message 作为开场白
-     * 3. 可选添加 message_example 展示对话风格
+     * 1. 使用personality + scenario字段构建角色
+     * 2. 添加first_message作为开场白
+     * 3. 可选添加message_example展示对话风格
      *
      * 兼容性说明：
-     * - 仍支持使用 prompt 字段 (legacy 模式)
-     * - 优先级：角色卡字段 > prompt 字段
+     * - 仍支持使用prompt字段 (legacy模式)
+     * - 优先级：角色卡字段 > prompt字段
      */
     class Body
     private constructor(
@@ -1214,7 +1214,7 @@ private constructor(
         fun intro(): String? = intro.getNullable("intro")
 
         /**
-         * AI 模型配置
+         * AI模型配置
          *
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
@@ -1222,7 +1222,7 @@ private constructor(
         fun llmConfig(): ModelConfig? = llmConfig.getNullable("llm_config")
 
         /**
-         * 主提示词 - 作为第一个 system message，覆盖全局默认主提示词
+         * 主提示词 - 作为第一个system message，覆盖全局默认主提示词
          *
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
@@ -1279,7 +1279,7 @@ private constructor(
             postHistoryInstructions.getNullable("post_history_instructions")
 
         /**
-         * 已废弃 - 请使用 personality 字段代替
+         * 已废弃 - 请使用personality字段代替
          *
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
@@ -1839,7 +1839,7 @@ private constructor(
              */
             fun intro(intro: JsonField<String>) = apply { this.intro = intro }
 
-            /** AI 模型配置 */
+            /** AI模型配置 */
             fun llmConfig(llmConfig: ModelConfig?) = llmConfig(JsonField.ofNullable(llmConfig))
 
             /**
@@ -1851,7 +1851,7 @@ private constructor(
              */
             fun llmConfig(llmConfig: JsonField<ModelConfig>) = apply { this.llmConfig = llmConfig }
 
-            /** 主提示词 - 作为第一个 system message，覆盖全局默认主提示词 */
+            /** 主提示词 - 作为第一个system message，覆盖全局默认主提示词 */
             fun mainPrompt(mainPrompt: String?) = mainPrompt(JsonField.ofNullable(mainPrompt))
 
             /**
@@ -1968,7 +1968,7 @@ private constructor(
                 this.postHistoryInstructions = postHistoryInstructions
             }
 
-            /** 已废弃 - 请使用 personality 字段代替 */
+            /** 已废弃 - 请使用personality字段代替 */
             @Deprecated("deprecated")
             fun prompt(prompt: String?) = prompt(JsonField.ofNullable(prompt))
 

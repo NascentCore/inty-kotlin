@@ -21,7 +21,7 @@ private constructor(
     /** 音色分类过滤 (如: premade, cloned) */
     fun category(): String? = category
 
-    /** 每页返回结果数，默认 10，最大 100 */
+    /** 每页返回结果数，默认10，最大100 */
     fun pageSize(): Long? = pageSize
 
     /** 搜索音色名称关键词 */
@@ -70,7 +70,7 @@ private constructor(
         /** 音色分类过滤 (如: premade, cloned) */
         fun category(category: String?) = apply { this.category = category }
 
-        /** 每页返回结果数，默认 10，最大 100 */
+        /** 每页返回结果数，默认10，最大100 */
         fun pageSize(pageSize: Long?) = apply { this.pageSize = pageSize }
 
         /**

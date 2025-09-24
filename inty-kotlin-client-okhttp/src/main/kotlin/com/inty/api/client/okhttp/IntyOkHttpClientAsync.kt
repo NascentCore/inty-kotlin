@@ -175,7 +175,10 @@ class IntyOkHttpClientAsync private constructor() {
          */
         fun maxRetries(maxRetries: Int) = apply { clientOptions.maxRetries(maxRetries) }
 
-        /** 输入格式为: your_token 注意: 不需要Bearer前缀 */
+        /**
+         *             输入格式为: your_token
+         *             注意: 不需要Bearer前缀
+         */
         fun apiKey(apiKey: String) = apply { clientOptions.apiKey(apiKey) }
 
         fun headers(headers: Headers) = apply { clientOptions.headers(headers) }

@@ -14,7 +14,7 @@ import com.inty.api.errors.IntyInvalidDataException
 import java.util.Collections
 import java.util.Objects
 
-/** AI 模型配置 */
+/** AI模型配置 */
 class ModelConfig
 private constructor(
     private val apiKey: JsonField<String>,

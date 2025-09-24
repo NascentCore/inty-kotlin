@@ -103,7 +103,7 @@ private constructor(
     fun intro(): String? = body.intro()
 
     /**
-     * AI 模型配置
+     * AI模型配置
      *
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
      *   responded with an unexpected value).
@@ -165,7 +165,7 @@ private constructor(
     fun postHistoryInstructions(): String? = body.postHistoryInstructions()
 
     /**
-     * 已废弃 - 请使用 personality 字段代替
+     * 已废弃 - 请使用personality字段代替
      *
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
      *   responded with an unexpected value).
@@ -622,7 +622,7 @@ private constructor(
          */
         fun intro(intro: JsonField<String>) = apply { body.intro(intro) }
 
-        /** AI 模型配置 */
+        /** AI模型配置 */
         fun llmConfig(llmConfig: ModelConfig?) = apply { body.llmConfig(llmConfig) }
 
         /**
@@ -748,7 +748,7 @@ private constructor(
             body.postHistoryInstructions(postHistoryInstructions)
         }
 
-        /** 已废弃 - 请使用 personality 字段代替 */
+        /** 已废弃 - 请使用personality字段代替 */
         @Deprecated("deprecated") fun prompt(prompt: String?) = apply { body.prompt(prompt) }
 
         /**
@@ -966,7 +966,7 @@ private constructor(
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
-    /** 更新 AI 角色 */
+    /** 更新AI角色 */
     class Body
     private constructor(
         private val alternateGreetings: JsonField<List<String>>,
@@ -1176,7 +1176,7 @@ private constructor(
         fun intro(): String? = intro.getNullable("intro")
 
         /**
-         * AI 模型配置
+         * AI模型配置
          *
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
@@ -1239,7 +1239,7 @@ private constructor(
             postHistoryInstructions.getNullable("post_history_instructions")
 
         /**
-         * 已废弃 - 请使用 personality 字段代替
+         * 已废弃 - 请使用personality字段代替
          *
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
@@ -1777,7 +1777,7 @@ private constructor(
              */
             fun intro(intro: JsonField<String>) = apply { this.intro = intro }
 
-            /** AI 模型配置 */
+            /** AI模型配置 */
             fun llmConfig(llmConfig: ModelConfig?) = llmConfig(JsonField.ofNullable(llmConfig))
 
             /**
@@ -1913,7 +1913,7 @@ private constructor(
                 this.postHistoryInstructions = postHistoryInstructions
             }
 
-            /** 已废弃 - 请使用 personality 字段代替 */
+            /** 已废弃 - 请使用personality字段代替 */
             @Deprecated("deprecated")
             fun prompt(prompt: String?) = prompt(JsonField.ofNullable(prompt))
 

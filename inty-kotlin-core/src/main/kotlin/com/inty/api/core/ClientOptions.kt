@@ -91,7 +91,10 @@ private constructor(
      * Defaults to 2.
      */
     val maxRetries: Int,
-    /** 输入格式为: your_token 注意: 不需要Bearer前缀 */
+    /**
+     *             输入格式为: your_token
+     *             注意: 不需要Bearer前缀
+     */
     val apiKey: String,
 ) {
 
@@ -265,7 +268,10 @@ private constructor(
          */
         fun maxRetries(maxRetries: Int) = apply { this.maxRetries = maxRetries }
 
-        /** 输入格式为: your_token 注意: 不需要Bearer前缀 */
+        /**
+         *             输入格式为: your_token
+         *             注意: 不需要Bearer前缀
+         */
         fun apiKey(apiKey: String) = apply { this.apiKey = apiKey }
 
         fun headers(headers: Headers) = apply {

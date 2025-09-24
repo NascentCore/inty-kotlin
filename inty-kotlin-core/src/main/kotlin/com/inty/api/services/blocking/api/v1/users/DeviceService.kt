@@ -23,7 +23,7 @@ interface DeviceService {
      */
     fun withOptions(modifier: (ClientOptions.Builder) -> Unit): DeviceService
 
-    /** 注册或更新设备 token */
+    /** 注册或更新设备token */
     fun register(
         params: DeviceRegisterParams,
         requestOptions: RequestOptions = RequestOptions.none(),
