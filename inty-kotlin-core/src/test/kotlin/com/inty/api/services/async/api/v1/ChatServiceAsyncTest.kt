@@ -87,4 +87,19 @@ internal class ChatServiceAsyncTest {
 
         apiResponseDict.validate()
     }
+
+    @Disabled("Prism tests are disabled")
+    @Test
+    suspend fun retrieveVoice() {
+        val client =
+            IntyOkHttpClientAsync.builder()
+                .baseUrl(TestServerExtension.BASE_URL)
+                .apiKey("My API Key")
+                .build()
+        val chatServiceAsync = client.api().v1().chats()
+
+        val response = chatServiceAsync.retrieveVoice("voice_id")
+
+        response.validate()
+    }
 }

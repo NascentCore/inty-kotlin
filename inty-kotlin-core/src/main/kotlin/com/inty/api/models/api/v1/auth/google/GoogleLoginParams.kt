@@ -19,7 +19,7 @@ import com.inty.api.models.api.v1.users.profile.Gender
 import java.util.Collections
 import java.util.Objects
 
-/** Google 登录 */
+/** Google登录 */
 class GoogleLoginParams
 private constructor(
     private val body: Body,
@@ -266,7 +266,7 @@ private constructor(
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
-    /** Google 认证请求 */
+    /** Google认证请求 */
     class Body
     private constructor(
         private val idToken: JsonField<String>,

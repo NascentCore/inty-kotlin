@@ -299,7 +299,7 @@ private constructor(
         fun subscriptionStatus(): String = subscriptionStatus.getRequired("subscription_status")
 
         /**
-         * Agent 创建数量限制
+         * Agent创建数量限制
          *
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
@@ -316,7 +316,7 @@ private constructor(
             backgroundGenerationLimitPerDay.getNullable("background_generation_limit_per_day")
 
         /**
-         * 24 小时内聊天次数限制（免费用户）
+         * 24小时内聊天次数限制（免费用户）
          *
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
@@ -620,7 +620,7 @@ private constructor(
                 this.subscriptionStatus = subscriptionStatus
             }
 
-            /** Agent 创建数量限制 */
+            /** Agent创建数量限制 */
             fun agentCreationLimit(agentCreationLimit: Long) =
                 agentCreationLimit(JsonField.of(agentCreationLimit))
 
@@ -651,7 +651,7 @@ private constructor(
                     this.backgroundGenerationLimitPerDay = backgroundGenerationLimitPerDay
                 }
 
-            /** 24 小时内聊天次数限制（免费用户） */
+            /** 24小时内聊天次数限制（免费用户） */
             fun chat24hLimit(chat24hLimit: Long?) = chat24hLimit(JsonField.ofNullable(chat24hLimit))
 
             /**
@@ -978,7 +978,7 @@ private constructor(
             fun icon(): String = icon.getRequired("icon")
 
             /**
-             * 权益 key
+             * 权益key
              *
              * @throws IntyInvalidDataException if the JSON field has an unexpected type or is
              *   unexpectedly missing or null (e.g. if the server responded with an unexpected
@@ -1152,7 +1152,7 @@ private constructor(
                  */
                 fun icon(icon: JsonField<String>) = apply { this.icon = icon }
 
-                /** 权益 key */
+                /** 权益key */
                 fun key(key: String) = key(JsonField.of(key))
 
                 /**

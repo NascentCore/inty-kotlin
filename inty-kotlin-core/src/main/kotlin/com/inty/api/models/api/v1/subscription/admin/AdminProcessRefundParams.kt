@@ -27,7 +27,7 @@ private constructor(
 ) : Params {
 
     /**
-     * 订阅 ID
+     * 订阅ID
      *
      * @throws IntyInvalidDataException if the JSON field has an unexpected type or is unexpectedly
      *   missing or null (e.g. if the server responded with an unexpected value).
@@ -118,7 +118,7 @@ private constructor(
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
-        /** 订阅 ID */
+        /** 订阅ID */
         fun subscriptionId(subscriptionId: String) = apply { body.subscriptionId(subscriptionId) }
 
         /**
@@ -328,7 +328,7 @@ private constructor(
         ) : this(subscriptionId, reason, refundAmount, mutableMapOf())
 
         /**
-         * 订阅 ID
+         * 订阅ID
          *
          * @throws IntyInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -418,7 +418,7 @@ private constructor(
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
-            /** 订阅 ID */
+            /** 订阅ID */
             fun subscriptionId(subscriptionId: String) =
                 subscriptionId(JsonField.of(subscriptionId))
 

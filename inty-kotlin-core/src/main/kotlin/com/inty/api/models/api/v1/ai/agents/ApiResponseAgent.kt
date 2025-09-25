@@ -36,7 +36,7 @@ private constructor(
     fun code(): Long? = code.getNullable("code")
 
     /**
-     * AI 角色
+     * AI角色
      *
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
      *   responded with an unexpected value).
@@ -113,7 +113,7 @@ private constructor(
          */
         fun code(code: JsonField<Long>) = apply { this.code = code }
 
-        /** AI 角色 */
+        /** AI角色 */
         fun data(data: Agent?) = data(JsonField.ofNullable(data))
 
         /**

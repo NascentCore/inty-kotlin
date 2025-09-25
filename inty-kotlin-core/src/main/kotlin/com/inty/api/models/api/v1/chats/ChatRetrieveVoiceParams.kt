@@ -1,39 +1,22 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package com.inty.api.models.api.v1.version
+package com.inty.api.models.api.v1.chats
 
-import com.inty.api.core.JsonValue
 import com.inty.api.core.Params
-import com.inty.api.core.checkRequired
 import com.inty.api.core.http.Headers
 import com.inty.api.core.http.QueryParams
-import com.inty.api.core.toImmutable
 import java.util.Objects
 
-/**
- * 检查应用版本更新
- *
- * 通过HTTP头传递版本信息：
- * - appVersionCode: 应用版本代码（必填，整数）
- * - appVersionName: 应用版本名称（可选，字符串）
- */
-class VersionCheckParams
+/** Get voice info by voice_id */
+@Deprecated("deprecated")
+class ChatRetrieveVoiceParams
 private constructor(
-    private val appVersionCode: Long,
-    private val appVersionName: String?,
+    private val voiceId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
-    private val additionalBodyProperties: Map<String, JsonValue>,
 ) : Params {
 
-    /** 应用版本代码 */
-    fun appVersionCode(): Long = appVersionCode
-
-    /** 应用版本名称（可选） */
-    fun appVersionName(): String? = appVersionName
-
-    /** Additional body properties to send with the request. */
-    fun _additionalBodyProperties(): Map<String, JsonValue> = additionalBodyProperties
+    fun voiceId(): String? = voiceId
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -45,39 +28,26 @@ private constructor(
 
     companion object {
 
-        /**
-         * Returns a mutable builder for constructing an instance of [VersionCheckParams].
-         *
-         * The following fields are required:
-         * ```kotlin
-         * .appVersionCode()
-         * ```
-         */
+        fun none(): ChatRetrieveVoiceParams = builder().build()
+
+        /** Returns a mutable builder for constructing an instance of [ChatRetrieveVoiceParams]. */
         fun builder() = Builder()
     }
 
-    /** A builder for [VersionCheckParams]. */
+    /** A builder for [ChatRetrieveVoiceParams]. */
     class Builder internal constructor() {
 
-        private var appVersionCode: Long? = null
-        private var appVersionName: String? = null
+        private var voiceId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
-        private var additionalBodyProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(versionCheckParams: VersionCheckParams) = apply {
-            appVersionCode = versionCheckParams.appVersionCode
-            appVersionName = versionCheckParams.appVersionName
-            additionalHeaders = versionCheckParams.additionalHeaders.toBuilder()
-            additionalQueryParams = versionCheckParams.additionalQueryParams.toBuilder()
-            additionalBodyProperties = versionCheckParams.additionalBodyProperties.toMutableMap()
+        internal fun from(chatRetrieveVoiceParams: ChatRetrieveVoiceParams) = apply {
+            voiceId = chatRetrieveVoiceParams.voiceId
+            additionalHeaders = chatRetrieveVoiceParams.additionalHeaders.toBuilder()
+            additionalQueryParams = chatRetrieveVoiceParams.additionalQueryParams.toBuilder()
         }
 
-        /** 应用版本代码 */
-        fun appVersionCode(appVersionCode: Long) = apply { this.appVersionCode = appVersionCode }
-
-        /** 应用版本名称（可选） */
-        fun appVersionName(appVersionName: String?) = apply { this.appVersionName = appVersionName }
+        fun voiceId(voiceId: String?) = apply { this.voiceId = voiceId }
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -177,60 +147,26 @@ private constructor(
             additionalQueryParams.removeAll(keys)
         }
 
-        fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
-            this.additionalBodyProperties.clear()
-            putAllAdditionalBodyProperties(additionalBodyProperties)
-        }
-
-        fun putAdditionalBodyProperty(key: String, value: JsonValue) = apply {
-            additionalBodyProperties.put(key, value)
-        }
-
-        fun putAllAdditionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) =
-            apply {
-                this.additionalBodyProperties.putAll(additionalBodyProperties)
-            }
-
-        fun removeAdditionalBodyProperty(key: String) = apply {
-            additionalBodyProperties.remove(key)
-        }
-
-        fun removeAllAdditionalBodyProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalBodyProperty)
-        }
-
         /**
-         * Returns an immutable instance of [VersionCheckParams].
+         * Returns an immutable instance of [ChatRetrieveVoiceParams].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
-         *
-         * The following fields are required:
-         * ```kotlin
-         * .appVersionCode()
-         * ```
-         *
-         * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): VersionCheckParams =
-            VersionCheckParams(
-                checkRequired("appVersionCode", appVersionCode),
-                appVersionName,
+        fun build(): ChatRetrieveVoiceParams =
+            ChatRetrieveVoiceParams(
+                voiceId,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
-                additionalBodyProperties.toImmutable(),
             )
     }
 
-    fun _body(): Map<String, JsonValue>? = additionalBodyProperties.ifEmpty { null }
+    fun _pathParam(index: Int): String =
+        when (index) {
+            0 -> voiceId ?: ""
+            else -> ""
+        }
 
-    override fun _headers(): Headers =
-        Headers.builder()
-            .apply {
-                put("appVersionCode", appVersionCode.toString())
-                appVersionName?.let { put("appVersionName", it) }
-                putAll(additionalHeaders)
-            }
-            .build()
+    override fun _headers(): Headers = additionalHeaders
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
@@ -239,23 +175,14 @@ private constructor(
             return true
         }
 
-        return other is VersionCheckParams &&
-            appVersionCode == other.appVersionCode &&
-            appVersionName == other.appVersionName &&
+        return other is ChatRetrieveVoiceParams &&
+            voiceId == other.voiceId &&
             additionalHeaders == other.additionalHeaders &&
-            additionalQueryParams == other.additionalQueryParams &&
-            additionalBodyProperties == other.additionalBodyProperties
+            additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int =
-        Objects.hash(
-            appVersionCode,
-            appVersionName,
-            additionalHeaders,
-            additionalQueryParams,
-            additionalBodyProperties,
-        )
+    override fun hashCode(): Int = Objects.hash(voiceId, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "VersionCheckParams{appVersionCode=$appVersionCode, appVersionName=$appVersionName, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams, additionalBodyProperties=$additionalBodyProperties}"
+        "ChatRetrieveVoiceParams{voiceId=$voiceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

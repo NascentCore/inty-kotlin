@@ -109,7 +109,7 @@ private constructor(
     fun createdAt(): OffsetDateTime = createdAt.getRequired("created_at")
 
     /**
-     * 订阅计划 ID
+     * 订阅计划ID
      *
      * @throws IntyInvalidDataException if the JSON field has an unexpected type or is unexpectedly
      *   missing or null (e.g. if the server responded with an unexpected value).
@@ -147,7 +147,7 @@ private constructor(
     fun extraData(): ExtraData? = extraData.getNullable("extra_data")
 
     /**
-     * Google Play 订单 ID
+     * Google Play订单ID
      *
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
      *   responded with an unexpected value).
@@ -155,7 +155,7 @@ private constructor(
     fun googlePlayOrderId(): String? = googlePlayOrderId.getNullable("google_play_order_id")
 
     /**
-     * Google Play 购买令牌
+     * Google Play购买令牌
      *
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
      *   responded with an unexpected value).
@@ -164,7 +164,7 @@ private constructor(
         googlePlayPurchaseToken.getNullable("google_play_purchase_token")
 
     /**
-     * Google Play 订阅 ID
+     * Google Play订阅ID
      *
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
      *   responded with an unexpected value).
@@ -420,7 +420,7 @@ private constructor(
          */
         fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
 
-        /** 订阅计划 ID */
+        /** 订阅计划ID */
         fun planId(planId: String) = planId(JsonField.of(planId))
 
         /**
@@ -477,7 +477,7 @@ private constructor(
          */
         fun extraData(extraData: JsonField<ExtraData>) = apply { this.extraData = extraData }
 
-        /** Google Play 订单 ID */
+        /** Google Play订单ID */
         fun googlePlayOrderId(googlePlayOrderId: String?) =
             googlePlayOrderId(JsonField.ofNullable(googlePlayOrderId))
 
@@ -492,7 +492,7 @@ private constructor(
             this.googlePlayOrderId = googlePlayOrderId
         }
 
-        /** Google Play 购买令牌 */
+        /** Google Play购买令牌 */
         fun googlePlayPurchaseToken(googlePlayPurchaseToken: String?) =
             googlePlayPurchaseToken(JsonField.ofNullable(googlePlayPurchaseToken))
 
@@ -507,7 +507,7 @@ private constructor(
             this.googlePlayPurchaseToken = googlePlayPurchaseToken
         }
 
-        /** Google Play 订阅 ID */
+        /** Google Play订阅ID */
         fun googlePlaySubscriptionId(googlePlaySubscriptionId: String?) =
             googlePlaySubscriptionId(JsonField.ofNullable(googlePlaySubscriptionId))
 

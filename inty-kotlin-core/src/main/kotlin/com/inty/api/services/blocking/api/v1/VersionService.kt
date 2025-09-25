@@ -26,7 +26,7 @@ interface VersionService {
     /**
      * 检查应用版本更新
      *
-     * 通过 HTTP 头传递版本信息：
+     * 通过HTTP头传递版本信息：
      * - appVersionCode: 应用版本代码（必填，整数）
      * - appVersionName: 应用版本名称（可选，字符串）
      */

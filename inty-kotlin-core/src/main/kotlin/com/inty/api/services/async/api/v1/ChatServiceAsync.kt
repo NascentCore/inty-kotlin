@@ -11,6 +11,8 @@ import com.inty.api.models.api.v1.chats.ChatCreateCompletionParams
 import com.inty.api.models.api.v1.chats.ChatCreateParams
 import com.inty.api.models.api.v1.chats.ChatDeleteParams
 import com.inty.api.models.api.v1.chats.ChatListParams
+import com.inty.api.models.api.v1.chats.ChatRetrieveVoiceParams
+import com.inty.api.models.api.v1.chats.ChatRetrieveVoiceResponse
 import com.inty.api.models.api.v1.report.ApiResponseDict
 import com.inty.api.services.async.api.v1.chats.AgentServiceAsync
 
@@ -63,7 +65,7 @@ interface ChatServiceAsync {
     suspend fun delete(chatId: String, requestOptions: RequestOptions): Chat =
         delete(chatId, ChatDeleteParams.none(), requestOptions)
 
-    /** 基于 Agent ID 的 OpenAI 风格聊天接口 如果用户还没有和该 Agent 创建会话，则自动创建 */
+    /** 基于Agent ID的OpenAI风格聊天接口 如果用户还没有和该Agent创建会话，则自动创建 */
     suspend fun createCompletion(
         agentId: String,
         params: ChatCreateCompletionParams,
@@ -76,6 +78,30 @@ interface ChatServiceAsync {
         params: ChatCreateCompletionParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): ApiResponseDict
+
+    /** Get voice info by voice_id */
+    @Deprecated("deprecated")
+    suspend fun retrieveVoice(
+        voiceId: String,
+        params: ChatRetrieveVoiceParams = ChatRetrieveVoiceParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): ChatRetrieveVoiceResponse =
+        retrieveVoice(params.toBuilder().voiceId(voiceId).build(), requestOptions)
+
+    /** @see retrieveVoice */
+    @Deprecated("deprecated")
+    suspend fun retrieveVoice(
+        params: ChatRetrieveVoiceParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): ChatRetrieveVoiceResponse
+
+    /** @see retrieveVoice */
+    @Deprecated("deprecated")
+    suspend fun retrieveVoice(
+        voiceId: String,
+        requestOptions: RequestOptions,
+    ): ChatRetrieveVoiceResponse =
+        retrieveVoice(voiceId, ChatRetrieveVoiceParams.none(), requestOptions)
 
     /** A view of [ChatServiceAsync] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -155,5 +181,35 @@ interface ChatServiceAsync {
             params: ChatCreateCompletionParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<ApiResponseDict>
+
+        /**
+         * Returns a raw HTTP response for `get /api/v1/chats/voices/{voice_id}`, but is otherwise
+         * the same as [ChatServiceAsync.retrieveVoice].
+         */
+        @Deprecated("deprecated")
+        @MustBeClosed
+        suspend fun retrieveVoice(
+            voiceId: String,
+            params: ChatRetrieveVoiceParams = ChatRetrieveVoiceParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<ChatRetrieveVoiceResponse> =
+            retrieveVoice(params.toBuilder().voiceId(voiceId).build(), requestOptions)
+
+        /** @see retrieveVoice */
+        @Deprecated("deprecated")
+        @MustBeClosed
+        suspend fun retrieveVoice(
+            params: ChatRetrieveVoiceParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<ChatRetrieveVoiceResponse>
+
+        /** @see retrieveVoice */
+        @Deprecated("deprecated")
+        @MustBeClosed
+        suspend fun retrieveVoice(
+            voiceId: String,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<ChatRetrieveVoiceResponse> =
+            retrieveVoice(voiceId, ChatRetrieveVoiceParams.none(), requestOptions)
     }
 }

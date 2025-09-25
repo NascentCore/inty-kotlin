@@ -109,7 +109,7 @@ private constructor(
     fun intro(): String? = body.intro()
 
     /**
-     * AI 模型配置
+     * AI模型配置
      *
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
      *   responded with an unexpected value).
@@ -117,7 +117,7 @@ private constructor(
     fun llmConfig(): ModelConfig? = body.llmConfig()
 
     /**
-     * 主提示词 - 作为第一个 system message，覆盖全局默认主提示词
+     * 主提示词 - 作为第一个system message，覆盖全局默认主提示词
      *
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
      *   responded with an unexpected value).
@@ -131,6 +131,14 @@ private constructor(
      *   responded with an unexpected value).
      */
     fun messageExample(): String? = body.messageExample()
+
+    /**
+     * Agent 元数据模型
+     *
+     * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
+     *   responded with an unexpected value).
+     */
+    fun metaData(): MetaData? = body.metaData()
 
     /**
      * 模式提示词 - 放在角色卡提示词后面，覆盖全局默认模式提示词
@@ -173,7 +181,7 @@ private constructor(
     fun postHistoryInstructions(): String? = body.postHistoryInstructions()
 
     /**
-     * 已废弃 - 请使用 personality 字段代替
+     * 已废弃 - 请使用personality字段代替
      *
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
      *   responded with an unexpected value).
@@ -329,6 +337,13 @@ private constructor(
      * Unlike [messageExample], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _messageExample(): JsonField<String> = body._messageExample()
+
+    /**
+     * Returns the raw JSON value of [metaData].
+     *
+     * Unlike [metaData], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _metaData(): JsonField<MetaData> = body._metaData()
 
     /**
      * Returns the raw JSON value of [modePrompt].
@@ -645,7 +660,7 @@ private constructor(
          */
         fun intro(intro: JsonField<String>) = apply { body.intro(intro) }
 
-        /** AI 模型配置 */
+        /** AI模型配置 */
         fun llmConfig(llmConfig: ModelConfig?) = apply { body.llmConfig(llmConfig) }
 
         /**
@@ -657,7 +672,7 @@ private constructor(
          */
         fun llmConfig(llmConfig: JsonField<ModelConfig>) = apply { body.llmConfig(llmConfig) }
 
-        /** 主提示词 - 作为第一个 system message，覆盖全局默认主提示词 */
+        /** 主提示词 - 作为第一个system message，覆盖全局默认主提示词 */
         fun mainPrompt(mainPrompt: String?) = apply { body.mainPrompt(mainPrompt) }
 
         /**
@@ -682,6 +697,18 @@ private constructor(
         fun messageExample(messageExample: JsonField<String>) = apply {
             body.messageExample(messageExample)
         }
+
+        /** Agent 元数据模型 */
+        fun metaData(metaData: MetaData?) = apply { body.metaData(metaData) }
+
+        /**
+         * Sets [Builder.metaData] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.metaData] with a well-typed [MetaData] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun metaData(metaData: JsonField<MetaData>) = apply { body.metaData(metaData) }
 
         /** 模式提示词 - 放在角色卡提示词后面，覆盖全局默认模式提示词 */
         fun modePrompt(modePrompt: String?) = apply { body.modePrompt(modePrompt) }
@@ -765,7 +792,7 @@ private constructor(
             body.postHistoryInstructions(postHistoryInstructions)
         }
 
-        /** 已废弃 - 请使用 personality 字段代替 */
+        /** 已废弃 - 请使用personality字段代替 */
         @Deprecated("deprecated") fun prompt(prompt: String?) = apply { body.prompt(prompt) }
 
         /**
@@ -986,16 +1013,16 @@ private constructor(
     override fun _queryParams(): QueryParams = additionalQueryParams
 
     /**
-     * 创建 AI 角色
+     * 创建AI角色
      *
      * 推荐使用方式：
-     * 1. 使用 personality + scenario 字段构建角色
-     * 2. 添加 first_message 作为开场白
-     * 3. 可选添加 message_example 展示对话风格
+     * 1. 使用personality + scenario字段构建角色
+     * 2. 添加first_message作为开场白
+     * 3. 可选添加message_example展示对话风格
      *
      * 兼容性说明：
-     * - 仍支持使用 prompt 字段 (legacy 模式)
-     * - 优先级：角色卡字段 > prompt 字段
+     * - 仍支持使用prompt字段 (legacy模式)
+     * - 优先级：角色卡字段 > prompt字段
      */
     class Body
     private constructor(
@@ -1015,6 +1042,7 @@ private constructor(
         private val llmConfig: JsonField<ModelConfig>,
         private val mainPrompt: JsonField<String>,
         private val messageExample: JsonField<String>,
+        private val metaData: JsonField<MetaData>,
         private val modePrompt: JsonField<String>,
         private val opening: JsonField<String>,
         private val openingAudioUrl: JsonField<String>,
@@ -1072,6 +1100,9 @@ private constructor(
             @JsonProperty("message_example")
             @ExcludeMissing
             messageExample: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("meta_data")
+            @ExcludeMissing
+            metaData: JsonField<MetaData> = JsonMissing.of(),
             @JsonProperty("mode_prompt")
             @ExcludeMissing
             modePrompt: JsonField<String> = JsonMissing.of(),
@@ -1117,6 +1148,7 @@ private constructor(
             llmConfig,
             mainPrompt,
             messageExample,
+            metaData,
             modePrompt,
             opening,
             openingAudioUrl,
@@ -1214,7 +1246,7 @@ private constructor(
         fun intro(): String? = intro.getNullable("intro")
 
         /**
-         * AI 模型配置
+         * AI模型配置
          *
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
@@ -1222,7 +1254,7 @@ private constructor(
         fun llmConfig(): ModelConfig? = llmConfig.getNullable("llm_config")
 
         /**
-         * 主提示词 - 作为第一个 system message，覆盖全局默认主提示词
+         * 主提示词 - 作为第一个system message，覆盖全局默认主提示词
          *
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
@@ -1236,6 +1268,14 @@ private constructor(
          *   server responded with an unexpected value).
          */
         fun messageExample(): String? = messageExample.getNullable("message_example")
+
+        /**
+         * Agent 元数据模型
+         *
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun metaData(): MetaData? = metaData.getNullable("meta_data")
 
         /**
          * 模式提示词 - 放在角色卡提示词后面，覆盖全局默认模式提示词
@@ -1279,7 +1319,7 @@ private constructor(
             postHistoryInstructions.getNullable("post_history_instructions")
 
         /**
-         * 已废弃 - 请使用 personality 字段代替
+         * 已废弃 - 请使用personality字段代替
          *
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
@@ -1462,6 +1502,13 @@ private constructor(
         fun _messageExample(): JsonField<String> = messageExample
 
         /**
+         * Returns the raw JSON value of [metaData].
+         *
+         * Unlike [metaData], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("meta_data") @ExcludeMissing fun _metaData(): JsonField<MetaData> = metaData
+
+        /**
          * Returns the raw JSON value of [modePrompt].
          *
          * Unlike [modePrompt], this method doesn't throw if the JSON field has an unexpected type.
@@ -1605,6 +1652,7 @@ private constructor(
             private var llmConfig: JsonField<ModelConfig> = JsonMissing.of()
             private var mainPrompt: JsonField<String> = JsonMissing.of()
             private var messageExample: JsonField<String> = JsonMissing.of()
+            private var metaData: JsonField<MetaData> = JsonMissing.of()
             private var modePrompt: JsonField<String> = JsonMissing.of()
             private var opening: JsonField<String> = JsonMissing.of()
             private var openingAudioUrl: JsonField<String> = JsonMissing.of()
@@ -1636,6 +1684,7 @@ private constructor(
                 llmConfig = body.llmConfig
                 mainPrompt = body.mainPrompt
                 messageExample = body.messageExample
+                metaData = body.metaData
                 modePrompt = body.modePrompt
                 opening = body.opening
                 openingAudioUrl = body.openingAudioUrl
@@ -1839,7 +1888,7 @@ private constructor(
              */
             fun intro(intro: JsonField<String>) = apply { this.intro = intro }
 
-            /** AI 模型配置 */
+            /** AI模型配置 */
             fun llmConfig(llmConfig: ModelConfig?) = llmConfig(JsonField.ofNullable(llmConfig))
 
             /**
@@ -1851,7 +1900,7 @@ private constructor(
              */
             fun llmConfig(llmConfig: JsonField<ModelConfig>) = apply { this.llmConfig = llmConfig }
 
-            /** 主提示词 - 作为第一个 system message，覆盖全局默认主提示词 */
+            /** 主提示词 - 作为第一个system message，覆盖全局默认主提示词 */
             fun mainPrompt(mainPrompt: String?) = mainPrompt(JsonField.ofNullable(mainPrompt))
 
             /**
@@ -1877,6 +1926,18 @@ private constructor(
             fun messageExample(messageExample: JsonField<String>) = apply {
                 this.messageExample = messageExample
             }
+
+            /** Agent 元数据模型 */
+            fun metaData(metaData: MetaData?) = metaData(JsonField.ofNullable(metaData))
+
+            /**
+             * Sets [Builder.metaData] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.metaData] with a well-typed [MetaData] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun metaData(metaData: JsonField<MetaData>) = apply { this.metaData = metaData }
 
             /** 模式提示词 - 放在角色卡提示词后面，覆盖全局默认模式提示词 */
             fun modePrompt(modePrompt: String?) = modePrompt(JsonField.ofNullable(modePrompt))
@@ -1968,7 +2029,7 @@ private constructor(
                 this.postHistoryInstructions = postHistoryInstructions
             }
 
-            /** 已废弃 - 请使用 personality 字段代替 */
+            /** 已废弃 - 请使用personality字段代替 */
             @Deprecated("deprecated")
             fun prompt(prompt: String?) = prompt(JsonField.ofNullable(prompt))
 
@@ -2103,6 +2164,7 @@ private constructor(
                     llmConfig,
                     mainPrompt,
                     messageExample,
+                    metaData,
                     modePrompt,
                     opening,
                     openingAudioUrl,
@@ -2142,6 +2204,7 @@ private constructor(
             llmConfig()?.validate()
             mainPrompt()
             messageExample()
+            metaData()?.validate()
             modePrompt()
             opening()
             openingAudioUrl()
@@ -2188,6 +2251,7 @@ private constructor(
                 (llmConfig.asKnown()?.validity() ?: 0) +
                 (if (mainPrompt.asKnown() == null) 0 else 1) +
                 (if (messageExample.asKnown() == null) 0 else 1) +
+                (metaData.asKnown()?.validity() ?: 0) +
                 (if (modePrompt.asKnown() == null) 0 else 1) +
                 (if (opening.asKnown() == null) 0 else 1) +
                 (if (openingAudioUrl.asKnown() == null) 0 else 1) +
@@ -2223,6 +2287,7 @@ private constructor(
                 llmConfig == other.llmConfig &&
                 mainPrompt == other.mainPrompt &&
                 messageExample == other.messageExample &&
+                metaData == other.metaData &&
                 modePrompt == other.modePrompt &&
                 opening == other.opening &&
                 openingAudioUrl == other.openingAudioUrl &&
@@ -2256,6 +2321,7 @@ private constructor(
                 llmConfig,
                 mainPrompt,
                 messageExample,
+                metaData,
                 modePrompt,
                 opening,
                 openingAudioUrl,
@@ -2275,7 +2341,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{gender=$gender, name=$name, alternateGreetings=$alternateGreetings, avatar=$avatar, background=$background, backgroundImages=$backgroundImages, category=$category, characterBook=$characterBook, characterCardSpec=$characterCardSpec, characterVersion=$characterVersion, creatorNotes=$creatorNotes, extensions=$extensions, intro=$intro, llmConfig=$llmConfig, mainPrompt=$mainPrompt, messageExample=$messageExample, modePrompt=$modePrompt, opening=$opening, openingAudioUrl=$openingAudioUrl, personality=$personality, photos=$photos, postHistoryInstructions=$postHistoryInstructions, prompt=$prompt, scenario=$scenario, settings=$settings, tags=$tags, visibility=$visibility, voiceId=$voiceId, additionalProperties=$additionalProperties}"
+            "Body{gender=$gender, name=$name, alternateGreetings=$alternateGreetings, avatar=$avatar, background=$background, backgroundImages=$backgroundImages, category=$category, characterBook=$characterBook, characterCardSpec=$characterCardSpec, characterVersion=$characterVersion, creatorNotes=$creatorNotes, extensions=$extensions, intro=$intro, llmConfig=$llmConfig, mainPrompt=$mainPrompt, messageExample=$messageExample, metaData=$metaData, modePrompt=$modePrompt, opening=$opening, openingAudioUrl=$openingAudioUrl, personality=$personality, photos=$photos, postHistoryInstructions=$postHistoryInstructions, prompt=$prompt, scenario=$scenario, settings=$settings, tags=$tags, visibility=$visibility, voiceId=$voiceId, additionalProperties=$additionalProperties}"
     }
 
     class CharacterBook
@@ -2470,6 +2536,187 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() = "Extensions{additionalProperties=$additionalProperties}"
+    }
+
+    /** Agent 元数据模型 */
+    class MetaData
+    private constructor(
+        private val comment: JsonField<String>,
+        private val score: JsonField<Long>,
+        private val additionalProperties: MutableMap<String, JsonValue>,
+    ) {
+
+        @JsonCreator
+        private constructor(
+            @JsonProperty("comment") @ExcludeMissing comment: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("score") @ExcludeMissing score: JsonField<Long> = JsonMissing.of(),
+        ) : this(comment, score, mutableMapOf())
+
+        /**
+         * Agent 备注信息
+         *
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun comment(): String? = comment.getNullable("comment")
+
+        /**
+         * Agent 评分，1-5 的整数
+         *
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun score(): Long? = score.getNullable("score")
+
+        /**
+         * Returns the raw JSON value of [comment].
+         *
+         * Unlike [comment], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("comment") @ExcludeMissing fun _comment(): JsonField<String> = comment
+
+        /**
+         * Returns the raw JSON value of [score].
+         *
+         * Unlike [score], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("score") @ExcludeMissing fun _score(): JsonField<Long> = score
+
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /** Returns a mutable builder for constructing an instance of [MetaData]. */
+            fun builder() = Builder()
+        }
+
+        /** A builder for [MetaData]. */
+        class Builder internal constructor() {
+
+            private var comment: JsonField<String> = JsonMissing.of()
+            private var score: JsonField<Long> = JsonMissing.of()
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            internal fun from(metaData: MetaData) = apply {
+                comment = metaData.comment
+                score = metaData.score
+                additionalProperties = metaData.additionalProperties.toMutableMap()
+            }
+
+            /** Agent 备注信息 */
+            fun comment(comment: String?) = comment(JsonField.ofNullable(comment))
+
+            /**
+             * Sets [Builder.comment] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.comment] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun comment(comment: JsonField<String>) = apply { this.comment = comment }
+
+            /** Agent 评分，1-5 的整数 */
+            fun score(score: Long?) = score(JsonField.ofNullable(score))
+
+            /**
+             * Alias for [Builder.score].
+             *
+             * This unboxed primitive overload exists for backwards compatibility.
+             */
+            fun score(score: Long) = score(score as Long?)
+
+            /**
+             * Sets [Builder.score] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.score] with a well-typed [Long] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun score(score: JsonField<Long>) = apply { this.score = score }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [MetaData].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             */
+            fun build(): MetaData = MetaData(comment, score, additionalProperties.toMutableMap())
+        }
+
+        private var validated: Boolean = false
+
+        fun validate(): MetaData = apply {
+            if (validated) {
+                return@apply
+            }
+
+            comment()
+            score()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: IntyInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        internal fun validity(): Int =
+            (if (comment.asKnown() == null) 0 else 1) + (if (score.asKnown() == null) 0 else 1)
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is MetaData &&
+                comment == other.comment &&
+                score == other.score &&
+                additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy { Objects.hash(comment, score, additionalProperties) }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() =
+            "MetaData{comment=$comment, score=$score, additionalProperties=$additionalProperties}"
     }
 
     class Settings

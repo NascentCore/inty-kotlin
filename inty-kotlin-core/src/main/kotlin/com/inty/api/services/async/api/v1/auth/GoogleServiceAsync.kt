@@ -23,7 +23,7 @@ interface GoogleServiceAsync {
      */
     fun withOptions(modifier: (ClientOptions.Builder) -> Unit): GoogleServiceAsync
 
-    /** Google 登录 */
+    /** Google登录 */
     suspend fun login(
         params: GoogleLoginParams,
         requestOptions: RequestOptions = RequestOptions.none(),

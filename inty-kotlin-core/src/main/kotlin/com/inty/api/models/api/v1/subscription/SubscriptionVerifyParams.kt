@@ -27,7 +27,7 @@ private constructor(
 ) : Params {
 
     /**
-     * 产品 ID
+     * 产品ID
      *
      * @throws IntyInvalidDataException if the JSON field has an unexpected type or is unexpectedly
      *   missing or null (e.g. if the server responded with an unexpected value).
@@ -43,7 +43,7 @@ private constructor(
     fun purchaseToken(): String = body.purchaseToken()
 
     /**
-     * 订单 ID
+     * 订单ID
      *
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
      *   responded with an unexpected value).
@@ -119,7 +119,7 @@ private constructor(
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
-        /** 产品 ID */
+        /** 产品ID */
         fun productId(productId: String) = apply { body.productId(productId) }
 
         /**
@@ -145,7 +145,7 @@ private constructor(
             body.purchaseToken(purchaseToken)
         }
 
-        /** 订单 ID */
+        /** 订单ID */
         fun orderId(orderId: String?) = apply { body.orderId(orderId) }
 
         /**
@@ -321,7 +321,7 @@ private constructor(
         ) : this(productId, purchaseToken, orderId, mutableMapOf())
 
         /**
-         * 产品 ID
+         * 产品ID
          *
          * @throws IntyInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -337,7 +337,7 @@ private constructor(
         fun purchaseToken(): String = purchaseToken.getRequired("purchase_token")
 
         /**
-         * 订单 ID
+         * 订单ID
          *
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
@@ -409,7 +409,7 @@ private constructor(
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
-            /** 产品 ID */
+            /** 产品ID */
             fun productId(productId: String) = productId(JsonField.of(productId))
 
             /**
@@ -435,7 +435,7 @@ private constructor(
                 this.purchaseToken = purchaseToken
             }
 
-            /** 订单 ID */
+            /** 订单ID */
             fun orderId(orderId: String?) = orderId(JsonField.ofNullable(orderId))
 
             /**

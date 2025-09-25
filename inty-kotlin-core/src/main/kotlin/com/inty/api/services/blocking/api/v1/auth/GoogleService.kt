@@ -23,7 +23,7 @@ interface GoogleService {
      */
     fun withOptions(modifier: (ClientOptions.Builder) -> Unit): GoogleService
 
-    /** Google 登录 */
+    /** Google登录 */
     fun login(
         params: GoogleLoginParams,
         requestOptions: RequestOptions = RequestOptions.none(),
