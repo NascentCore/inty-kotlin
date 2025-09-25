@@ -31,10 +31,10 @@ private constructor(
     /** Items per page, maximum 100 */
     fun pageSize(): Long? = pageSize
 
-    /** Sort order: created_asc, created_desc, random */
+    /** Sort order: created_asc, created_desc, random, score_based_random */
     fun sort(): Sort? = sort
 
-    /** sort seed [not yet used] */
+    /** Sort seed for deterministic random ordering */
     fun sortSeed(): String? = sortSeed
 
     /** Additional headers to send with the request. */
@@ -92,10 +92,10 @@ private constructor(
          */
         fun pageSize(pageSize: Long) = pageSize(pageSize as Long?)
 
-        /** Sort order: created_asc, created_desc, random */
+        /** Sort order: created_asc, created_desc, random, score_based_random */
         fun sort(sort: Sort?) = apply { this.sort = sort }
 
-        /** sort seed [not yet used] */
+        /** Sort seed for deterministic random ordering */
         fun sortSeed(sortSeed: String?) = apply { this.sortSeed = sortSeed }
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
@@ -225,7 +225,7 @@ private constructor(
             }
             .build()
 
-    /** Sort order: created_asc, created_desc, random */
+    /** Sort order: created_asc, created_desc, random, score_based_random */
     class Sort @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**
@@ -246,6 +246,8 @@ private constructor(
 
             val RANDOM = of("random")
 
+            val SCORE_BASED_RANDOM = of("score_based_random")
+
             fun of(value: String) = Sort(JsonField.of(value))
         }
 
@@ -254,6 +256,7 @@ private constructor(
             CREATED_ASC,
             CREATED_DESC,
             RANDOM,
+            SCORE_BASED_RANDOM,
         }
 
         /**
@@ -269,6 +272,7 @@ private constructor(
             CREATED_ASC,
             CREATED_DESC,
             RANDOM,
+            SCORE_BASED_RANDOM,
             /** An enum member indicating that [Sort] was instantiated with an unknown value. */
             _UNKNOWN,
         }
@@ -285,6 +289,7 @@ private constructor(
                 CREATED_ASC -> Value.CREATED_ASC
                 CREATED_DESC -> Value.CREATED_DESC
                 RANDOM -> Value.RANDOM
+                SCORE_BASED_RANDOM -> Value.SCORE_BASED_RANDOM
                 else -> Value._UNKNOWN
             }
 
@@ -301,6 +306,7 @@ private constructor(
                 CREATED_ASC -> Known.CREATED_ASC
                 CREATED_DESC -> Known.CREATED_DESC
                 RANDOM -> Known.RANDOM
+                SCORE_BASED_RANDOM -> Known.SCORE_BASED_RANDOM
                 else -> throw IntyInvalidDataException("Unknown Sort: $value")
             }
 

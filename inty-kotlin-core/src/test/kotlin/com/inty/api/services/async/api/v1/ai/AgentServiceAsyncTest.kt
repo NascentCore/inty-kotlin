@@ -69,6 +69,9 @@ internal class AgentServiceAsyncTest {
                     )
                     .mainPrompt("main_prompt")
                     .messageExample("message_example")
+                    .metaData(
+                        AgentCreateParams.MetaData.builder().comment("comment").score(1L).build()
+                    )
                     .modePrompt("mode_prompt")
                     .opening("opening")
                     .openingAudioUrl("opening_audio_url")
@@ -155,6 +158,9 @@ internal class AgentServiceAsyncTest {
                     )
                     .mainPrompt("main_prompt")
                     .messageExample("message_example")
+                    .metaData(
+                        AgentUpdateParams.MetaData.builder().comment("comment").score(1L).build()
+                    )
                     .modePrompt("mode_prompt")
                     .name("name")
                     .opening("opening")
