@@ -21,6 +21,8 @@ import com.inty.api.models.api.v1.chats.ChatCreateCompletionParams
 import com.inty.api.models.api.v1.chats.ChatCreateParams
 import com.inty.api.models.api.v1.chats.ChatDeleteParams
 import com.inty.api.models.api.v1.chats.ChatListParams
+import com.inty.api.models.api.v1.chats.ChatRetrieveVoiceParams
+import com.inty.api.models.api.v1.chats.ChatRetrieveVoiceResponse
 import com.inty.api.models.api.v1.report.ApiResponseDict
 import com.inty.api.services.async.api.v1.chats.AgentServiceAsync
 import com.inty.api.services.async.api.v1.chats.AgentServiceAsyncImpl
@@ -59,6 +61,14 @@ class ChatServiceAsyncImpl internal constructor(private val clientOptions: Clien
     ): ApiResponseDict =
         // post /api/v1/chat/completions/{agent_id}
         withRawResponse().createCompletion(params, requestOptions).parse()
+
+    @Deprecated("deprecated")
+    override suspend fun retrieveVoice(
+        params: ChatRetrieveVoiceParams,
+        requestOptions: RequestOptions,
+    ): ChatRetrieveVoiceResponse =
+        // get /api/v1/chats/voices/{voice_id}
+        withRawResponse().retrieveVoice(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         ChatServiceAsync.WithRawResponse {
@@ -186,6 +196,37 @@ class ChatServiceAsyncImpl internal constructor(private val clientOptions: Clien
             return errorHandler.handle(response).parseable {
                 response
                     .use { createCompletionHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+            }
+        }
+
+        private val retrieveVoiceHandler: Handler<ChatRetrieveVoiceResponse> =
+            jsonHandler<ChatRetrieveVoiceResponse>(clientOptions.jsonMapper)
+
+        @Deprecated("deprecated")
+        override suspend fun retrieveVoice(
+            params: ChatRetrieveVoiceParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<ChatRetrieveVoiceResponse> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("voiceId", params.voiceId())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("api", "v1", "chats", "voices", params._pathParam(0))
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.executeAsync(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response
+                    .use { retrieveVoiceHandler.handle(it) }
                     .also {
                         if (requestOptions.responseValidation!!) {
                             it.validate()

@@ -11,6 +11,8 @@ import com.inty.api.models.api.v1.chats.ChatCreateCompletionParams
 import com.inty.api.models.api.v1.chats.ChatCreateParams
 import com.inty.api.models.api.v1.chats.ChatDeleteParams
 import com.inty.api.models.api.v1.chats.ChatListParams
+import com.inty.api.models.api.v1.chats.ChatRetrieveVoiceParams
+import com.inty.api.models.api.v1.chats.ChatRetrieveVoiceResponse
 import com.inty.api.models.api.v1.report.ApiResponseDict
 import com.inty.api.services.blocking.api.v1.chats.AgentService
 
@@ -76,6 +78,27 @@ interface ChatService {
         params: ChatCreateCompletionParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): ApiResponseDict
+
+    /** Get voice info by voice_id */
+    @Deprecated("deprecated")
+    fun retrieveVoice(
+        voiceId: String,
+        params: ChatRetrieveVoiceParams = ChatRetrieveVoiceParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): ChatRetrieveVoiceResponse =
+        retrieveVoice(params.toBuilder().voiceId(voiceId).build(), requestOptions)
+
+    /** @see retrieveVoice */
+    @Deprecated("deprecated")
+    fun retrieveVoice(
+        params: ChatRetrieveVoiceParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): ChatRetrieveVoiceResponse
+
+    /** @see retrieveVoice */
+    @Deprecated("deprecated")
+    fun retrieveVoice(voiceId: String, requestOptions: RequestOptions): ChatRetrieveVoiceResponse =
+        retrieveVoice(voiceId, ChatRetrieveVoiceParams.none(), requestOptions)
 
     /** A view of [ChatService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -155,5 +178,35 @@ interface ChatService {
             params: ChatCreateCompletionParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<ApiResponseDict>
+
+        /**
+         * Returns a raw HTTP response for `get /api/v1/chats/voices/{voice_id}`, but is otherwise
+         * the same as [ChatService.retrieveVoice].
+         */
+        @Deprecated("deprecated")
+        @MustBeClosed
+        fun retrieveVoice(
+            voiceId: String,
+            params: ChatRetrieveVoiceParams = ChatRetrieveVoiceParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<ChatRetrieveVoiceResponse> =
+            retrieveVoice(params.toBuilder().voiceId(voiceId).build(), requestOptions)
+
+        /** @see retrieveVoice */
+        @Deprecated("deprecated")
+        @MustBeClosed
+        fun retrieveVoice(
+            params: ChatRetrieveVoiceParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<ChatRetrieveVoiceResponse>
+
+        /** @see retrieveVoice */
+        @Deprecated("deprecated")
+        @MustBeClosed
+        fun retrieveVoice(
+            voiceId: String,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<ChatRetrieveVoiceResponse> =
+            retrieveVoice(voiceId, ChatRetrieveVoiceParams.none(), requestOptions)
     }
 }

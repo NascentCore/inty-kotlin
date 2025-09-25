@@ -59,7 +59,7 @@ interface AgentService {
     fun retrieve(agentId: String, requestOptions: RequestOptions): Agent =
         retrieve(agentId, AgentRetrieveParams.none(), requestOptions)
 
-    /** Update AI agent */
+    /** 更新任何图片，都会将图片全部记录在 background_images 字段中，用于保存历史记录如果没有提供 avatar，则会自动截取头像，并记录在 avatar 字段中 */
     fun update(
         agentId: String,
         params: AgentUpdateParams = AgentUpdateParams.none(),

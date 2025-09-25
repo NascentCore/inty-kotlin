@@ -1,34 +1,22 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package com.inty.api.models.api.v1.texttospeech
+package com.inty.api.models.api.v1.chats
 
 import com.inty.api.core.Params
 import com.inty.api.core.http.Headers
 import com.inty.api.core.http.QueryParams
 import java.util.Objects
 
-/** 获取 ElevenLabs 可用音色列表，支持搜索和过滤功能 */
-class TextToSpeechListVoicesParams
+/** Get voice info by voice_id */
+@Deprecated("deprecated")
+class ChatRetrieveVoiceParams
 private constructor(
-    private val category: String?,
-    private val pageSize: Long?,
-    private val search: String?,
-    private val voiceType: String?,
+    private val voiceId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    /** 音色分类过滤 (如: premade, cloned) */
-    fun category(): String? = category
-
-    /** 每页返回结果数，默认返回所有音色，最大1000 */
-    fun pageSize(): Long? = pageSize
-
-    /** 搜索音色名称关键词 */
-    fun search(): String? = search
-
-    /** 音色类型过滤 (如: personal, community) */
-    fun voiceType(): String? = voiceType
+    fun voiceId(): String? = voiceId
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -40,51 +28,26 @@ private constructor(
 
     companion object {
 
-        fun none(): TextToSpeechListVoicesParams = builder().build()
+        fun none(): ChatRetrieveVoiceParams = builder().build()
 
-        /**
-         * Returns a mutable builder for constructing an instance of [TextToSpeechListVoicesParams].
-         */
+        /** Returns a mutable builder for constructing an instance of [ChatRetrieveVoiceParams]. */
         fun builder() = Builder()
     }
 
-    /** A builder for [TextToSpeechListVoicesParams]. */
+    /** A builder for [ChatRetrieveVoiceParams]. */
     class Builder internal constructor() {
 
-        private var category: String? = null
-        private var pageSize: Long? = null
-        private var search: String? = null
-        private var voiceType: String? = null
+        private var voiceId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
-        internal fun from(textToSpeechListVoicesParams: TextToSpeechListVoicesParams) = apply {
-            category = textToSpeechListVoicesParams.category
-            pageSize = textToSpeechListVoicesParams.pageSize
-            search = textToSpeechListVoicesParams.search
-            voiceType = textToSpeechListVoicesParams.voiceType
-            additionalHeaders = textToSpeechListVoicesParams.additionalHeaders.toBuilder()
-            additionalQueryParams = textToSpeechListVoicesParams.additionalQueryParams.toBuilder()
+        internal fun from(chatRetrieveVoiceParams: ChatRetrieveVoiceParams) = apply {
+            voiceId = chatRetrieveVoiceParams.voiceId
+            additionalHeaders = chatRetrieveVoiceParams.additionalHeaders.toBuilder()
+            additionalQueryParams = chatRetrieveVoiceParams.additionalQueryParams.toBuilder()
         }
 
-        /** 音色分类过滤 (如: premade, cloned) */
-        fun category(category: String?) = apply { this.category = category }
-
-        /** 每页返回结果数，默认返回所有音色，最大1000 */
-        fun pageSize(pageSize: Long?) = apply { this.pageSize = pageSize }
-
-        /**
-         * Alias for [Builder.pageSize].
-         *
-         * This unboxed primitive overload exists for backwards compatibility.
-         */
-        fun pageSize(pageSize: Long) = pageSize(pageSize as Long?)
-
-        /** 搜索音色名称关键词 */
-        fun search(search: String?) = apply { this.search = search }
-
-        /** 音色类型过滤 (如: personal, community) */
-        fun voiceType(voiceType: String?) = apply { this.voiceType = voiceType }
+        fun voiceId(voiceId: String?) = apply { this.voiceId = voiceId }
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -185,58 +148,41 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [TextToSpeechListVoicesParams].
+         * Returns an immutable instance of [ChatRetrieveVoiceParams].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          */
-        fun build(): TextToSpeechListVoicesParams =
-            TextToSpeechListVoicesParams(
-                category,
-                pageSize,
-                search,
-                voiceType,
+        fun build(): ChatRetrieveVoiceParams =
+            ChatRetrieveVoiceParams(
+                voiceId,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
     }
 
+    fun _pathParam(index: Int): String =
+        when (index) {
+            0 -> voiceId ?: ""
+            else -> ""
+        }
+
     override fun _headers(): Headers = additionalHeaders
 
-    override fun _queryParams(): QueryParams =
-        QueryParams.builder()
-            .apply {
-                category?.let { put("category", it) }
-                pageSize?.let { put("page_size", it.toString()) }
-                search?.let { put("search", it) }
-                voiceType?.let { put("voice_type", it) }
-                putAll(additionalQueryParams)
-            }
-            .build()
+    override fun _queryParams(): QueryParams = additionalQueryParams
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
         }
 
-        return other is TextToSpeechListVoicesParams &&
-            category == other.category &&
-            pageSize == other.pageSize &&
-            search == other.search &&
-            voiceType == other.voiceType &&
+        return other is ChatRetrieveVoiceParams &&
+            voiceId == other.voiceId &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int =
-        Objects.hash(
-            category,
-            pageSize,
-            search,
-            voiceType,
-            additionalHeaders,
-            additionalQueryParams,
-        )
+    override fun hashCode(): Int = Objects.hash(voiceId, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "TextToSpeechListVoicesParams{category=$category, pageSize=$pageSize, search=$search, voiceType=$voiceType, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "ChatRetrieveVoiceParams{voiceId=$voiceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }
