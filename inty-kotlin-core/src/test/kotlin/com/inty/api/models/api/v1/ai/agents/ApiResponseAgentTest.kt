@@ -28,8 +28,10 @@ internal class ApiResponseAgentTest {
                         .status(Agent.Status.PENDING)
                         .addAlternateGreeting("string")
                         .avatar("avatar")
+                        .avatarSize(Agent.AvatarSize.builder().height(0L).width(0L).build())
                         .background("background")
                         .addBackgroundImage("string")
+                        .backgroundSize(Agent.BackgroundSize.builder().height(0L).width(0L).build())
                         .category("category")
                         .characterBook(
                             Agent.CharacterBook.builder()
@@ -123,8 +125,10 @@ internal class ApiResponseAgentTest {
                     .status(Agent.Status.PENDING)
                     .addAlternateGreeting("string")
                     .avatar("avatar")
+                    .avatarSize(Agent.AvatarSize.builder().height(0L).width(0L).build())
                     .background("background")
                     .addBackgroundImage("string")
+                    .backgroundSize(Agent.BackgroundSize.builder().height(0L).width(0L).build())
                     .category("category")
                     .characterBook(
                         Agent.CharacterBook.builder()
@@ -222,8 +226,10 @@ internal class ApiResponseAgentTest {
                         .status(Agent.Status.PENDING)
                         .addAlternateGreeting("string")
                         .avatar("avatar")
+                        .avatarSize(Agent.AvatarSize.builder().height(0L).width(0L).build())
                         .background("background")
                         .addBackgroundImage("string")
+                        .backgroundSize(Agent.BackgroundSize.builder().height(0L).width(0L).build())
                         .category("category")
                         .characterBook(
                             Agent.CharacterBook.builder()
