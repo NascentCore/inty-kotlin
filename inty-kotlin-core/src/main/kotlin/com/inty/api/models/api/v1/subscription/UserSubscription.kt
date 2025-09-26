@@ -21,6 +21,7 @@ import java.util.Objects
 
 /** 用户订阅响应模型 */
 class UserSubscription
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val id: JsonField<String>,
     private val createdAt: JsonField<OffsetDateTime>,

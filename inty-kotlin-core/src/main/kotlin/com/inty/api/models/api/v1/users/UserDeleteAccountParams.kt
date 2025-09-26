@@ -229,6 +229,7 @@ private constructor(
 
     /** 账户删除请求 */
     class Body
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val reason: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,

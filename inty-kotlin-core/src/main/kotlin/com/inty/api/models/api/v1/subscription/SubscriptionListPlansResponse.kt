@@ -19,6 +19,7 @@ import java.util.Collections
 import java.util.Objects
 
 class SubscriptionListPlansResponse
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val code: JsonField<Long>,
     private val data: JsonField<Data>,
@@ -202,6 +203,7 @@ private constructor(
 
     /** 订阅计划列表响应 */
     class Data
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val plans: JsonField<List<SubscriptionPlan>>,
         private val currentSubscription: JsonField<UserSubscription>,

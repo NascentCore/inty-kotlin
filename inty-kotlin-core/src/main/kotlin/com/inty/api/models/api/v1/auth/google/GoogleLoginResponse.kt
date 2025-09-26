@@ -18,6 +18,7 @@ import java.util.Collections
 import java.util.Objects
 
 class GoogleLoginResponse
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val code: JsonField<Long>,
     private val data: JsonField<Data>,
@@ -198,6 +199,7 @@ private constructor(
 
     /** 登录响应 */
     class Data
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val token: JsonField<String>,
         private val user: JsonField<User>,
@@ -371,6 +373,7 @@ private constructor(
 
         /** 登录用户响应 */
         class User
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
             private val id: JsonField<String>,
             private val authType: JsonField<AuthType>,

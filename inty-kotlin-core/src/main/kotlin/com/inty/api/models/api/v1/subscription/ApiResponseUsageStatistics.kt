@@ -19,6 +19,7 @@ import java.util.Collections
 import java.util.Objects
 
 class ApiResponseUsageStatistics
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val code: JsonField<Long>,
     private val data: JsonField<Data>,
@@ -201,6 +202,7 @@ private constructor(
 
     /** 使用统计响应 */
     class Data
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val agentCount: JsonField<Long>,
         private val agentLimit: JsonField<Long>,
@@ -702,6 +704,7 @@ private constructor(
 
         /** 订阅使用响应模型 */
         class UsageHistory
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
             private val id: JsonField<String>,
             private val createdAt: JsonField<OffsetDateTime>,

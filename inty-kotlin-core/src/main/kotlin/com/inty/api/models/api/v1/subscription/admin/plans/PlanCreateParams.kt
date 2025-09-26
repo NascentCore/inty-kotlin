@@ -592,6 +592,7 @@ private constructor(
 
     /** 创建订阅计划 */
     class Body
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val googlePlayProductId: JsonField<String>,
         private val name: JsonField<String>,

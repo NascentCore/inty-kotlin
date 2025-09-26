@@ -19,8 +19,9 @@ import com.inty.api.models.api.v1.users.profile.User
 import java.util.Collections
 import java.util.Objects
 
-/** AI角色 */
+/** AI角色，在 sqlalchemy 模型基础上添加额外多表查询来的数据 */
 class Agent
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val id: JsonField<String>,
     private val createdAt: JsonField<Long>,
@@ -30,8 +31,10 @@ private constructor(
     private val status: JsonField<Status>,
     private val alternateGreetings: JsonField<List<String>>,
     private val avatar: JsonField<String>,
+    private val avatarSize: JsonField<AvatarSize>,
     private val background: JsonField<String>,
     private val backgroundImages: JsonField<List<String>>,
+    private val backgroundSize: JsonField<BackgroundSize>,
     private val category: JsonField<String>,
     private val characterBook: JsonField<CharacterBook>,
     private val characterCardSpec: JsonField<String>,
@@ -79,12 +82,18 @@ private constructor(
         @ExcludeMissing
         alternateGreetings: JsonField<List<String>> = JsonMissing.of(),
         @JsonProperty("avatar") @ExcludeMissing avatar: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("avatar_size")
+        @ExcludeMissing
+        avatarSize: JsonField<AvatarSize> = JsonMissing.of(),
         @JsonProperty("background")
         @ExcludeMissing
         background: JsonField<String> = JsonMissing.of(),
         @JsonProperty("background_images")
         @ExcludeMissing
         backgroundImages: JsonField<List<String>> = JsonMissing.of(),
+        @JsonProperty("background_size")
+        @ExcludeMissing
+        backgroundSize: JsonField<BackgroundSize> = JsonMissing.of(),
         @JsonProperty("category") @ExcludeMissing category: JsonField<String> = JsonMissing.of(),
         @JsonProperty("character_book")
         @ExcludeMissing
@@ -156,8 +165,10 @@ private constructor(
         status,
         alternateGreetings,
         avatar,
+        avatarSize,
         background,
         backgroundImages,
+        backgroundSize,
         category,
         characterBook,
         characterCardSpec,
@@ -242,6 +253,14 @@ private constructor(
     fun avatar(): String? = avatar.getNullable("avatar")
 
     /**
+     * Image size
+     *
+     * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
+     *   responded with an unexpected value).
+     */
+    fun avatarSize(): AvatarSize? = avatarSize.getNullable("avatar_size")
+
+    /**
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
      *   responded with an unexpected value).
      */
@@ -252,6 +271,14 @@ private constructor(
      *   responded with an unexpected value).
      */
     fun backgroundImages(): List<String>? = backgroundImages.getNullable("background_images")
+
+    /**
+     * Image size
+     *
+     * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
+     *   responded with an unexpected value).
+     */
+    fun backgroundSize(): BackgroundSize? = backgroundSize.getNullable("background_size")
 
     /**
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
@@ -516,6 +543,15 @@ private constructor(
     @JsonProperty("avatar") @ExcludeMissing fun _avatar(): JsonField<String> = avatar
 
     /**
+     * Returns the raw JSON value of [avatarSize].
+     *
+     * Unlike [avatarSize], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("avatar_size")
+    @ExcludeMissing
+    fun _avatarSize(): JsonField<AvatarSize> = avatarSize
+
+    /**
      * Returns the raw JSON value of [background].
      *
      * Unlike [background], this method doesn't throw if the JSON field has an unexpected type.
@@ -531,6 +567,15 @@ private constructor(
     @JsonProperty("background_images")
     @ExcludeMissing
     fun _backgroundImages(): JsonField<List<String>> = backgroundImages
+
+    /**
+     * Returns the raw JSON value of [backgroundSize].
+     *
+     * Unlike [backgroundSize], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("background_size")
+    @ExcludeMissing
+    fun _backgroundSize(): JsonField<BackgroundSize> = backgroundSize
 
     /**
      * Returns the raw JSON value of [category].
@@ -811,8 +856,10 @@ private constructor(
         private var status: JsonField<Status>? = null
         private var alternateGreetings: JsonField<MutableList<String>>? = null
         private var avatar: JsonField<String> = JsonMissing.of()
+        private var avatarSize: JsonField<AvatarSize> = JsonMissing.of()
         private var background: JsonField<String> = JsonMissing.of()
         private var backgroundImages: JsonField<MutableList<String>>? = null
+        private var backgroundSize: JsonField<BackgroundSize> = JsonMissing.of()
         private var category: JsonField<String> = JsonMissing.of()
         private var characterBook: JsonField<CharacterBook> = JsonMissing.of()
         private var characterCardSpec: JsonField<String> = JsonMissing.of()
@@ -854,8 +901,10 @@ private constructor(
             status = agent.status
             alternateGreetings = agent.alternateGreetings.map { it.toMutableList() }
             avatar = agent.avatar
+            avatarSize = agent.avatarSize
             background = agent.background
             backgroundImages = agent.backgroundImages.map { it.toMutableList() }
+            backgroundSize = agent.backgroundSize
             category = agent.category
             characterBook = agent.characterBook
             characterCardSpec = agent.characterCardSpec
@@ -987,6 +1036,18 @@ private constructor(
          */
         fun avatar(avatar: JsonField<String>) = apply { this.avatar = avatar }
 
+        /** Image size */
+        fun avatarSize(avatarSize: AvatarSize?) = avatarSize(JsonField.ofNullable(avatarSize))
+
+        /**
+         * Sets [Builder.avatarSize] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.avatarSize] with a well-typed [AvatarSize] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun avatarSize(avatarSize: JsonField<AvatarSize>) = apply { this.avatarSize = avatarSize }
+
         fun background(background: String?) = background(JsonField.ofNullable(background))
 
         /**
@@ -1022,6 +1083,21 @@ private constructor(
                 (backgroundImages ?: JsonField.of(mutableListOf())).also {
                     checkKnown("backgroundImages", it).add(backgroundImage)
                 }
+        }
+
+        /** Image size */
+        fun backgroundSize(backgroundSize: BackgroundSize?) =
+            backgroundSize(JsonField.ofNullable(backgroundSize))
+
+        /**
+         * Sets [Builder.backgroundSize] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.backgroundSize] with a well-typed [BackgroundSize] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun backgroundSize(backgroundSize: JsonField<BackgroundSize>) = apply {
+            this.backgroundSize = backgroundSize
         }
 
         fun category(category: String?) = category(JsonField.ofNullable(category))
@@ -1468,8 +1544,10 @@ private constructor(
                 checkRequired("status", status),
                 (alternateGreetings ?: JsonMissing.of()).map { it.toImmutable() },
                 avatar,
+                avatarSize,
                 background,
                 (backgroundImages ?: JsonMissing.of()).map { it.toImmutable() },
+                backgroundSize,
                 category,
                 characterBook,
                 characterCardSpec,
@@ -1519,8 +1597,10 @@ private constructor(
         status().validate()
         alternateGreetings()
         avatar()
+        avatarSize()?.validate()
         background()
         backgroundImages()
+        backgroundSize()?.validate()
         category()
         characterBook()?.validate()
         characterCardSpec()
@@ -1576,8 +1656,10 @@ private constructor(
             (status.asKnown()?.validity() ?: 0) +
             (alternateGreetings.asKnown()?.size ?: 0) +
             (if (avatar.asKnown() == null) 0 else 1) +
+            (avatarSize.asKnown()?.validity() ?: 0) +
             (if (background.asKnown() == null) 0 else 1) +
             (backgroundImages.asKnown()?.size ?: 0) +
+            (backgroundSize.asKnown()?.validity() ?: 0) +
             (if (category.asKnown() == null) 0 else 1) +
             (characterBook.asKnown()?.validity() ?: 0) +
             (if (characterCardSpec.asKnown() == null) 0 else 1) +
@@ -1738,6 +1820,386 @@ private constructor(
         override fun hashCode() = value.hashCode()
 
         override fun toString() = value.toString()
+    }
+
+    /** Image size */
+    class AvatarSize
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+    private constructor(
+        private val height: JsonField<Long>,
+        private val width: JsonField<Long>,
+        private val additionalProperties: MutableMap<String, JsonValue>,
+    ) {
+
+        @JsonCreator
+        private constructor(
+            @JsonProperty("height") @ExcludeMissing height: JsonField<Long> = JsonMissing.of(),
+            @JsonProperty("width") @ExcludeMissing width: JsonField<Long> = JsonMissing.of(),
+        ) : this(height, width, mutableMapOf())
+
+        /**
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun height(): Long = height.getRequired("height")
+
+        /**
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun width(): Long = width.getRequired("width")
+
+        /**
+         * Returns the raw JSON value of [height].
+         *
+         * Unlike [height], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("height") @ExcludeMissing fun _height(): JsonField<Long> = height
+
+        /**
+         * Returns the raw JSON value of [width].
+         *
+         * Unlike [width], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("width") @ExcludeMissing fun _width(): JsonField<Long> = width
+
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /**
+             * Returns a mutable builder for constructing an instance of [AvatarSize].
+             *
+             * The following fields are required:
+             * ```kotlin
+             * .height()
+             * .width()
+             * ```
+             */
+            fun builder() = Builder()
+        }
+
+        /** A builder for [AvatarSize]. */
+        class Builder internal constructor() {
+
+            private var height: JsonField<Long>? = null
+            private var width: JsonField<Long>? = null
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            internal fun from(avatarSize: AvatarSize) = apply {
+                height = avatarSize.height
+                width = avatarSize.width
+                additionalProperties = avatarSize.additionalProperties.toMutableMap()
+            }
+
+            fun height(height: Long) = height(JsonField.of(height))
+
+            /**
+             * Sets [Builder.height] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.height] with a well-typed [Long] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun height(height: JsonField<Long>) = apply { this.height = height }
+
+            fun width(width: Long) = width(JsonField.of(width))
+
+            /**
+             * Sets [Builder.width] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.width] with a well-typed [Long] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun width(width: JsonField<Long>) = apply { this.width = width }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [AvatarSize].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             *
+             * The following fields are required:
+             * ```kotlin
+             * .height()
+             * .width()
+             * ```
+             *
+             * @throws IllegalStateException if any required field is unset.
+             */
+            fun build(): AvatarSize =
+                AvatarSize(
+                    checkRequired("height", height),
+                    checkRequired("width", width),
+                    additionalProperties.toMutableMap(),
+                )
+        }
+
+        private var validated: Boolean = false
+
+        fun validate(): AvatarSize = apply {
+            if (validated) {
+                return@apply
+            }
+
+            height()
+            width()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: IntyInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        internal fun validity(): Int =
+            (if (height.asKnown() == null) 0 else 1) + (if (width.asKnown() == null) 0 else 1)
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is AvatarSize &&
+                height == other.height &&
+                width == other.width &&
+                additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy { Objects.hash(height, width, additionalProperties) }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() =
+            "AvatarSize{height=$height, width=$width, additionalProperties=$additionalProperties}"
+    }
+
+    /** Image size */
+    class BackgroundSize
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+    private constructor(
+        private val height: JsonField<Long>,
+        private val width: JsonField<Long>,
+        private val additionalProperties: MutableMap<String, JsonValue>,
+    ) {
+
+        @JsonCreator
+        private constructor(
+            @JsonProperty("height") @ExcludeMissing height: JsonField<Long> = JsonMissing.of(),
+            @JsonProperty("width") @ExcludeMissing width: JsonField<Long> = JsonMissing.of(),
+        ) : this(height, width, mutableMapOf())
+
+        /**
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun height(): Long = height.getRequired("height")
+
+        /**
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun width(): Long = width.getRequired("width")
+
+        /**
+         * Returns the raw JSON value of [height].
+         *
+         * Unlike [height], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("height") @ExcludeMissing fun _height(): JsonField<Long> = height
+
+        /**
+         * Returns the raw JSON value of [width].
+         *
+         * Unlike [width], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("width") @ExcludeMissing fun _width(): JsonField<Long> = width
+
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /**
+             * Returns a mutable builder for constructing an instance of [BackgroundSize].
+             *
+             * The following fields are required:
+             * ```kotlin
+             * .height()
+             * .width()
+             * ```
+             */
+            fun builder() = Builder()
+        }
+
+        /** A builder for [BackgroundSize]. */
+        class Builder internal constructor() {
+
+            private var height: JsonField<Long>? = null
+            private var width: JsonField<Long>? = null
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            internal fun from(backgroundSize: BackgroundSize) = apply {
+                height = backgroundSize.height
+                width = backgroundSize.width
+                additionalProperties = backgroundSize.additionalProperties.toMutableMap()
+            }
+
+            fun height(height: Long) = height(JsonField.of(height))
+
+            /**
+             * Sets [Builder.height] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.height] with a well-typed [Long] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun height(height: JsonField<Long>) = apply { this.height = height }
+
+            fun width(width: Long) = width(JsonField.of(width))
+
+            /**
+             * Sets [Builder.width] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.width] with a well-typed [Long] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun width(width: JsonField<Long>) = apply { this.width = width }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [BackgroundSize].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             *
+             * The following fields are required:
+             * ```kotlin
+             * .height()
+             * .width()
+             * ```
+             *
+             * @throws IllegalStateException if any required field is unset.
+             */
+            fun build(): BackgroundSize =
+                BackgroundSize(
+                    checkRequired("height", height),
+                    checkRequired("width", width),
+                    additionalProperties.toMutableMap(),
+                )
+        }
+
+        private var validated: Boolean = false
+
+        fun validate(): BackgroundSize = apply {
+            if (validated) {
+                return@apply
+            }
+
+            height()
+            width()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: IntyInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        internal fun validity(): Int =
+            (if (height.asKnown() == null) 0 else 1) + (if (width.asKnown() == null) 0 else 1)
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is BackgroundSize &&
+                height == other.height &&
+                width == other.width &&
+                additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy { Objects.hash(height, width, additionalProperties) }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() =
+            "BackgroundSize{height=$height, width=$width, additionalProperties=$additionalProperties}"
     }
 
     class CharacterBook
@@ -1936,6 +2398,7 @@ private constructor(
 
     /** Agent 元数据模型 */
     class MetaData
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val comment: JsonField<String>,
         private val score: JsonField<Long>,
@@ -2226,8 +2689,10 @@ private constructor(
             status == other.status &&
             alternateGreetings == other.alternateGreetings &&
             avatar == other.avatar &&
+            avatarSize == other.avatarSize &&
             background == other.background &&
             backgroundImages == other.backgroundImages &&
+            backgroundSize == other.backgroundSize &&
             category == other.category &&
             characterBook == other.characterBook &&
             characterCardSpec == other.characterCardSpec &&
@@ -2271,8 +2736,10 @@ private constructor(
             status,
             alternateGreetings,
             avatar,
+            avatarSize,
             background,
             backgroundImages,
+            backgroundSize,
             category,
             characterBook,
             characterCardSpec,
@@ -2310,5 +2777,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Agent{id=$id, createdAt=$createdAt, gender=$gender, name=$name, readableId=$readableId, status=$status, alternateGreetings=$alternateGreetings, avatar=$avatar, background=$background, backgroundImages=$backgroundImages, category=$category, characterBook=$characterBook, characterCardSpec=$characterCardSpec, characterVersion=$characterVersion, connectorCount=$connectorCount, creator=$creator, creatorId=$creatorId, creatorNotes=$creatorNotes, deletedAt=$deletedAt, extensions=$extensions, followerCount=$followerCount, intro=$intro, isFollowed=$isFollowed, llmConfig=$llmConfig, mainPrompt=$mainPrompt, messageExample=$messageExample, metaData=$metaData, modePrompt=$modePrompt, opening=$opening, openingAudioUrl=$openingAudioUrl, personality=$personality, photos=$photos, postHistoryInstructions=$postHistoryInstructions, prompt=$prompt, scenario=$scenario, settings=$settings, tags=$tags, updatedAt=$updatedAt, visibility=$visibility, voiceId=$voiceId, additionalProperties=$additionalProperties}"
+        "Agent{id=$id, createdAt=$createdAt, gender=$gender, name=$name, readableId=$readableId, status=$status, alternateGreetings=$alternateGreetings, avatar=$avatar, avatarSize=$avatarSize, background=$background, backgroundImages=$backgroundImages, backgroundSize=$backgroundSize, category=$category, characterBook=$characterBook, characterCardSpec=$characterCardSpec, characterVersion=$characterVersion, connectorCount=$connectorCount, creator=$creator, creatorId=$creatorId, creatorNotes=$creatorNotes, deletedAt=$deletedAt, extensions=$extensions, followerCount=$followerCount, intro=$intro, isFollowed=$isFollowed, llmConfig=$llmConfig, mainPrompt=$mainPrompt, messageExample=$messageExample, metaData=$metaData, modePrompt=$modePrompt, opening=$opening, openingAudioUrl=$openingAudioUrl, personality=$personality, photos=$photos, postHistoryInstructions=$postHistoryInstructions, prompt=$prompt, scenario=$scenario, settings=$settings, tags=$tags, updatedAt=$updatedAt, visibility=$visibility, voiceId=$voiceId, additionalProperties=$additionalProperties}"
 }

@@ -16,6 +16,7 @@ import java.util.Collections
 import java.util.Objects
 
 class SubscriptionVerifyResponse
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val code: JsonField<Long>,
     private val data: JsonField<Data>,
@@ -198,6 +199,7 @@ private constructor(
 
     /** 购买验证响应 */
     class Data
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val isVerified: JsonField<Boolean>,
         private val message: JsonField<String>,

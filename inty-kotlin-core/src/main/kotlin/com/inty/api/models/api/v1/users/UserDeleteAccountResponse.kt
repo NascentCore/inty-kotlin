@@ -18,6 +18,7 @@ import java.util.Collections
 import java.util.Objects
 
 class UserDeleteAccountResponse
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val code: JsonField<Long>,
     private val data: JsonField<Data>,
@@ -200,6 +201,7 @@ private constructor(
 
     /** 账户删除响应 */
     class Data
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val message: JsonField<String>,
         private val success: JsonField<Boolean>,

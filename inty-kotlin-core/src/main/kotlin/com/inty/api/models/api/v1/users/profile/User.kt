@@ -18,6 +18,7 @@ import java.util.Objects
 
 /** 返回给客户端的用户信息 */
 class User
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val id: JsonField<String>,
     private val authType: JsonField<String>,
