@@ -37,7 +37,7 @@ private constructor(
     fun code(): Long? = code.getNullable("code")
 
     /**
-     * AI角色
+     * AI角色，在 sqlalchemy 模型基础上添加额外多表查询来的数据
      *
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
      *   responded with an unexpected value).
@@ -114,7 +114,7 @@ private constructor(
          */
         fun code(code: JsonField<Long>) = apply { this.code = code }
 
-        /** AI角色 */
+        /** AI角色，在 sqlalchemy 模型基础上添加额外多表查询来的数据 */
         fun data(data: Agent?) = data(JsonField.ofNullable(data))
 
         /**
