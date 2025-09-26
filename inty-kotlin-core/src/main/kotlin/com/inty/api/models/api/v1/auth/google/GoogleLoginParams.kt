@@ -268,6 +268,7 @@ private constructor(
 
     /** Google认证请求 */
     class Body
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val idToken: JsonField<String>,
         private val userInfo: JsonField<UserInfo>,
@@ -460,6 +461,7 @@ private constructor(
 
     /** 用户信息 */
     class UserInfo
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val ageGroup: JsonField<String>,
         private val gender: JsonField<Gender>,

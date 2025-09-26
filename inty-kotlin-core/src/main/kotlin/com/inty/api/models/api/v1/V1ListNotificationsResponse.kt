@@ -19,6 +19,7 @@ import java.util.Collections
 import java.util.Objects
 
 class V1ListNotificationsResponse
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val code: JsonField<Long>,
     private val data: JsonField<Data>,
@@ -201,6 +202,7 @@ private constructor(
 
     /** Specific model for a paginated list of notification items. */
     class Data
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val items: JsonField<List<Item>>,
         private val page: JsonField<Long>,
@@ -465,6 +467,7 @@ private constructor(
 
         /** 通知项 */
         class Item
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
             private val id: JsonField<String>,
             private val content: JsonField<String>,

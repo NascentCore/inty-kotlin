@@ -302,6 +302,7 @@ private constructor(
 
     /** 购买验证请求 */
     class Body
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val productId: JsonField<String>,
         private val purchaseToken: JsonField<String>,

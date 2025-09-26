@@ -19,6 +19,7 @@ import java.util.Objects
 
 /** 订阅计划响应模型 */
 class SubscriptionPlan
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val id: JsonField<String>,
     private val createdAt: JsonField<OffsetDateTime>,

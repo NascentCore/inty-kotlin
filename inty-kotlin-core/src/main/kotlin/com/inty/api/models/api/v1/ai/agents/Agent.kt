@@ -21,6 +21,7 @@ import java.util.Objects
 
 /** AI角色 */
 class Agent
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val id: JsonField<String>,
     private val createdAt: JsonField<Long>,
@@ -1936,6 +1937,7 @@ private constructor(
 
     /** Agent 元数据模型 */
     class MetaData
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val comment: JsonField<String>,
         private val score: JsonField<Long>,

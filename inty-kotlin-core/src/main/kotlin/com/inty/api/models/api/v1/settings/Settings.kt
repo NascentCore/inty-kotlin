@@ -18,6 +18,7 @@ import java.util.Objects
 
 /** API 响应中的设置 */
 class Settings
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val id: JsonField<String>,
     private val createdAt: JsonField<OffsetDateTime>,

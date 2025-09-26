@@ -17,6 +17,7 @@ import java.util.Collections
 import java.util.Objects
 
 class ApiResponsePaginationDataAgent
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val code: JsonField<Long>,
     private val data: JsonField<Data>,
@@ -197,6 +198,7 @@ private constructor(
             (if (message.asKnown() == null) 0 else 1)
 
     class Data
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val list: JsonField<List<Agent>>,
         private val page: JsonField<Long>,

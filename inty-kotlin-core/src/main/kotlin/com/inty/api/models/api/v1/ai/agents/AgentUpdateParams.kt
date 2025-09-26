@@ -995,6 +995,7 @@ private constructor(
 
     /** 更新AI角色 */
     class Body
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val alternateGreetings: JsonField<List<String>>,
         private val avatar: JsonField<String>,
@@ -2477,6 +2478,7 @@ private constructor(
 
     /** Agent 元数据模型 */
     class MetaData
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val comment: JsonField<String>,
         private val score: JsonField<Long>,

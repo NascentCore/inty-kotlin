@@ -260,6 +260,7 @@ private constructor(
 
     /** 更新设置 */
     class Body
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val language: JsonField<String>,
         private val voiceEnabled: JsonField<Boolean>,

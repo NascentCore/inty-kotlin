@@ -17,6 +17,7 @@ import java.util.Collections
 import java.util.Objects
 
 class AdminProcessRefundResponse
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val code: JsonField<Long>,
     private val data: JsonField<Data>,
@@ -199,6 +200,7 @@ private constructor(
 
     /** 退款响应 */
     class Data
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val message: JsonField<String>,
         private val refundAmount: JsonField<Double>,

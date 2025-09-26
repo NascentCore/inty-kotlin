@@ -16,6 +16,7 @@ import java.util.Collections
 import java.util.Objects
 
 class AuthCreateGuestResponse
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val code: JsonField<Long>,
     private val data: JsonField<Data>,
@@ -196,6 +197,7 @@ private constructor(
 
     /** 游客响应 */
     class Data
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val token: JsonField<String>,
         private val guestId: JsonField<String>,

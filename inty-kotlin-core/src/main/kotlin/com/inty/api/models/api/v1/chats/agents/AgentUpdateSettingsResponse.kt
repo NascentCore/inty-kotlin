@@ -213,6 +213,7 @@ private constructor(
     }
 
     class ApiResponseChatSettings
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val code: JsonField<Long>,
         private val data: JsonField<ChatSettings>,

@@ -334,6 +334,7 @@ private constructor(
     override fun _queryParams(): QueryParams = additionalQueryParams
 
     class Body
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val messages: JsonField<List<Message>>,
         private val language: JsonField<String>,
@@ -607,6 +608,7 @@ private constructor(
     }
 
     class Message
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val content: JsonField<String>,
         private val role: JsonField<String>,

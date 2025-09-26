@@ -360,6 +360,7 @@ private constructor(
     override fun _queryParams(): QueryParams = additionalQueryParams
 
     class Body
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val reasonIds: JsonField<List<Long>>,
         private val targetId: JsonField<String>,
