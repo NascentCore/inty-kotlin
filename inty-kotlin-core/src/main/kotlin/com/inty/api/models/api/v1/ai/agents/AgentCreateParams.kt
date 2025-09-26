@@ -1025,6 +1025,7 @@ private constructor(
      * - 优先级：角色卡字段 > prompt字段
      */
     class Body
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val gender: JsonField<String>,
         private val name: JsonField<String>,
@@ -2540,6 +2541,7 @@ private constructor(
 
     /** Agent 元数据模型 */
     class MetaData
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val comment: JsonField<String>,
         private val score: JsonField<Long>,

@@ -399,6 +399,7 @@ private constructor(
 
     /** 更新用户信息 */
     class Body
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val ageGroup: JsonField<String>,
         private val avatar: JsonField<String>,

@@ -235,6 +235,7 @@ private constructor(
 
     /** 创建聊天 */
     class Body
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val agentId: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,

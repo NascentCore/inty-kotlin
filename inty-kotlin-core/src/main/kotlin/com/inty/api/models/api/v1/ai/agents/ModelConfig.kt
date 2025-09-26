@@ -16,6 +16,7 @@ import java.util.Objects
 
 /** AI模型配置 */
 class ModelConfig
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val apiKey: JsonField<String>,
     private val baseUrl: JsonField<String>,

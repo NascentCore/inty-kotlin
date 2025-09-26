@@ -309,6 +309,7 @@ private constructor(
 
     /** 退款请求 */
     class Body
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val subscriptionId: JsonField<String>,
         private val reason: JsonField<String>,

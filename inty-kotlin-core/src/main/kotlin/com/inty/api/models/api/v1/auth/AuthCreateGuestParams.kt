@@ -277,6 +277,7 @@ private constructor(
 
     /** 游客请求 */
     class Body
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val ageGroup: JsonField<String>,
         private val deviceId: JsonField<String>,

@@ -19,6 +19,7 @@ import java.util.Collections
 import java.util.Objects
 
 class ApiResponseSubscriptionStatus
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val code: JsonField<Long>,
     private val data: JsonField<Data>,
@@ -202,6 +203,7 @@ private constructor(
 
     /** 订阅状态响应 */
     class Data
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val isSubscribed: JsonField<Boolean>,
         private val subscriptionStatus: JsonField<String>,
@@ -933,6 +935,7 @@ private constructor(
 
         /** 权益功能信息 */
         class FeatureList
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
             private val description: JsonField<String>,
             private val icon: JsonField<String>,

@@ -336,6 +336,7 @@ private constructor(
 
     /** 更新聊天设置 */
     class Body
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val language: JsonField<String>,
         private val premiumMode: JsonField<Boolean>,

@@ -19,6 +19,7 @@ import java.util.Objects
 
 /** 聊天 */
 class Chat
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val id: JsonField<String>,
     private val agentId: JsonField<String>,

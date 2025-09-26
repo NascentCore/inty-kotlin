@@ -16,6 +16,7 @@ import java.util.Collections
 import java.util.Objects
 
 class DeletionCheckEligibilityResponse
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val code: JsonField<Long>,
     private val data: JsonField<Data>,
@@ -206,6 +207,7 @@ private constructor(
 
     /** 删除检查响应 */
     class Data
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val canDelete: JsonField<Boolean>,
         private val activeSubscription: JsonField<Boolean>,

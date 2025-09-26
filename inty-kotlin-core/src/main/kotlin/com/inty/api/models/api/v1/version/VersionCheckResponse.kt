@@ -18,6 +18,7 @@ import java.util.Collections
 import java.util.Objects
 
 class VersionCheckResponse
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val code: JsonField<Long>,
     private val data: JsonField<Data>,
@@ -198,6 +199,7 @@ private constructor(
 
     /** 版本检查响应模型 */
     class Data
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val currentVersion: JsonField<String>,
         private val downloadUrl: JsonField<String>,
