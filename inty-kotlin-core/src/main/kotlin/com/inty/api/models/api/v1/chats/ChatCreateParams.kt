@@ -33,11 +33,24 @@ private constructor(
     fun agentId(): String = body.agentId()
 
     /**
+     * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
+     *   responded with an unexpected value).
+     */
+    fun requestId(): String? = body.requestId()
+
+    /**
      * Returns the raw JSON value of [agentId].
      *
      * Unlike [agentId], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _agentId(): JsonField<String> = body._agentId()
+
+    /**
+     * Returns the raw JSON value of [requestId].
+     *
+     * Unlike [requestId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _requestId(): JsonField<String> = body._requestId()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -81,6 +94,7 @@ private constructor(
          * This is generally only useful if you are already constructing the body separately.
          * Otherwise, it's more convenient to use the top-level setters instead:
          * - [agentId]
+         * - [requestId]
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
@@ -93,6 +107,17 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun agentId(agentId: JsonField<String>) = apply { body.agentId(agentId) }
+
+        fun requestId(requestId: String?) = apply { body.requestId(requestId) }
+
+        /**
+         * Sets [Builder.requestId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.requestId] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun requestId(requestId: JsonField<String>) = apply { body.requestId(requestId) }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
@@ -238,13 +263,17 @@ private constructor(
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val agentId: JsonField<String>,
+        private val requestId: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
         @JsonCreator
         private constructor(
-            @JsonProperty("agent_id") @ExcludeMissing agentId: JsonField<String> = JsonMissing.of()
-        ) : this(agentId, mutableMapOf())
+            @JsonProperty("agent_id") @ExcludeMissing agentId: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("request_id")
+            @ExcludeMissing
+            requestId: JsonField<String> = JsonMissing.of(),
+        ) : this(agentId, requestId, mutableMapOf())
 
         /**
          * @throws IntyInvalidDataException if the JSON field has an unexpected type or is
@@ -253,11 +282,24 @@ private constructor(
         fun agentId(): String = agentId.getRequired("agent_id")
 
         /**
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun requestId(): String? = requestId.getNullable("request_id")
+
+        /**
          * Returns the raw JSON value of [agentId].
          *
          * Unlike [agentId], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("agent_id") @ExcludeMissing fun _agentId(): JsonField<String> = agentId
+
+        /**
+         * Returns the raw JSON value of [requestId].
+         *
+         * Unlike [requestId], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("request_id") @ExcludeMissing fun _requestId(): JsonField<String> = requestId
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -288,10 +330,12 @@ private constructor(
         class Builder internal constructor() {
 
             private var agentId: JsonField<String>? = null
+            private var requestId: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             internal fun from(body: Body) = apply {
                 agentId = body.agentId
+                requestId = body.requestId
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
@@ -305,6 +349,17 @@ private constructor(
              * supported value.
              */
             fun agentId(agentId: JsonField<String>) = apply { this.agentId = agentId }
+
+            fun requestId(requestId: String?) = requestId(JsonField.ofNullable(requestId))
+
+            /**
+             * Sets [Builder.requestId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.requestId] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun requestId(requestId: JsonField<String>) = apply { this.requestId = requestId }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -338,7 +393,11 @@ private constructor(
              * @throws IllegalStateException if any required field is unset.
              */
             fun build(): Body =
-                Body(checkRequired("agentId", agentId), additionalProperties.toMutableMap())
+                Body(
+                    checkRequired("agentId", agentId),
+                    requestId,
+                    additionalProperties.toMutableMap(),
+                )
         }
 
         private var validated: Boolean = false
@@ -349,6 +408,7 @@ private constructor(
             }
 
             agentId()
+            requestId()
             validated = true
         }
 
@@ -366,7 +426,8 @@ private constructor(
          *
          * Used for best match union deserialization.
          */
-        internal fun validity(): Int = (if (agentId.asKnown() == null) 0 else 1)
+        internal fun validity(): Int =
+            (if (agentId.asKnown() == null) 0 else 1) + (if (requestId.asKnown() == null) 0 else 1)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -375,15 +436,16 @@ private constructor(
 
             return other is Body &&
                 agentId == other.agentId &&
+                requestId == other.requestId &&
                 additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy { Objects.hash(agentId, additionalProperties) }
+        private val hashCode: Int by lazy { Objects.hash(agentId, requestId, additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{agentId=$agentId, additionalProperties=$additionalProperties}"
+            "Body{agentId=$agentId, requestId=$requestId, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

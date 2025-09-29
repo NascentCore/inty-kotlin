@@ -23,7 +23,9 @@ internal class DeviceServiceTest {
         val deviceService = client.api().v1().users().device()
 
         val apiResponse =
-            deviceService.register(DeviceRegisterParams.builder().token("token").build())
+            deviceService.register(
+                DeviceRegisterParams.builder().token("token").requestId("request_id").build()
+            )
 
         apiResponse.validate()
     }

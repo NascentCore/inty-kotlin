@@ -124,6 +124,12 @@ private constructor(
     fun isActive(): Boolean? = body.isActive()
 
     /**
+     * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
+     *   responded with an unexpected value).
+     */
+    fun requestId(): String? = body.requestId()
+
+    /**
      * 排序顺序
      *
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
@@ -218,6 +224,13 @@ private constructor(
      * Unlike [isActive], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _isActive(): JsonField<Boolean> = body._isActive()
+
+    /**
+     * Returns the raw JSON value of [requestId].
+     *
+     * Unlike [requestId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _requestId(): JsonField<String> = body._requestId()
 
     /**
      * Returns the raw JSON value of [sortOrder].
@@ -437,6 +450,17 @@ private constructor(
          */
         fun isActive(isActive: JsonField<Boolean>) = apply { body.isActive(isActive) }
 
+        fun requestId(requestId: String?) = apply { body.requestId(requestId) }
+
+        /**
+         * Sets [Builder.requestId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.requestId] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun requestId(requestId: JsonField<String>) = apply { body.requestId(requestId) }
+
         /** 排序顺序 */
         fun sortOrder(sortOrder: Long) = apply { body.sortOrder(sortOrder) }
 
@@ -606,6 +630,7 @@ private constructor(
         private val discountRate: JsonField<Double>,
         private val features: JsonField<Features>,
         private val isActive: JsonField<Boolean>,
+        private val requestId: JsonField<String>,
         private val sortOrder: JsonField<Long>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
@@ -644,6 +669,9 @@ private constructor(
             @JsonProperty("is_active")
             @ExcludeMissing
             isActive: JsonField<Boolean> = JsonMissing.of(),
+            @JsonProperty("request_id")
+            @ExcludeMissing
+            requestId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("sort_order")
             @ExcludeMissing
             sortOrder: JsonField<Long> = JsonMissing.of(),
@@ -660,6 +688,7 @@ private constructor(
             discountRate,
             features,
             isActive,
+            requestId,
             sortOrder,
             mutableMapOf(),
         )
@@ -761,6 +790,12 @@ private constructor(
          *   server responded with an unexpected value).
          */
         fun isActive(): Boolean? = isActive.getNullable("is_active")
+
+        /**
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun requestId(): String? = requestId.getNullable("request_id")
 
         /**
          * 排序顺序
@@ -874,6 +909,13 @@ private constructor(
         @JsonProperty("is_active") @ExcludeMissing fun _isActive(): JsonField<Boolean> = isActive
 
         /**
+         * Returns the raw JSON value of [requestId].
+         *
+         * Unlike [requestId], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("request_id") @ExcludeMissing fun _requestId(): JsonField<String> = requestId
+
+        /**
          * Returns the raw JSON value of [sortOrder].
          *
          * Unlike [sortOrder], this method doesn't throw if the JSON field has an unexpected type.
@@ -923,6 +965,7 @@ private constructor(
             private var discountRate: JsonField<Double> = JsonMissing.of()
             private var features: JsonField<Features> = JsonMissing.of()
             private var isActive: JsonField<Boolean> = JsonMissing.of()
+            private var requestId: JsonField<String> = JsonMissing.of()
             private var sortOrder: JsonField<Long> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -939,6 +982,7 @@ private constructor(
                 discountRate = body.discountRate
                 features = body.features
                 isActive = body.isActive
+                requestId = body.requestId
                 sortOrder = body.sortOrder
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
@@ -1106,6 +1150,17 @@ private constructor(
              */
             fun isActive(isActive: JsonField<Boolean>) = apply { this.isActive = isActive }
 
+            fun requestId(requestId: String?) = requestId(JsonField.ofNullable(requestId))
+
+            /**
+             * Sets [Builder.requestId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.requestId] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun requestId(requestId: JsonField<String>) = apply { this.requestId = requestId }
+
             /** 排序顺序 */
             fun sortOrder(sortOrder: Long) = sortOrder(JsonField.of(sortOrder))
 
@@ -1166,6 +1221,7 @@ private constructor(
                     discountRate,
                     features,
                     isActive,
+                    requestId,
                     sortOrder,
                     additionalProperties.toMutableMap(),
                 )
@@ -1190,6 +1246,7 @@ private constructor(
             discountRate()
             features()?.validate()
             isActive()
+            requestId()
             sortOrder()
             validated = true
         }
@@ -1221,6 +1278,7 @@ private constructor(
                 (if (discountRate.asKnown() == null) 0 else 1) +
                 (features.asKnown()?.validity() ?: 0) +
                 (if (isActive.asKnown() == null) 0 else 1) +
+                (if (requestId.asKnown() == null) 0 else 1) +
                 (if (sortOrder.asKnown() == null) 0 else 1)
 
         override fun equals(other: Any?): Boolean {
@@ -1241,6 +1299,7 @@ private constructor(
                 discountRate == other.discountRate &&
                 features == other.features &&
                 isActive == other.isActive &&
+                requestId == other.requestId &&
                 sortOrder == other.sortOrder &&
                 additionalProperties == other.additionalProperties
         }
@@ -1259,6 +1318,7 @@ private constructor(
                 discountRate,
                 features,
                 isActive,
+                requestId,
                 sortOrder,
                 additionalProperties,
             )
@@ -1267,7 +1327,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{googlePlayProductId=$googlePlayProductId, name=$name, planType=$planType, price=$price, agentCreationLimit=$agentCreationLimit, backgroundGenerationLimitPerDay=$backgroundGenerationLimitPerDay, chatLimitPerDay=$chatLimitPerDay, currency=$currency, description=$description, discountRate=$discountRate, features=$features, isActive=$isActive, sortOrder=$sortOrder, additionalProperties=$additionalProperties}"
+            "Body{googlePlayProductId=$googlePlayProductId, name=$name, planType=$planType, price=$price, agentCreationLimit=$agentCreationLimit, backgroundGenerationLimitPerDay=$backgroundGenerationLimitPerDay, chatLimitPerDay=$chatLimitPerDay, currency=$currency, description=$description, discountRate=$discountRate, features=$features, isActive=$isActive, requestId=$requestId, sortOrder=$sortOrder, additionalProperties=$additionalProperties}"
     }
 
     /** 功能权益配置 */

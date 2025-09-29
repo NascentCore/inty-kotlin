@@ -53,6 +53,12 @@ private constructor(
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
      *   responded with an unexpected value).
      */
+    fun requestId(): String? = body.requestId()
+
+    /**
+     * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
+     *   responded with an unexpected value).
+     */
     fun stream(): Boolean? = body.stream()
 
     /**
@@ -75,6 +81,13 @@ private constructor(
      * Unlike [model], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _model(): JsonField<String> = body._model()
+
+    /**
+     * Returns the raw JSON value of [requestId].
+     *
+     * Unlike [requestId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _requestId(): JsonField<String> = body._requestId()
 
     /**
      * Returns the raw JSON value of [stream].
@@ -131,7 +144,9 @@ private constructor(
          * - [messages]
          * - [language]
          * - [model]
+         * - [requestId]
          * - [stream]
+         * - etc.
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
@@ -172,6 +187,17 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun model(model: JsonField<String>) = apply { body.model(model) }
+
+        fun requestId(requestId: String?) = apply { body.requestId(requestId) }
+
+        /**
+         * Sets [Builder.requestId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.requestId] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun requestId(requestId: JsonField<String>) = apply { body.requestId(requestId) }
 
         fun stream(stream: Boolean) = apply { body.stream(stream) }
 
@@ -339,6 +365,7 @@ private constructor(
         private val messages: JsonField<List<Message>>,
         private val language: JsonField<String>,
         private val model: JsonField<String>,
+        private val requestId: JsonField<String>,
         private val stream: JsonField<Boolean>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
@@ -352,8 +379,11 @@ private constructor(
             @ExcludeMissing
             language: JsonField<String> = JsonMissing.of(),
             @JsonProperty("model") @ExcludeMissing model: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("request_id")
+            @ExcludeMissing
+            requestId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("stream") @ExcludeMissing stream: JsonField<Boolean> = JsonMissing.of(),
-        ) : this(messages, language, model, stream, mutableMapOf())
+        ) : this(messages, language, model, requestId, stream, mutableMapOf())
 
         /**
          * @throws IntyInvalidDataException if the JSON field has an unexpected type or is
@@ -372,6 +402,12 @@ private constructor(
          *   server responded with an unexpected value).
          */
         fun model(): String? = model.getNullable("model")
+
+        /**
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun requestId(): String? = requestId.getNullable("request_id")
 
         /**
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -401,6 +437,13 @@ private constructor(
          * Unlike [model], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("model") @ExcludeMissing fun _model(): JsonField<String> = model
+
+        /**
+         * Returns the raw JSON value of [requestId].
+         *
+         * Unlike [requestId], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("request_id") @ExcludeMissing fun _requestId(): JsonField<String> = requestId
 
         /**
          * Returns the raw JSON value of [stream].
@@ -440,6 +483,7 @@ private constructor(
             private var messages: JsonField<MutableList<Message>>? = null
             private var language: JsonField<String> = JsonMissing.of()
             private var model: JsonField<String> = JsonMissing.of()
+            private var requestId: JsonField<String> = JsonMissing.of()
             private var stream: JsonField<Boolean> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -447,6 +491,7 @@ private constructor(
                 messages = body.messages.map { it.toMutableList() }
                 language = body.language
                 model = body.model
+                requestId = body.requestId
                 stream = body.stream
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
@@ -498,6 +543,17 @@ private constructor(
              */
             fun model(model: JsonField<String>) = apply { this.model = model }
 
+            fun requestId(requestId: String?) = requestId(JsonField.ofNullable(requestId))
+
+            /**
+             * Sets [Builder.requestId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.requestId] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun requestId(requestId: JsonField<String>) = apply { this.requestId = requestId }
+
             fun stream(stream: Boolean) = stream(JsonField.of(stream))
 
             /**
@@ -545,6 +601,7 @@ private constructor(
                     checkRequired("messages", messages).map { it.toImmutable() },
                     language,
                     model,
+                    requestId,
                     stream,
                     additionalProperties.toMutableMap(),
                 )
@@ -560,6 +617,7 @@ private constructor(
             messages().forEach { it.validate() }
             language()
             model()
+            requestId()
             stream()
             validated = true
         }
@@ -582,6 +640,7 @@ private constructor(
             (messages.asKnown()?.sumOf { it.validity().toInt() } ?: 0) +
                 (if (language.asKnown() == null) 0 else 1) +
                 (if (model.asKnown() == null) 0 else 1) +
+                (if (requestId.asKnown() == null) 0 else 1) +
                 (if (stream.asKnown() == null) 0 else 1)
 
         override fun equals(other: Any?): Boolean {
@@ -593,18 +652,19 @@ private constructor(
                 messages == other.messages &&
                 language == other.language &&
                 model == other.model &&
+                requestId == other.requestId &&
                 stream == other.stream &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(messages, language, model, stream, additionalProperties)
+            Objects.hash(messages, language, model, requestId, stream, additionalProperties)
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{messages=$messages, language=$language, model=$model, stream=$stream, additionalProperties=$additionalProperties}"
+            "Body{messages=$messages, language=$language, model=$model, requestId=$requestId, stream=$stream, additionalProperties=$additionalProperties}"
     }
 
     class Message

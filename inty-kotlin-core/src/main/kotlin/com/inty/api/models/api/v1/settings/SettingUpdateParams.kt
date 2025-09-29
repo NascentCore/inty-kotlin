@@ -35,6 +35,12 @@ private constructor(
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
      *   responded with an unexpected value).
      */
+    fun requestId(): String? = body.requestId()
+
+    /**
+     * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
+     *   responded with an unexpected value).
+     */
     fun voiceEnabled(): Boolean? = body.voiceEnabled()
 
     /**
@@ -43,6 +49,13 @@ private constructor(
      * Unlike [language], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _language(): JsonField<String> = body._language()
+
+    /**
+     * Returns the raw JSON value of [requestId].
+     *
+     * Unlike [requestId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _requestId(): JsonField<String> = body._requestId()
 
     /**
      * Returns the raw JSON value of [voiceEnabled].
@@ -88,6 +101,7 @@ private constructor(
          * This is generally only useful if you are already constructing the body separately.
          * Otherwise, it's more convenient to use the top-level setters instead:
          * - [language]
+         * - [requestId]
          * - [voiceEnabled]
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
@@ -101,6 +115,17 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun language(language: JsonField<String>) = apply { body.language(language) }
+
+        fun requestId(requestId: String?) = apply { body.requestId(requestId) }
+
+        /**
+         * Sets [Builder.requestId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.requestId] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun requestId(requestId: JsonField<String>) = apply { body.requestId(requestId) }
 
         fun voiceEnabled(voiceEnabled: Boolean?) = apply { body.voiceEnabled(voiceEnabled) }
 
@@ -263,6 +288,7 @@ private constructor(
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val language: JsonField<String>,
+        private val requestId: JsonField<String>,
         private val voiceEnabled: JsonField<Boolean>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
@@ -272,16 +298,25 @@ private constructor(
             @JsonProperty("language")
             @ExcludeMissing
             language: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("request_id")
+            @ExcludeMissing
+            requestId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("voice_enabled")
             @ExcludeMissing
             voiceEnabled: JsonField<Boolean> = JsonMissing.of(),
-        ) : this(language, voiceEnabled, mutableMapOf())
+        ) : this(language, requestId, voiceEnabled, mutableMapOf())
 
         /**
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
          */
         fun language(): String? = language.getNullable("language")
+
+        /**
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun requestId(): String? = requestId.getNullable("request_id")
 
         /**
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -295,6 +330,13 @@ private constructor(
          * Unlike [language], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("language") @ExcludeMissing fun _language(): JsonField<String> = language
+
+        /**
+         * Returns the raw JSON value of [requestId].
+         *
+         * Unlike [requestId], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("request_id") @ExcludeMissing fun _requestId(): JsonField<String> = requestId
 
         /**
          * Returns the raw JSON value of [voiceEnabled].
@@ -328,11 +370,13 @@ private constructor(
         class Builder internal constructor() {
 
             private var language: JsonField<String> = JsonMissing.of()
+            private var requestId: JsonField<String> = JsonMissing.of()
             private var voiceEnabled: JsonField<Boolean> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             internal fun from(body: Body) = apply {
                 language = body.language
+                requestId = body.requestId
                 voiceEnabled = body.voiceEnabled
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
@@ -347,6 +391,17 @@ private constructor(
              * supported value.
              */
             fun language(language: JsonField<String>) = apply { this.language = language }
+
+            fun requestId(requestId: String?) = requestId(JsonField.ofNullable(requestId))
+
+            /**
+             * Sets [Builder.requestId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.requestId] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun requestId(requestId: JsonField<String>) = apply { this.requestId = requestId }
 
             fun voiceEnabled(voiceEnabled: Boolean?) =
                 voiceEnabled(JsonField.ofNullable(voiceEnabled))
@@ -393,7 +448,8 @@ private constructor(
              *
              * Further updates to this [Builder] will not mutate the returned instance.
              */
-            fun build(): Body = Body(language, voiceEnabled, additionalProperties.toMutableMap())
+            fun build(): Body =
+                Body(language, requestId, voiceEnabled, additionalProperties.toMutableMap())
         }
 
         private var validated: Boolean = false
@@ -404,6 +460,7 @@ private constructor(
             }
 
             language()
+            requestId()
             voiceEnabled()
             validated = true
         }
@@ -424,6 +481,7 @@ private constructor(
          */
         internal fun validity(): Int =
             (if (language.asKnown() == null) 0 else 1) +
+                (if (requestId.asKnown() == null) 0 else 1) +
                 (if (voiceEnabled.asKnown() == null) 0 else 1)
 
         override fun equals(other: Any?): Boolean {
@@ -433,18 +491,19 @@ private constructor(
 
             return other is Body &&
                 language == other.language &&
+                requestId == other.requestId &&
                 voiceEnabled == other.voiceEnabled &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(language, voiceEnabled, additionalProperties)
+            Objects.hash(language, requestId, voiceEnabled, additionalProperties)
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{language=$language, voiceEnabled=$voiceEnabled, additionalProperties=$additionalProperties}"
+            "Body{language=$language, requestId=$requestId, voiceEnabled=$voiceEnabled, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

@@ -24,7 +24,10 @@ internal class ChatServiceTest {
                 .build()
         val chatService = client.api().v1().chats()
 
-        val chat = chatService.create(ChatCreateParams.builder().agentId("agent_id").build())
+        val chat =
+            chatService.create(
+                ChatCreateParams.builder().agentId("agent_id").requestId("request_id").build()
+            )
 
         chat.validate()
     }
@@ -81,6 +84,7 @@ internal class ChatServiceTest {
                     )
                     .language("language")
                     .model("model")
+                    .requestId("request_id")
                     .stream(true)
                     .build()
             )

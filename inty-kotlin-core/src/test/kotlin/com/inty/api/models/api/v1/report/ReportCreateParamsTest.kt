@@ -15,6 +15,7 @@ internal class ReportCreateParamsTest {
             .targetType(ReportCreateParams.TargetType.USER)
             .description("description")
             .addImageUrl("string")
+            .requestId("request_id")
             .build()
     }
 
@@ -27,6 +28,7 @@ internal class ReportCreateParamsTest {
                 .targetType(ReportCreateParams.TargetType.USER)
                 .description("description")
                 .addImageUrl("string")
+                .requestId("request_id")
                 .build()
 
         val body = params._body()
@@ -36,6 +38,7 @@ internal class ReportCreateParamsTest {
         assertThat(body.targetType()).isEqualTo(ReportCreateParams.TargetType.USER)
         assertThat(body.description()).isEqualTo("description")
         assertThat(body.imageUrls()).containsExactly("string")
+        assertThat(body.requestId()).isEqualTo("request_id")
     }
 
     @Test

@@ -30,6 +30,7 @@ internal class ReportServiceAsyncTest {
                     .targetType(ReportCreateParams.TargetType.USER)
                     .description("description")
                     .addImageUrl("string")
+                    .requestId("request_id")
                     .build()
             )
 

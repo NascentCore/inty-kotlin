@@ -48,6 +48,7 @@ internal class ProfileServiceTest {
                     .gender(Gender.MALE)
                     .nickname("nickname")
                     .phone("phone")
+                    .requestId("request_id")
                     .systemLanguage("system_language")
                     .build()
             )

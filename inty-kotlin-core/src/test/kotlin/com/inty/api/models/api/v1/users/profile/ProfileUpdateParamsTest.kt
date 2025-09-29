@@ -17,6 +17,7 @@ internal class ProfileUpdateParamsTest {
             .gender(Gender.MALE)
             .nickname("nickname")
             .phone("phone")
+            .requestId("request_id")
             .systemLanguage("system_language")
             .build()
     }
@@ -32,6 +33,7 @@ internal class ProfileUpdateParamsTest {
                 .gender(Gender.MALE)
                 .nickname("nickname")
                 .phone("phone")
+                .requestId("request_id")
                 .systemLanguage("system_language")
                 .build()
 
@@ -44,6 +46,7 @@ internal class ProfileUpdateParamsTest {
         assertThat(body.gender()).isEqualTo(Gender.MALE)
         assertThat(body.nickname()).isEqualTo("nickname")
         assertThat(body.phone()).isEqualTo("phone")
+        assertThat(body.requestId()).isEqualTo("request_id")
         assertThat(body.systemLanguage()).isEqualTo("system_language")
     }
 

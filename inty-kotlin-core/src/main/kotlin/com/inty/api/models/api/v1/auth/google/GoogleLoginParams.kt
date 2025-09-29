@@ -34,6 +34,12 @@ private constructor(
     fun idToken(): String = body.idToken()
 
     /**
+     * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
+     *   responded with an unexpected value).
+     */
+    fun requestId(): String? = body.requestId()
+
+    /**
      * 用户信息
      *
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
@@ -47,6 +53,13 @@ private constructor(
      * Unlike [idToken], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _idToken(): JsonField<String> = body._idToken()
+
+    /**
+     * Returns the raw JSON value of [requestId].
+     *
+     * Unlike [requestId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _requestId(): JsonField<String> = body._requestId()
 
     /**
      * Returns the raw JSON value of [userInfo].
@@ -97,6 +110,7 @@ private constructor(
          * This is generally only useful if you are already constructing the body separately.
          * Otherwise, it's more convenient to use the top-level setters instead:
          * - [idToken]
+         * - [requestId]
          * - [userInfo]
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
@@ -110,6 +124,17 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun idToken(idToken: JsonField<String>) = apply { body.idToken(idToken) }
+
+        fun requestId(requestId: String?) = apply { body.requestId(requestId) }
+
+        /**
+         * Sets [Builder.requestId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.requestId] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun requestId(requestId: JsonField<String>) = apply { body.requestId(requestId) }
 
         /** 用户信息 */
         fun userInfo(userInfo: UserInfo?) = apply { body.userInfo(userInfo) }
@@ -271,6 +296,7 @@ private constructor(
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val idToken: JsonField<String>,
+        private val requestId: JsonField<String>,
         private val userInfo: JsonField<UserInfo>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
@@ -278,16 +304,25 @@ private constructor(
         @JsonCreator
         private constructor(
             @JsonProperty("id_token") @ExcludeMissing idToken: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("request_id")
+            @ExcludeMissing
+            requestId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("user_info")
             @ExcludeMissing
             userInfo: JsonField<UserInfo> = JsonMissing.of(),
-        ) : this(idToken, userInfo, mutableMapOf())
+        ) : this(idToken, requestId, userInfo, mutableMapOf())
 
         /**
          * @throws IntyInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun idToken(): String = idToken.getRequired("id_token")
+
+        /**
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun requestId(): String? = requestId.getNullable("request_id")
 
         /**
          * 用户信息
@@ -303,6 +338,13 @@ private constructor(
          * Unlike [idToken], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("id_token") @ExcludeMissing fun _idToken(): JsonField<String> = idToken
+
+        /**
+         * Returns the raw JSON value of [requestId].
+         *
+         * Unlike [requestId], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("request_id") @ExcludeMissing fun _requestId(): JsonField<String> = requestId
 
         /**
          * Returns the raw JSON value of [userInfo].
@@ -340,11 +382,13 @@ private constructor(
         class Builder internal constructor() {
 
             private var idToken: JsonField<String>? = null
+            private var requestId: JsonField<String> = JsonMissing.of()
             private var userInfo: JsonField<UserInfo> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             internal fun from(body: Body) = apply {
                 idToken = body.idToken
+                requestId = body.requestId
                 userInfo = body.userInfo
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
@@ -359,6 +403,17 @@ private constructor(
              * supported value.
              */
             fun idToken(idToken: JsonField<String>) = apply { this.idToken = idToken }
+
+            fun requestId(requestId: String?) = requestId(JsonField.ofNullable(requestId))
+
+            /**
+             * Sets [Builder.requestId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.requestId] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun requestId(requestId: JsonField<String>) = apply { this.requestId = requestId }
 
             /** 用户信息 */
             fun userInfo(userInfo: UserInfo?) = userInfo(JsonField.ofNullable(userInfo))
@@ -406,6 +461,7 @@ private constructor(
             fun build(): Body =
                 Body(
                     checkRequired("idToken", idToken),
+                    requestId,
                     userInfo,
                     additionalProperties.toMutableMap(),
                 )
@@ -419,6 +475,7 @@ private constructor(
             }
 
             idToken()
+            requestId()
             userInfo()?.validate()
             validated = true
         }
@@ -438,7 +495,9 @@ private constructor(
          * Used for best match union deserialization.
          */
         internal fun validity(): Int =
-            (if (idToken.asKnown() == null) 0 else 1) + (userInfo.asKnown()?.validity() ?: 0)
+            (if (idToken.asKnown() == null) 0 else 1) +
+                (if (requestId.asKnown() == null) 0 else 1) +
+                (userInfo.asKnown()?.validity() ?: 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -447,16 +506,19 @@ private constructor(
 
             return other is Body &&
                 idToken == other.idToken &&
+                requestId == other.requestId &&
                 userInfo == other.userInfo &&
                 additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy { Objects.hash(idToken, userInfo, additionalProperties) }
+        private val hashCode: Int by lazy {
+            Objects.hash(idToken, requestId, userInfo, additionalProperties)
+        }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{idToken=$idToken, userInfo=$userInfo, additionalProperties=$additionalProperties}"
+            "Body{idToken=$idToken, requestId=$requestId, userInfo=$userInfo, additionalProperties=$additionalProperties}"
     }
 
     /** 用户信息 */

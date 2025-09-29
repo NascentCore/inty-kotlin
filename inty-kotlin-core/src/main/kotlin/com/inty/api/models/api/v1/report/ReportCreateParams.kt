@@ -60,6 +60,12 @@ private constructor(
     fun imageUrls(): List<String>? = body.imageUrls()
 
     /**
+     * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
+     *   responded with an unexpected value).
+     */
+    fun requestId(): String? = body.requestId()
+
+    /**
      * Returns the raw JSON value of [reasonIds].
      *
      * Unlike [reasonIds], this method doesn't throw if the JSON field has an unexpected type.
@@ -93,6 +99,13 @@ private constructor(
      * Unlike [imageUrls], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _imageUrls(): JsonField<List<String>> = body._imageUrls()
+
+    /**
+     * Returns the raw JSON value of [requestId].
+     *
+     * Unlike [requestId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _requestId(): JsonField<String> = body._requestId()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -213,6 +226,17 @@ private constructor(
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
         fun addImageUrl(imageUrl: String) = apply { body.addImageUrl(imageUrl) }
+
+        fun requestId(requestId: String?) = apply { body.requestId(requestId) }
+
+        /**
+         * Sets [Builder.requestId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.requestId] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun requestId(requestId: JsonField<String>) = apply { body.requestId(requestId) }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
@@ -367,6 +391,7 @@ private constructor(
         private val targetType: JsonField<TargetType>,
         private val description: JsonField<String>,
         private val imageUrls: JsonField<List<String>>,
+        private val requestId: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -387,7 +412,10 @@ private constructor(
             @JsonProperty("image_urls")
             @ExcludeMissing
             imageUrls: JsonField<List<String>> = JsonMissing.of(),
-        ) : this(reasonIds, targetId, targetType, description, imageUrls, mutableMapOf())
+            @JsonProperty("request_id")
+            @ExcludeMissing
+            requestId: JsonField<String> = JsonMissing.of(),
+        ) : this(reasonIds, targetId, targetType, description, imageUrls, requestId, mutableMapOf())
 
         /**
          * @throws IntyInvalidDataException if the JSON field has an unexpected type or is
@@ -418,6 +446,12 @@ private constructor(
          *   server responded with an unexpected value).
          */
         fun imageUrls(): List<String>? = imageUrls.getNullable("image_urls")
+
+        /**
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun requestId(): String? = requestId.getNullable("request_id")
 
         /**
          * Returns the raw JSON value of [reasonIds].
@@ -462,6 +496,13 @@ private constructor(
         @ExcludeMissing
         fun _imageUrls(): JsonField<List<String>> = imageUrls
 
+        /**
+         * Returns the raw JSON value of [requestId].
+         *
+         * Unlike [requestId], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("request_id") @ExcludeMissing fun _requestId(): JsonField<String> = requestId
+
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
             additionalProperties.put(key, value)
@@ -497,6 +538,7 @@ private constructor(
             private var targetType: JsonField<TargetType>? = null
             private var description: JsonField<String> = JsonMissing.of()
             private var imageUrls: JsonField<MutableList<String>>? = null
+            private var requestId: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             internal fun from(body: Body) = apply {
@@ -505,6 +547,7 @@ private constructor(
                 targetType = body.targetType
                 description = body.description
                 imageUrls = body.imageUrls.map { it.toMutableList() }
+                requestId = body.requestId
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
@@ -595,6 +638,17 @@ private constructor(
                     }
             }
 
+            fun requestId(requestId: String?) = requestId(JsonField.ofNullable(requestId))
+
+            /**
+             * Sets [Builder.requestId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.requestId] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun requestId(requestId: JsonField<String>) = apply { this.requestId = requestId }
+
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -635,6 +689,7 @@ private constructor(
                     checkRequired("targetType", targetType),
                     description,
                     (imageUrls ?: JsonMissing.of()).map { it.toImmutable() },
+                    requestId,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -651,6 +706,7 @@ private constructor(
             targetType().validate()
             description()
             imageUrls()
+            requestId()
             validated = true
         }
 
@@ -673,7 +729,8 @@ private constructor(
                 (if (targetId.asKnown() == null) 0 else 1) +
                 (targetType.asKnown()?.validity() ?: 0) +
                 (if (description.asKnown() == null) 0 else 1) +
-                (imageUrls.asKnown()?.size ?: 0)
+                (imageUrls.asKnown()?.size ?: 0) +
+                (if (requestId.asKnown() == null) 0 else 1)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -686,6 +743,7 @@ private constructor(
                 targetType == other.targetType &&
                 description == other.description &&
                 imageUrls == other.imageUrls &&
+                requestId == other.requestId &&
                 additionalProperties == other.additionalProperties
         }
 
@@ -696,6 +754,7 @@ private constructor(
                 targetType,
                 description,
                 imageUrls,
+                requestId,
                 additionalProperties,
             )
         }
@@ -703,7 +762,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{reasonIds=$reasonIds, targetId=$targetId, targetType=$targetType, description=$description, imageUrls=$imageUrls, additionalProperties=$additionalProperties}"
+            "Body{reasonIds=$reasonIds, targetId=$targetId, targetType=$targetType, description=$description, imageUrls=$imageUrls, requestId=$requestId, additionalProperties=$additionalProperties}"
     }
 
     class TargetType @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
