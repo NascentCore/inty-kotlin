@@ -9,11 +9,21 @@ internal class ChatCreateParamsTest {
 
     @Test
     fun create() {
-        ChatCreateParams.builder().agentId("agent_id").build()
+        ChatCreateParams.builder().agentId("agent_id").requestId("request_id").build()
     }
 
     @Test
     fun body() {
+        val params = ChatCreateParams.builder().agentId("agent_id").requestId("request_id").build()
+
+        val body = params._body()
+
+        assertThat(body.agentId()).isEqualTo("agent_id")
+        assertThat(body.requestId()).isEqualTo("request_id")
+    }
+
+    @Test
+    fun bodyWithoutOptionalFields() {
         val params = ChatCreateParams.builder().agentId("agent_id").build()
 
         val body = params._body()

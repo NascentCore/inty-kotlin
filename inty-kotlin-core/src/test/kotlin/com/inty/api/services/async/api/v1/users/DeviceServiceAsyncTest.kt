@@ -23,7 +23,9 @@ internal class DeviceServiceAsyncTest {
         val deviceServiceAsync = client.api().v1().users().device()
 
         val apiResponse =
-            deviceServiceAsync.register(DeviceRegisterParams.builder().token("token").build())
+            deviceServiceAsync.register(
+                DeviceRegisterParams.builder().token("token").requestId("request_id").build()
+            )
 
         apiResponse.validate()
     }

@@ -73,6 +73,12 @@ private constructor(
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
      *   responded with an unexpected value).
      */
+    fun requestId(): String? = body.requestId()
+
+    /**
+     * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
+     *   responded with an unexpected value).
+     */
     fun systemLanguage(): String? = body.systemLanguage()
 
     /**
@@ -123,6 +129,13 @@ private constructor(
      * Unlike [phone], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _phone(): JsonField<String> = body._phone()
+
+    /**
+     * Returns the raw JSON value of [requestId].
+     *
+     * Unlike [requestId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _requestId(): JsonField<String> = body._requestId()
 
     /**
      * Returns the raw JSON value of [systemLanguage].
@@ -247,6 +260,17 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun phone(phone: JsonField<String>) = apply { body.phone(phone) }
+
+        fun requestId(requestId: String?) = apply { body.requestId(requestId) }
+
+        /**
+         * Sets [Builder.requestId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.requestId] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun requestId(requestId: JsonField<String>) = apply { body.requestId(requestId) }
 
         fun systemLanguage(systemLanguage: String?) = apply { body.systemLanguage(systemLanguage) }
 
@@ -408,6 +432,7 @@ private constructor(
         private val gender: JsonField<Gender>,
         private val nickname: JsonField<String>,
         private val phone: JsonField<String>,
+        private val requestId: JsonField<String>,
         private val systemLanguage: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
@@ -427,6 +452,9 @@ private constructor(
             @ExcludeMissing
             nickname: JsonField<String> = JsonMissing.of(),
             @JsonProperty("phone") @ExcludeMissing phone: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("request_id")
+            @ExcludeMissing
+            requestId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("system_language")
             @ExcludeMissing
             systemLanguage: JsonField<String> = JsonMissing.of(),
@@ -438,6 +466,7 @@ private constructor(
             gender,
             nickname,
             phone,
+            requestId,
             systemLanguage,
             mutableMapOf(),
         )
@@ -485,6 +514,12 @@ private constructor(
          *   server responded with an unexpected value).
          */
         fun phone(): String? = phone.getNullable("phone")
+
+        /**
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun requestId(): String? = requestId.getNullable("request_id")
 
         /**
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -544,6 +579,13 @@ private constructor(
         @JsonProperty("phone") @ExcludeMissing fun _phone(): JsonField<String> = phone
 
         /**
+         * Returns the raw JSON value of [requestId].
+         *
+         * Unlike [requestId], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("request_id") @ExcludeMissing fun _requestId(): JsonField<String> = requestId
+
+        /**
          * Returns the raw JSON value of [systemLanguage].
          *
          * Unlike [systemLanguage], this method doesn't throw if the JSON field has an unexpected
@@ -581,6 +623,7 @@ private constructor(
             private var gender: JsonField<Gender> = JsonMissing.of()
             private var nickname: JsonField<String> = JsonMissing.of()
             private var phone: JsonField<String> = JsonMissing.of()
+            private var requestId: JsonField<String> = JsonMissing.of()
             private var systemLanguage: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -592,6 +635,7 @@ private constructor(
                 gender = body.gender
                 nickname = body.nickname
                 phone = body.phone
+                requestId = body.requestId
                 systemLanguage = body.systemLanguage
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
@@ -676,6 +720,17 @@ private constructor(
              */
             fun phone(phone: JsonField<String>) = apply { this.phone = phone }
 
+            fun requestId(requestId: String?) = requestId(JsonField.ofNullable(requestId))
+
+            /**
+             * Sets [Builder.requestId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.requestId] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun requestId(requestId: JsonField<String>) = apply { this.requestId = requestId }
+
             fun systemLanguage(systemLanguage: String?) =
                 systemLanguage(JsonField.ofNullable(systemLanguage))
 
@@ -723,6 +778,7 @@ private constructor(
                     gender,
                     nickname,
                     phone,
+                    requestId,
                     systemLanguage,
                     additionalProperties.toMutableMap(),
                 )
@@ -742,6 +798,7 @@ private constructor(
             gender()?.validate()
             nickname()
             phone()
+            requestId()
             systemLanguage()
             validated = true
         }
@@ -768,6 +825,7 @@ private constructor(
                 (gender.asKnown()?.validity() ?: 0) +
                 (if (nickname.asKnown() == null) 0 else 1) +
                 (if (phone.asKnown() == null) 0 else 1) +
+                (if (requestId.asKnown() == null) 0 else 1) +
                 (if (systemLanguage.asKnown() == null) 0 else 1)
 
         override fun equals(other: Any?): Boolean {
@@ -783,6 +841,7 @@ private constructor(
                 gender == other.gender &&
                 nickname == other.nickname &&
                 phone == other.phone &&
+                requestId == other.requestId &&
                 systemLanguage == other.systemLanguage &&
                 additionalProperties == other.additionalProperties
         }
@@ -796,6 +855,7 @@ private constructor(
                 gender,
                 nickname,
                 phone,
+                requestId,
                 systemLanguage,
                 additionalProperties,
             )
@@ -804,7 +864,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{ageGroup=$ageGroup, avatar=$avatar, description=$description, email=$email, gender=$gender, nickname=$nickname, phone=$phone, systemLanguage=$systemLanguage, additionalProperties=$additionalProperties}"
+            "Body{ageGroup=$ageGroup, avatar=$avatar, description=$description, email=$email, gender=$gender, nickname=$nickname, phone=$phone, requestId=$requestId, systemLanguage=$systemLanguage, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

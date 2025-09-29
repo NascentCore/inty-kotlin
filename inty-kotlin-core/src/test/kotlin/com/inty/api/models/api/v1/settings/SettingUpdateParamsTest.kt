@@ -9,16 +9,26 @@ internal class SettingUpdateParamsTest {
 
     @Test
     fun create() {
-        SettingUpdateParams.builder().language("language").voiceEnabled(true).build()
+        SettingUpdateParams.builder()
+            .language("language")
+            .requestId("request_id")
+            .voiceEnabled(true)
+            .build()
     }
 
     @Test
     fun body() {
-        val params = SettingUpdateParams.builder().language("language").voiceEnabled(true).build()
+        val params =
+            SettingUpdateParams.builder()
+                .language("language")
+                .requestId("request_id")
+                .voiceEnabled(true)
+                .build()
 
         val body = params._body()
 
         assertThat(body.language()).isEqualTo("language")
+        assertThat(body.requestId()).isEqualTo("request_id")
         assertThat(body.voiceEnabled()).isEqualTo(true)
     }
 

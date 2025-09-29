@@ -73,6 +73,7 @@ internal class SubscriptionServiceAsyncTest {
                     .productId("product_id")
                     .purchaseToken("purchase_token")
                     .orderId("order_id")
+                    .requestId("request_id")
                     .build()
             )
 

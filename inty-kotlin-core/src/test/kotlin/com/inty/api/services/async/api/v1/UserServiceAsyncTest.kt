@@ -23,7 +23,9 @@ internal class UserServiceAsyncTest {
         val userServiceAsync = client.api().v1().users()
 
         val response =
-            userServiceAsync.deleteAccount(UserDeleteAccountParams.builder().reason("隐私关注").build())
+            userServiceAsync.deleteAccount(
+                UserDeleteAccountParams.builder().reason("隐私关注").requestId("request_id").build()
+            )
 
         response.validate()
     }

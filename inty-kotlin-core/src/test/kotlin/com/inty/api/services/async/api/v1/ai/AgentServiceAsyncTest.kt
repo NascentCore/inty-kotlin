@@ -70,7 +70,7 @@ internal class AgentServiceAsyncTest {
                     .mainPrompt("main_prompt")
                     .messageExample("message_example")
                     .metaData(
-                        AgentCreateParams.MetaData.builder().comment("comment").score(1L).build()
+                        AgentCreateParams.MetaData.builder().comment("comment").score(0L).build()
                     )
                     .modePrompt("mode_prompt")
                     .opening("opening")
@@ -79,6 +79,7 @@ internal class AgentServiceAsyncTest {
                     .addPhoto("string")
                     .postHistoryInstructions("post_history_instructions")
                     .prompt("prompt")
+                    .requestId("request_id")
                     .scenario("scenario")
                     .settings(
                         AgentCreateParams.Settings.builder()
@@ -159,7 +160,7 @@ internal class AgentServiceAsyncTest {
                     .mainPrompt("main_prompt")
                     .messageExample("message_example")
                     .metaData(
-                        AgentUpdateParams.MetaData.builder().comment("comment").score(1L).build()
+                        AgentUpdateParams.MetaData.builder().comment("comment").score(0L).build()
                     )
                     .modePrompt("mode_prompt")
                     .name("name")
@@ -169,6 +170,7 @@ internal class AgentServiceAsyncTest {
                     .addPhoto("string")
                     .postHistoryInstructions("post_history_instructions")
                     .prompt("prompt")
+                    .requestId("request_id")
                     .scenario("scenario")
                     .settings(
                         AgentUpdateParams.Settings.builder()

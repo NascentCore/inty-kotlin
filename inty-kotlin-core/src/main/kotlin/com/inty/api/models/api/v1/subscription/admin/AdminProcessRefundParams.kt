@@ -51,6 +51,12 @@ private constructor(
     fun refundAmount(): Double? = body.refundAmount()
 
     /**
+     * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
+     *   responded with an unexpected value).
+     */
+    fun requestId(): String? = body.requestId()
+
+    /**
      * Returns the raw JSON value of [subscriptionId].
      *
      * Unlike [subscriptionId], this method doesn't throw if the JSON field has an unexpected type.
@@ -70,6 +76,13 @@ private constructor(
      * Unlike [refundAmount], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _refundAmount(): JsonField<Double> = body._refundAmount()
+
+    /**
+     * Returns the raw JSON value of [requestId].
+     *
+     * Unlike [requestId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _requestId(): JsonField<String> = body._requestId()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -115,6 +128,7 @@ private constructor(
          * - [subscriptionId]
          * - [reason]
          * - [refundAmount]
+         * - [requestId]
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
@@ -163,6 +177,17 @@ private constructor(
         fun refundAmount(refundAmount: JsonField<Double>) = apply {
             body.refundAmount(refundAmount)
         }
+
+        fun requestId(requestId: String?) = apply { body.requestId(requestId) }
+
+        /**
+         * Sets [Builder.requestId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.requestId] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun requestId(requestId: JsonField<String>) = apply { body.requestId(requestId) }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
@@ -314,6 +339,7 @@ private constructor(
         private val subscriptionId: JsonField<String>,
         private val reason: JsonField<String>,
         private val refundAmount: JsonField<Double>,
+        private val requestId: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -326,7 +352,10 @@ private constructor(
             @JsonProperty("refund_amount")
             @ExcludeMissing
             refundAmount: JsonField<Double> = JsonMissing.of(),
-        ) : this(subscriptionId, reason, refundAmount, mutableMapOf())
+            @JsonProperty("request_id")
+            @ExcludeMissing
+            requestId: JsonField<String> = JsonMissing.of(),
+        ) : this(subscriptionId, reason, refundAmount, requestId, mutableMapOf())
 
         /**
          * 订阅ID
@@ -351,6 +380,12 @@ private constructor(
          *   server responded with an unexpected value).
          */
         fun refundAmount(): Double? = refundAmount.getNullable("refund_amount")
+
+        /**
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun requestId(): String? = requestId.getNullable("request_id")
 
         /**
          * Returns the raw JSON value of [subscriptionId].
@@ -378,6 +413,13 @@ private constructor(
         @JsonProperty("refund_amount")
         @ExcludeMissing
         fun _refundAmount(): JsonField<Double> = refundAmount
+
+        /**
+         * Returns the raw JSON value of [requestId].
+         *
+         * Unlike [requestId], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("request_id") @ExcludeMissing fun _requestId(): JsonField<String> = requestId
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -410,12 +452,14 @@ private constructor(
             private var subscriptionId: JsonField<String>? = null
             private var reason: JsonField<String> = JsonMissing.of()
             private var refundAmount: JsonField<Double> = JsonMissing.of()
+            private var requestId: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             internal fun from(body: Body) = apply {
                 subscriptionId = body.subscriptionId
                 reason = body.reason
                 refundAmount = body.refundAmount
+                requestId = body.requestId
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
@@ -468,6 +512,17 @@ private constructor(
                 this.refundAmount = refundAmount
             }
 
+            fun requestId(requestId: String?) = requestId(JsonField.ofNullable(requestId))
+
+            /**
+             * Sets [Builder.requestId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.requestId] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun requestId(requestId: JsonField<String>) = apply { this.requestId = requestId }
+
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -504,6 +559,7 @@ private constructor(
                     checkRequired("subscriptionId", subscriptionId),
                     reason,
                     refundAmount,
+                    requestId,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -518,6 +574,7 @@ private constructor(
             subscriptionId()
             reason()
             refundAmount()
+            requestId()
             validated = true
         }
 
@@ -538,7 +595,8 @@ private constructor(
         internal fun validity(): Int =
             (if (subscriptionId.asKnown() == null) 0 else 1) +
                 (if (reason.asKnown() == null) 0 else 1) +
-                (if (refundAmount.asKnown() == null) 0 else 1)
+                (if (refundAmount.asKnown() == null) 0 else 1) +
+                (if (requestId.asKnown() == null) 0 else 1)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -549,17 +607,18 @@ private constructor(
                 subscriptionId == other.subscriptionId &&
                 reason == other.reason &&
                 refundAmount == other.refundAmount &&
+                requestId == other.requestId &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(subscriptionId, reason, refundAmount, additionalProperties)
+            Objects.hash(subscriptionId, reason, refundAmount, requestId, additionalProperties)
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{subscriptionId=$subscriptionId, reason=$reason, refundAmount=$refundAmount, additionalProperties=$additionalProperties}"
+            "Body{subscriptionId=$subscriptionId, reason=$reason, refundAmount=$refundAmount, requestId=$requestId, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

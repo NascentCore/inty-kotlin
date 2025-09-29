@@ -39,7 +39,11 @@ internal class SettingServiceTest {
 
         val settings =
             settingService.update(
-                SettingUpdateParams.builder().language("language").voiceEnabled(true).build()
+                SettingUpdateParams.builder()
+                    .language("language")
+                    .requestId("request_id")
+                    .voiceEnabled(true)
+                    .build()
             )
 
         settings.validate()

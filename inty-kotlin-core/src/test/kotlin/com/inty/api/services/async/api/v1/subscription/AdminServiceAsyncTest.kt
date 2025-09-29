@@ -28,6 +28,7 @@ internal class AdminServiceAsyncTest {
                     .subscriptionId("subscription_id")
                     .reason("reason")
                     .refundAmount(0.0)
+                    .requestId("request_id")
                     .build()
             )
 

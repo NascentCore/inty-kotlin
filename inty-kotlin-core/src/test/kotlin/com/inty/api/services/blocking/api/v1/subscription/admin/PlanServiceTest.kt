@@ -44,6 +44,7 @@ internal class PlanServiceTest {
                             .build()
                     )
                     .isActive(true)
+                    .requestId("request_id")
                     .sortOrder(0L)
                     .build()
             )

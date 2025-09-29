@@ -13,6 +13,7 @@ internal class AgentUpdateSettingsParamsTest {
             .agentId("agent_id")
             .language("language")
             .premiumMode(true)
+            .requestId("request_id")
             .stylePrompt("style_prompt")
             .voiceEnabled(true)
             .build()
@@ -34,6 +35,7 @@ internal class AgentUpdateSettingsParamsTest {
                 .agentId("agent_id")
                 .language("language")
                 .premiumMode(true)
+                .requestId("request_id")
                 .stylePrompt("style_prompt")
                 .voiceEnabled(true)
                 .build()
@@ -42,6 +44,7 @@ internal class AgentUpdateSettingsParamsTest {
 
         assertThat(body.language()).isEqualTo("language")
         assertThat(body.premiumMode()).isEqualTo(true)
+        assertThat(body.requestId()).isEqualTo("request_id")
         assertThat(body.stylePrompt()).isEqualTo("style_prompt")
         assertThat(body.voiceEnabled()).isEqualTo(true)
     }

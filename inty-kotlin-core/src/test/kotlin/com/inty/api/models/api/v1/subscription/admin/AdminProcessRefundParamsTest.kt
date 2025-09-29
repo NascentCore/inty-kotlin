@@ -13,6 +13,7 @@ internal class AdminProcessRefundParamsTest {
             .subscriptionId("subscription_id")
             .reason("reason")
             .refundAmount(0.0)
+            .requestId("request_id")
             .build()
     }
 
@@ -23,6 +24,7 @@ internal class AdminProcessRefundParamsTest {
                 .subscriptionId("subscription_id")
                 .reason("reason")
                 .refundAmount(0.0)
+                .requestId("request_id")
                 .build()
 
         val body = params._body()
@@ -30,6 +32,7 @@ internal class AdminProcessRefundParamsTest {
         assertThat(body.subscriptionId()).isEqualTo("subscription_id")
         assertThat(body.reason()).isEqualTo("reason")
         assertThat(body.refundAmount()).isEqualTo(0.0)
+        assertThat(body.requestId()).isEqualTo("request_id")
     }
 
     @Test

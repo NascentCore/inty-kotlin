@@ -47,6 +47,12 @@ private constructor(
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
      *   responded with an unexpected value).
      */
+    fun requestId(): String? = body.requestId()
+
+    /**
+     * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
+     *   responded with an unexpected value).
+     */
     fun stylePrompt(): String? = body.stylePrompt()
 
     /**
@@ -68,6 +74,13 @@ private constructor(
      * Unlike [premiumMode], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _premiumMode(): JsonField<Boolean> = body._premiumMode()
+
+    /**
+     * Returns the raw JSON value of [requestId].
+     *
+     * Unlike [requestId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _requestId(): JsonField<String> = body._requestId()
 
     /**
      * Returns the raw JSON value of [stylePrompt].
@@ -127,8 +140,10 @@ private constructor(
          * Otherwise, it's more convenient to use the top-level setters instead:
          * - [language]
          * - [premiumMode]
+         * - [requestId]
          * - [stylePrompt]
          * - [voiceEnabled]
+         * - etc.
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
@@ -159,6 +174,17 @@ private constructor(
          * value.
          */
         fun premiumMode(premiumMode: JsonField<Boolean>) = apply { body.premiumMode(premiumMode) }
+
+        fun requestId(requestId: String?) = apply { body.requestId(requestId) }
+
+        /**
+         * Sets [Builder.requestId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.requestId] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun requestId(requestId: JsonField<String>) = apply { body.requestId(requestId) }
 
         fun stylePrompt(stylePrompt: String?) = apply { body.stylePrompt(stylePrompt) }
 
@@ -340,6 +366,7 @@ private constructor(
     private constructor(
         private val language: JsonField<String>,
         private val premiumMode: JsonField<Boolean>,
+        private val requestId: JsonField<String>,
         private val stylePrompt: JsonField<String>,
         private val voiceEnabled: JsonField<Boolean>,
         private val additionalProperties: MutableMap<String, JsonValue>,
@@ -353,13 +380,16 @@ private constructor(
             @JsonProperty("premium_mode")
             @ExcludeMissing
             premiumMode: JsonField<Boolean> = JsonMissing.of(),
+            @JsonProperty("request_id")
+            @ExcludeMissing
+            requestId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("style_prompt")
             @ExcludeMissing
             stylePrompt: JsonField<String> = JsonMissing.of(),
             @JsonProperty("voice_enabled")
             @ExcludeMissing
             voiceEnabled: JsonField<Boolean> = JsonMissing.of(),
-        ) : this(language, premiumMode, stylePrompt, voiceEnabled, mutableMapOf())
+        ) : this(language, premiumMode, requestId, stylePrompt, voiceEnabled, mutableMapOf())
 
         /**
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -372,6 +402,12 @@ private constructor(
          *   server responded with an unexpected value).
          */
         fun premiumMode(): Boolean? = premiumMode.getNullable("premium_mode")
+
+        /**
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun requestId(): String? = requestId.getNullable("request_id")
 
         /**
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -400,6 +436,13 @@ private constructor(
         @JsonProperty("premium_mode")
         @ExcludeMissing
         fun _premiumMode(): JsonField<Boolean> = premiumMode
+
+        /**
+         * Returns the raw JSON value of [requestId].
+         *
+         * Unlike [requestId], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("request_id") @ExcludeMissing fun _requestId(): JsonField<String> = requestId
 
         /**
          * Returns the raw JSON value of [stylePrompt].
@@ -443,6 +486,7 @@ private constructor(
 
             private var language: JsonField<String> = JsonMissing.of()
             private var premiumMode: JsonField<Boolean> = JsonMissing.of()
+            private var requestId: JsonField<String> = JsonMissing.of()
             private var stylePrompt: JsonField<String> = JsonMissing.of()
             private var voiceEnabled: JsonField<Boolean> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -450,6 +494,7 @@ private constructor(
             internal fun from(body: Body) = apply {
                 language = body.language
                 premiumMode = body.premiumMode
+                requestId = body.requestId
                 stylePrompt = body.stylePrompt
                 voiceEnabled = body.voiceEnabled
                 additionalProperties = body.additionalProperties.toMutableMap()
@@ -485,6 +530,17 @@ private constructor(
             fun premiumMode(premiumMode: JsonField<Boolean>) = apply {
                 this.premiumMode = premiumMode
             }
+
+            fun requestId(requestId: String?) = requestId(JsonField.ofNullable(requestId))
+
+            /**
+             * Sets [Builder.requestId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.requestId] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun requestId(requestId: JsonField<String>) = apply { this.requestId = requestId }
 
             fun stylePrompt(stylePrompt: String?) = stylePrompt(JsonField.ofNullable(stylePrompt))
 
@@ -548,6 +604,7 @@ private constructor(
                 Body(
                     language,
                     premiumMode,
+                    requestId,
                     stylePrompt,
                     voiceEnabled,
                     additionalProperties.toMutableMap(),
@@ -563,6 +620,7 @@ private constructor(
 
             language()
             premiumMode()
+            requestId()
             stylePrompt()
             voiceEnabled()
             validated = true
@@ -585,6 +643,7 @@ private constructor(
         internal fun validity(): Int =
             (if (language.asKnown() == null) 0 else 1) +
                 (if (premiumMode.asKnown() == null) 0 else 1) +
+                (if (requestId.asKnown() == null) 0 else 1) +
                 (if (stylePrompt.asKnown() == null) 0 else 1) +
                 (if (voiceEnabled.asKnown() == null) 0 else 1)
 
@@ -596,19 +655,27 @@ private constructor(
             return other is Body &&
                 language == other.language &&
                 premiumMode == other.premiumMode &&
+                requestId == other.requestId &&
                 stylePrompt == other.stylePrompt &&
                 voiceEnabled == other.voiceEnabled &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(language, premiumMode, stylePrompt, voiceEnabled, additionalProperties)
+            Objects.hash(
+                language,
+                premiumMode,
+                requestId,
+                stylePrompt,
+                voiceEnabled,
+                additionalProperties,
+            )
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{language=$language, premiumMode=$premiumMode, stylePrompt=$stylePrompt, voiceEnabled=$voiceEnabled, additionalProperties=$additionalProperties}"
+            "Body{language=$language, premiumMode=$premiumMode, requestId=$requestId, stylePrompt=$stylePrompt, voiceEnabled=$voiceEnabled, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

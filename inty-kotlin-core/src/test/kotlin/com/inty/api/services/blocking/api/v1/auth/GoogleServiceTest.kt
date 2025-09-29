@@ -27,6 +27,7 @@ internal class GoogleServiceTest {
             googleService.login(
                 GoogleLoginParams.builder()
                     .idToken("id_token")
+                    .requestId("request_id")
                     .userInfo(
                         GoogleLoginParams.UserInfo.builder()
                             .ageGroup("age_group")

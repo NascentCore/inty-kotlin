@@ -13,6 +13,7 @@ internal class SubscriptionVerifyParamsTest {
             .productId("product_id")
             .purchaseToken("purchase_token")
             .orderId("order_id")
+            .requestId("request_id")
             .build()
     }
 
@@ -23,6 +24,7 @@ internal class SubscriptionVerifyParamsTest {
                 .productId("product_id")
                 .purchaseToken("purchase_token")
                 .orderId("order_id")
+                .requestId("request_id")
                 .build()
 
         val body = params._body()
@@ -30,6 +32,7 @@ internal class SubscriptionVerifyParamsTest {
         assertThat(body.productId()).isEqualTo("product_id")
         assertThat(body.purchaseToken()).isEqualTo("purchase_token")
         assertThat(body.orderId()).isEqualTo("order_id")
+        assertThat(body.requestId()).isEqualTo("request_id")
     }
 
     @Test

@@ -12,6 +12,7 @@ internal class GoogleLoginParamsTest {
     fun create() {
         GoogleLoginParams.builder()
             .idToken("id_token")
+            .requestId("request_id")
             .userInfo(
                 GoogleLoginParams.UserInfo.builder()
                     .ageGroup("age_group")
@@ -27,6 +28,7 @@ internal class GoogleLoginParamsTest {
         val params =
             GoogleLoginParams.builder()
                 .idToken("id_token")
+                .requestId("request_id")
                 .userInfo(
                     GoogleLoginParams.UserInfo.builder()
                         .ageGroup("age_group")
@@ -39,6 +41,7 @@ internal class GoogleLoginParamsTest {
         val body = params._body()
 
         assertThat(body.idToken()).isEqualTo("id_token")
+        assertThat(body.requestId()).isEqualTo("request_id")
         assertThat(body.userInfo())
             .isEqualTo(
                 GoogleLoginParams.UserInfo.builder()
