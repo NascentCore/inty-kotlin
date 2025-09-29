@@ -27,6 +27,7 @@ internal class AuthServiceAsyncTest {
                 AuthCreateGuestParams.builder()
                     .ageGroup("age_group")
                     .deviceId("device_id")
+                    .requestId("request_id")
                     .systemLanguage("system_language")
                     .build()
             )

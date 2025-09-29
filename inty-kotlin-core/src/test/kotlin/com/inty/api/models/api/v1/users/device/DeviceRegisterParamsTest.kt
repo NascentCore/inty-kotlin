@@ -9,11 +9,21 @@ internal class DeviceRegisterParamsTest {
 
     @Test
     fun create() {
-        DeviceRegisterParams.builder().token("token").build()
+        DeviceRegisterParams.builder().token("token").requestId("request_id").build()
     }
 
     @Test
     fun body() {
+        val params = DeviceRegisterParams.builder().token("token").requestId("request_id").build()
+
+        val body = params._body()
+
+        assertThat(body.token()).isEqualTo("token")
+        assertThat(body.requestId()).isEqualTo("request_id")
+    }
+
+    @Test
+    fun bodyWithoutOptionalFields() {
         val params = DeviceRegisterParams.builder().token("token").build()
 
         val body = params._body()

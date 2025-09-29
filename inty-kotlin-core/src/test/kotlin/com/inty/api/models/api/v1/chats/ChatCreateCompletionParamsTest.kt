@@ -16,6 +16,7 @@ internal class ChatCreateCompletionParamsTest {
             )
             .language("language")
             .model("model")
+            .requestId("request_id")
             .stream(true)
             .build()
     }
@@ -51,6 +52,7 @@ internal class ChatCreateCompletionParamsTest {
                 )
                 .language("language")
                 .model("model")
+                .requestId("request_id")
                 .stream(true)
                 .build()
 
@@ -62,6 +64,7 @@ internal class ChatCreateCompletionParamsTest {
             )
         assertThat(body.language()).isEqualTo("language")
         assertThat(body.model()).isEqualTo("model")
+        assertThat(body.requestId()).isEqualTo("request_id")
         assertThat(body.stream()).isEqualTo(true)
     }
 

@@ -9,16 +9,18 @@ internal class UserDeleteAccountParamsTest {
 
     @Test
     fun create() {
-        UserDeleteAccountParams.builder().reason("隐私关注").build()
+        UserDeleteAccountParams.builder().reason("隐私关注").requestId("request_id").build()
     }
 
     @Test
     fun body() {
-        val params = UserDeleteAccountParams.builder().reason("隐私关注").build()
+        val params =
+            UserDeleteAccountParams.builder().reason("隐私关注").requestId("request_id").build()
 
         val body = params._body()
 
         assertThat(body.reason()).isEqualTo("隐私关注")
+        assertThat(body.requestId()).isEqualTo("request_id")
     }
 
     @Test

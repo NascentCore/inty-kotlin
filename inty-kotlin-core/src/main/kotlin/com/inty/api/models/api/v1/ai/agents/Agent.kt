@@ -63,6 +63,7 @@ private constructor(
     private val settings: JsonField<Settings>,
     private val tags: JsonField<List<String>>,
     private val updatedAt: JsonField<Long>,
+    private val user: JsonField<String>,
     private val visibility: JsonField<AgentVisibility>,
     private val voiceId: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
@@ -152,6 +153,7 @@ private constructor(
         @JsonProperty("settings") @ExcludeMissing settings: JsonField<Settings> = JsonMissing.of(),
         @JsonProperty("tags") @ExcludeMissing tags: JsonField<List<String>> = JsonMissing.of(),
         @JsonProperty("updated_at") @ExcludeMissing updatedAt: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("user") @ExcludeMissing user: JsonField<String> = JsonMissing.of(),
         @JsonProperty("visibility")
         @ExcludeMissing
         visibility: JsonField<AgentVisibility> = JsonMissing.of(),
@@ -197,6 +199,7 @@ private constructor(
         settings,
         tags,
         updatedAt,
+        user,
         visibility,
         voiceId,
         mutableMapOf(),
@@ -468,6 +471,12 @@ private constructor(
      *   responded with an unexpected value).
      */
     fun updatedAt(): Long? = updatedAt.getNullable("updated_at")
+
+    /**
+     * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
+     *   responded with an unexpected value).
+     */
+    fun user(): String? = user.getNullable("user")
 
     /**
      * AI 角色可见性
@@ -800,6 +809,13 @@ private constructor(
     @JsonProperty("updated_at") @ExcludeMissing fun _updatedAt(): JsonField<Long> = updatedAt
 
     /**
+     * Returns the raw JSON value of [user].
+     *
+     * Unlike [user], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("user") @ExcludeMissing fun _user(): JsonField<String> = user
+
+    /**
      * Returns the raw JSON value of [visibility].
      *
      * Unlike [visibility], this method doesn't throw if the JSON field has an unexpected type.
@@ -888,6 +904,7 @@ private constructor(
         private var settings: JsonField<Settings> = JsonMissing.of()
         private var tags: JsonField<MutableList<String>>? = null
         private var updatedAt: JsonField<Long> = JsonMissing.of()
+        private var user: JsonField<String> = JsonMissing.of()
         private var visibility: JsonField<AgentVisibility> = JsonMissing.of()
         private var voiceId: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -933,6 +950,7 @@ private constructor(
             settings = agent.settings
             tags = agent.tags.map { it.toMutableList() }
             updatedAt = agent.updatedAt
+            user = agent.user
             visibility = agent.visibility
             voiceId = agent.voiceId
             additionalProperties = agent.additionalProperties.toMutableMap()
@@ -1474,6 +1492,16 @@ private constructor(
          */
         fun updatedAt(updatedAt: JsonField<Long>) = apply { this.updatedAt = updatedAt }
 
+        fun user(user: String?) = user(JsonField.ofNullable(user))
+
+        /**
+         * Sets [Builder.user] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.user] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun user(user: JsonField<String>) = apply { this.user = user }
+
         /** AI 角色可见性 */
         fun visibility(visibility: AgentVisibility) = visibility(JsonField.of(visibility))
 
@@ -1576,6 +1604,7 @@ private constructor(
                 settings,
                 (tags ?: JsonMissing.of()).map { it.toImmutable() },
                 updatedAt,
+                user,
                 visibility,
                 voiceId,
                 additionalProperties.toMutableMap(),
@@ -1629,6 +1658,7 @@ private constructor(
         settings()?.validate()
         tags()
         updatedAt()
+        user()
         visibility()?.validate()
         voiceId()
         validated = true
@@ -1688,6 +1718,7 @@ private constructor(
             (settings.asKnown()?.validity() ?: 0) +
             (tags.asKnown()?.size ?: 0) +
             (if (updatedAt.asKnown() == null) 0 else 1) +
+            (if (user.asKnown() == null) 0 else 1) +
             (visibility.asKnown()?.validity() ?: 0) +
             (if (voiceId.asKnown() == null) 0 else 1)
 
@@ -2420,7 +2451,7 @@ private constructor(
         fun comment(): String? = comment.getNullable("comment")
 
         /**
-         * Agent 评分，1-5 的整数
+         * Agent 评分
          *
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
@@ -2484,7 +2515,7 @@ private constructor(
              */
             fun comment(comment: JsonField<String>) = apply { this.comment = comment }
 
-            /** Agent 评分，1-5 的整数 */
+            /** Agent 评分 */
             fun score(score: Long?) = score(JsonField.ofNullable(score))
 
             /**
@@ -2721,6 +2752,7 @@ private constructor(
             settings == other.settings &&
             tags == other.tags &&
             updatedAt == other.updatedAt &&
+            user == other.user &&
             visibility == other.visibility &&
             voiceId == other.voiceId &&
             additionalProperties == other.additionalProperties
@@ -2768,6 +2800,7 @@ private constructor(
             settings,
             tags,
             updatedAt,
+            user,
             visibility,
             voiceId,
             additionalProperties,
@@ -2777,5 +2810,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Agent{id=$id, createdAt=$createdAt, gender=$gender, name=$name, readableId=$readableId, status=$status, alternateGreetings=$alternateGreetings, avatar=$avatar, avatarSize=$avatarSize, background=$background, backgroundImages=$backgroundImages, backgroundSize=$backgroundSize, category=$category, characterBook=$characterBook, characterCardSpec=$characterCardSpec, characterVersion=$characterVersion, connectorCount=$connectorCount, creator=$creator, creatorId=$creatorId, creatorNotes=$creatorNotes, deletedAt=$deletedAt, extensions=$extensions, followerCount=$followerCount, intro=$intro, isFollowed=$isFollowed, llmConfig=$llmConfig, mainPrompt=$mainPrompt, messageExample=$messageExample, metaData=$metaData, modePrompt=$modePrompt, opening=$opening, openingAudioUrl=$openingAudioUrl, personality=$personality, photos=$photos, postHistoryInstructions=$postHistoryInstructions, prompt=$prompt, scenario=$scenario, settings=$settings, tags=$tags, updatedAt=$updatedAt, visibility=$visibility, voiceId=$voiceId, additionalProperties=$additionalProperties}"
+        "Agent{id=$id, createdAt=$createdAt, gender=$gender, name=$name, readableId=$readableId, status=$status, alternateGreetings=$alternateGreetings, avatar=$avatar, avatarSize=$avatarSize, background=$background, backgroundImages=$backgroundImages, backgroundSize=$backgroundSize, category=$category, characterBook=$characterBook, characterCardSpec=$characterCardSpec, characterVersion=$characterVersion, connectorCount=$connectorCount, creator=$creator, creatorId=$creatorId, creatorNotes=$creatorNotes, deletedAt=$deletedAt, extensions=$extensions, followerCount=$followerCount, intro=$intro, isFollowed=$isFollowed, llmConfig=$llmConfig, mainPrompt=$mainPrompt, messageExample=$messageExample, metaData=$metaData, modePrompt=$modePrompt, opening=$opening, openingAudioUrl=$openingAudioUrl, personality=$personality, photos=$photos, postHistoryInstructions=$postHistoryInstructions, prompt=$prompt, scenario=$scenario, settings=$settings, tags=$tags, updatedAt=$updatedAt, user=$user, visibility=$visibility, voiceId=$voiceId, additionalProperties=$additionalProperties}"
 }

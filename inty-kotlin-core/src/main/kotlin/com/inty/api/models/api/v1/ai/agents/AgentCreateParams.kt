@@ -189,6 +189,12 @@ private constructor(
     @Deprecated("deprecated") fun prompt(): String? = body.prompt()
 
     /**
+     * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
+     *   responded with an unexpected value).
+     */
+    fun requestId(): String? = body.requestId()
+
+    /**
      * 背景设定 (推荐)
      *
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
@@ -394,6 +400,13 @@ private constructor(
      * Unlike [prompt], this method doesn't throw if the JSON field has an unexpected type.
      */
     @Deprecated("deprecated") fun _prompt(): JsonField<String> = body._prompt()
+
+    /**
+     * Returns the raw JSON value of [requestId].
+     *
+     * Unlike [requestId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _requestId(): JsonField<String> = body._requestId()
 
     /**
      * Returns the raw JSON value of [scenario].
@@ -804,6 +817,17 @@ private constructor(
         @Deprecated("deprecated")
         fun prompt(prompt: JsonField<String>) = apply { body.prompt(prompt) }
 
+        fun requestId(requestId: String?) = apply { body.requestId(requestId) }
+
+        /**
+         * Sets [Builder.requestId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.requestId] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun requestId(requestId: JsonField<String>) = apply { body.requestId(requestId) }
+
         /** 背景设定 (推荐) */
         fun scenario(scenario: String?) = apply { body.scenario(scenario) }
 
@@ -1051,6 +1075,7 @@ private constructor(
         private val photos: JsonField<List<String>>,
         private val postHistoryInstructions: JsonField<String>,
         private val prompt: JsonField<String>,
+        private val requestId: JsonField<String>,
         private val scenario: JsonField<String>,
         private val settings: JsonField<Settings>,
         private val tags: JsonField<List<String>>,
@@ -1121,6 +1146,9 @@ private constructor(
             @ExcludeMissing
             postHistoryInstructions: JsonField<String> = JsonMissing.of(),
             @JsonProperty("prompt") @ExcludeMissing prompt: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("request_id")
+            @ExcludeMissing
+            requestId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("scenario")
             @ExcludeMissing
             scenario: JsonField<String> = JsonMissing.of(),
@@ -1157,6 +1185,7 @@ private constructor(
             photos,
             postHistoryInstructions,
             prompt,
+            requestId,
             scenario,
             settings,
             tags,
@@ -1326,6 +1355,12 @@ private constructor(
          *   server responded with an unexpected value).
          */
         @Deprecated("deprecated") fun prompt(): String? = prompt.getNullable("prompt")
+
+        /**
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun requestId(): String? = requestId.getNullable("request_id")
 
         /**
          * 背景设定 (推荐)
@@ -1572,6 +1607,13 @@ private constructor(
         fun _prompt(): JsonField<String> = prompt
 
         /**
+         * Returns the raw JSON value of [requestId].
+         *
+         * Unlike [requestId], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("request_id") @ExcludeMissing fun _requestId(): JsonField<String> = requestId
+
+        /**
          * Returns the raw JSON value of [scenario].
          *
          * Unlike [scenario], this method doesn't throw if the JSON field has an unexpected type.
@@ -1661,6 +1703,7 @@ private constructor(
             private var photos: JsonField<MutableList<String>>? = null
             private var postHistoryInstructions: JsonField<String> = JsonMissing.of()
             private var prompt: JsonField<String> = JsonMissing.of()
+            private var requestId: JsonField<String> = JsonMissing.of()
             private var scenario: JsonField<String> = JsonMissing.of()
             private var settings: JsonField<Settings> = JsonMissing.of()
             private var tags: JsonField<MutableList<String>>? = null
@@ -1693,6 +1736,7 @@ private constructor(
                 photos = body.photos.map { it.toMutableList() }
                 postHistoryInstructions = body.postHistoryInstructions
                 prompt = body.prompt
+                requestId = body.requestId
                 scenario = body.scenario
                 settings = body.settings
                 tags = body.tags.map { it.toMutableList() }
@@ -2044,6 +2088,17 @@ private constructor(
             @Deprecated("deprecated")
             fun prompt(prompt: JsonField<String>) = apply { this.prompt = prompt }
 
+            fun requestId(requestId: String?) = requestId(JsonField.ofNullable(requestId))
+
+            /**
+             * Sets [Builder.requestId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.requestId] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun requestId(requestId: JsonField<String>) = apply { this.requestId = requestId }
+
             /** 背景设定 (推荐) */
             fun scenario(scenario: String?) = scenario(JsonField.ofNullable(scenario))
 
@@ -2173,6 +2228,7 @@ private constructor(
                     (photos ?: JsonMissing.of()).map { it.toImmutable() },
                     postHistoryInstructions,
                     prompt,
+                    requestId,
                     scenario,
                     settings,
                     (tags ?: JsonMissing.of()).map { it.toImmutable() },
@@ -2213,6 +2269,7 @@ private constructor(
             photos()
             postHistoryInstructions()
             prompt()
+            requestId()
             scenario()
             settings()?.validate()
             tags()
@@ -2260,6 +2317,7 @@ private constructor(
                 (photos.asKnown()?.size ?: 0) +
                 (if (postHistoryInstructions.asKnown() == null) 0 else 1) +
                 (if (prompt.asKnown() == null) 0 else 1) +
+                (if (requestId.asKnown() == null) 0 else 1) +
                 (if (scenario.asKnown() == null) 0 else 1) +
                 (settings.asKnown()?.validity() ?: 0) +
                 (tags.asKnown()?.size ?: 0) +
@@ -2296,6 +2354,7 @@ private constructor(
                 photos == other.photos &&
                 postHistoryInstructions == other.postHistoryInstructions &&
                 prompt == other.prompt &&
+                requestId == other.requestId &&
                 scenario == other.scenario &&
                 settings == other.settings &&
                 tags == other.tags &&
@@ -2330,6 +2389,7 @@ private constructor(
                 photos,
                 postHistoryInstructions,
                 prompt,
+                requestId,
                 scenario,
                 settings,
                 tags,
@@ -2342,7 +2402,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{gender=$gender, name=$name, alternateGreetings=$alternateGreetings, avatar=$avatar, background=$background, backgroundImages=$backgroundImages, category=$category, characterBook=$characterBook, characterCardSpec=$characterCardSpec, characterVersion=$characterVersion, creatorNotes=$creatorNotes, extensions=$extensions, intro=$intro, llmConfig=$llmConfig, mainPrompt=$mainPrompt, messageExample=$messageExample, metaData=$metaData, modePrompt=$modePrompt, opening=$opening, openingAudioUrl=$openingAudioUrl, personality=$personality, photos=$photos, postHistoryInstructions=$postHistoryInstructions, prompt=$prompt, scenario=$scenario, settings=$settings, tags=$tags, visibility=$visibility, voiceId=$voiceId, additionalProperties=$additionalProperties}"
+            "Body{gender=$gender, name=$name, alternateGreetings=$alternateGreetings, avatar=$avatar, background=$background, backgroundImages=$backgroundImages, category=$category, characterBook=$characterBook, characterCardSpec=$characterCardSpec, characterVersion=$characterVersion, creatorNotes=$creatorNotes, extensions=$extensions, intro=$intro, llmConfig=$llmConfig, mainPrompt=$mainPrompt, messageExample=$messageExample, metaData=$metaData, modePrompt=$modePrompt, opening=$opening, openingAudioUrl=$openingAudioUrl, personality=$personality, photos=$photos, postHistoryInstructions=$postHistoryInstructions, prompt=$prompt, requestId=$requestId, scenario=$scenario, settings=$settings, tags=$tags, visibility=$visibility, voiceId=$voiceId, additionalProperties=$additionalProperties}"
     }
 
     class CharacterBook
@@ -2563,7 +2623,7 @@ private constructor(
         fun comment(): String? = comment.getNullable("comment")
 
         /**
-         * Agent 评分，1-5 的整数
+         * Agent 评分
          *
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
@@ -2627,7 +2687,7 @@ private constructor(
              */
             fun comment(comment: JsonField<String>) = apply { this.comment = comment }
 
-            /** Agent 评分，1-5 的整数 */
+            /** Agent 评分 */
             fun score(score: Long?) = score(JsonField.ofNullable(score))
 
             /**

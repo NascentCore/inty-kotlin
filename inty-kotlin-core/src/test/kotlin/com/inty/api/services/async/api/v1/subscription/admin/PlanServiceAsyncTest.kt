@@ -44,6 +44,7 @@ internal class PlanServiceAsyncTest {
                             .build()
                     )
                     .isActive(true)
+                    .requestId("request_id")
                     .sortOrder(0L)
                     .build()
             )

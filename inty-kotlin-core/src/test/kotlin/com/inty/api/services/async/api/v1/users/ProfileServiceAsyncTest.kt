@@ -48,6 +48,7 @@ internal class ProfileServiceAsyncTest {
                     .gender(Gender.MALE)
                     .nickname("nickname")
                     .phone("phone")
+                    .requestId("request_id")
                     .systemLanguage("system_language")
                     .build()
             )

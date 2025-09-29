@@ -51,6 +51,12 @@ private constructor(
     fun orderId(): String? = body.orderId()
 
     /**
+     * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
+     *   responded with an unexpected value).
+     */
+    fun requestId(): String? = body.requestId()
+
+    /**
      * Returns the raw JSON value of [productId].
      *
      * Unlike [productId], this method doesn't throw if the JSON field has an unexpected type.
@@ -70,6 +76,13 @@ private constructor(
      * Unlike [orderId], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _orderId(): JsonField<String> = body._orderId()
+
+    /**
+     * Returns the raw JSON value of [requestId].
+     *
+     * Unlike [requestId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _requestId(): JsonField<String> = body._requestId()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -116,6 +129,7 @@ private constructor(
          * - [productId]
          * - [purchaseToken]
          * - [orderId]
+         * - [requestId]
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
@@ -155,6 +169,17 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun orderId(orderId: JsonField<String>) = apply { body.orderId(orderId) }
+
+        fun requestId(requestId: String?) = apply { body.requestId(requestId) }
+
+        /**
+         * Sets [Builder.requestId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.requestId] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun requestId(requestId: JsonField<String>) = apply { body.requestId(requestId) }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
@@ -307,6 +332,7 @@ private constructor(
         private val productId: JsonField<String>,
         private val purchaseToken: JsonField<String>,
         private val orderId: JsonField<String>,
+        private val requestId: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -319,7 +345,10 @@ private constructor(
             @ExcludeMissing
             purchaseToken: JsonField<String> = JsonMissing.of(),
             @JsonProperty("order_id") @ExcludeMissing orderId: JsonField<String> = JsonMissing.of(),
-        ) : this(productId, purchaseToken, orderId, mutableMapOf())
+            @JsonProperty("request_id")
+            @ExcludeMissing
+            requestId: JsonField<String> = JsonMissing.of(),
+        ) : this(productId, purchaseToken, orderId, requestId, mutableMapOf())
 
         /**
          * 产品ID
@@ -346,6 +375,12 @@ private constructor(
         fun orderId(): String? = orderId.getNullable("order_id")
 
         /**
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun requestId(): String? = requestId.getNullable("request_id")
+
+        /**
          * Returns the raw JSON value of [productId].
          *
          * Unlike [productId], this method doesn't throw if the JSON field has an unexpected type.
@@ -368,6 +403,13 @@ private constructor(
          * Unlike [orderId], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("order_id") @ExcludeMissing fun _orderId(): JsonField<String> = orderId
+
+        /**
+         * Returns the raw JSON value of [requestId].
+         *
+         * Unlike [requestId], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("request_id") @ExcludeMissing fun _requestId(): JsonField<String> = requestId
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -401,12 +443,14 @@ private constructor(
             private var productId: JsonField<String>? = null
             private var purchaseToken: JsonField<String>? = null
             private var orderId: JsonField<String> = JsonMissing.of()
+            private var requestId: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             internal fun from(body: Body) = apply {
                 productId = body.productId
                 purchaseToken = body.purchaseToken
                 orderId = body.orderId
+                requestId = body.requestId
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
@@ -448,6 +492,17 @@ private constructor(
              */
             fun orderId(orderId: JsonField<String>) = apply { this.orderId = orderId }
 
+            fun requestId(requestId: String?) = requestId(JsonField.ofNullable(requestId))
+
+            /**
+             * Sets [Builder.requestId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.requestId] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun requestId(requestId: JsonField<String>) = apply { this.requestId = requestId }
+
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -485,6 +540,7 @@ private constructor(
                     checkRequired("productId", productId),
                     checkRequired("purchaseToken", purchaseToken),
                     orderId,
+                    requestId,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -499,6 +555,7 @@ private constructor(
             productId()
             purchaseToken()
             orderId()
+            requestId()
             validated = true
         }
 
@@ -519,7 +576,8 @@ private constructor(
         internal fun validity(): Int =
             (if (productId.asKnown() == null) 0 else 1) +
                 (if (purchaseToken.asKnown() == null) 0 else 1) +
-                (if (orderId.asKnown() == null) 0 else 1)
+                (if (orderId.asKnown() == null) 0 else 1) +
+                (if (requestId.asKnown() == null) 0 else 1)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -530,17 +588,18 @@ private constructor(
                 productId == other.productId &&
                 purchaseToken == other.purchaseToken &&
                 orderId == other.orderId &&
+                requestId == other.requestId &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(productId, purchaseToken, orderId, additionalProperties)
+            Objects.hash(productId, purchaseToken, orderId, requestId, additionalProperties)
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{productId=$productId, purchaseToken=$purchaseToken, orderId=$orderId, additionalProperties=$additionalProperties}"
+            "Body{productId=$productId, purchaseToken=$purchaseToken, orderId=$orderId, requestId=$requestId, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

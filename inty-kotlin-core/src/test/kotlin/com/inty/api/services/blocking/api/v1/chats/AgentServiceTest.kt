@@ -90,6 +90,7 @@ internal class AgentServiceTest {
                     .agentId("agent_id")
                     .language("language")
                     .premiumMode(true)
+                    .requestId("request_id")
                     .stylePrompt("style_prompt")
                     .voiceEnabled(true)
                     .build()

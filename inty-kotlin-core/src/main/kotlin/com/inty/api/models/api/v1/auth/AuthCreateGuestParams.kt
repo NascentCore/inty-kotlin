@@ -41,6 +41,12 @@ private constructor(
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
      *   responded with an unexpected value).
      */
+    fun requestId(): String? = body.requestId()
+
+    /**
+     * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
+     *   responded with an unexpected value).
+     */
     fun systemLanguage(): String? = body.systemLanguage()
 
     /**
@@ -56,6 +62,13 @@ private constructor(
      * Unlike [deviceId], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _deviceId(): JsonField<String> = body._deviceId()
+
+    /**
+     * Returns the raw JSON value of [requestId].
+     *
+     * Unlike [requestId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _requestId(): JsonField<String> = body._requestId()
 
     /**
      * Returns the raw JSON value of [systemLanguage].
@@ -102,6 +115,7 @@ private constructor(
          * Otherwise, it's more convenient to use the top-level setters instead:
          * - [ageGroup]
          * - [deviceId]
+         * - [requestId]
          * - [systemLanguage]
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
@@ -125,6 +139,17 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun deviceId(deviceId: JsonField<String>) = apply { body.deviceId(deviceId) }
+
+        fun requestId(requestId: String?) = apply { body.requestId(requestId) }
+
+        /**
+         * Sets [Builder.requestId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.requestId] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun requestId(requestId: JsonField<String>) = apply { body.requestId(requestId) }
 
         fun systemLanguage(systemLanguage: String?) = apply { body.systemLanguage(systemLanguage) }
 
@@ -281,6 +306,7 @@ private constructor(
     private constructor(
         private val ageGroup: JsonField<String>,
         private val deviceId: JsonField<String>,
+        private val requestId: JsonField<String>,
         private val systemLanguage: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
@@ -293,10 +319,13 @@ private constructor(
             @JsonProperty("device_id")
             @ExcludeMissing
             deviceId: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("request_id")
+            @ExcludeMissing
+            requestId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("system_language")
             @ExcludeMissing
             systemLanguage: JsonField<String> = JsonMissing.of(),
-        ) : this(ageGroup, deviceId, systemLanguage, mutableMapOf())
+        ) : this(ageGroup, deviceId, requestId, systemLanguage, mutableMapOf())
 
         /**
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -309,6 +338,12 @@ private constructor(
          *   server responded with an unexpected value).
          */
         fun deviceId(): String? = deviceId.getNullable("device_id")
+
+        /**
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun requestId(): String? = requestId.getNullable("request_id")
 
         /**
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -329,6 +364,13 @@ private constructor(
          * Unlike [deviceId], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("device_id") @ExcludeMissing fun _deviceId(): JsonField<String> = deviceId
+
+        /**
+         * Returns the raw JSON value of [requestId].
+         *
+         * Unlike [requestId], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("request_id") @ExcludeMissing fun _requestId(): JsonField<String> = requestId
 
         /**
          * Returns the raw JSON value of [systemLanguage].
@@ -363,12 +405,14 @@ private constructor(
 
             private var ageGroup: JsonField<String> = JsonMissing.of()
             private var deviceId: JsonField<String> = JsonMissing.of()
+            private var requestId: JsonField<String> = JsonMissing.of()
             private var systemLanguage: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             internal fun from(body: Body) = apply {
                 ageGroup = body.ageGroup
                 deviceId = body.deviceId
+                requestId = body.requestId
                 systemLanguage = body.systemLanguage
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
@@ -394,6 +438,17 @@ private constructor(
              * supported value.
              */
             fun deviceId(deviceId: JsonField<String>) = apply { this.deviceId = deviceId }
+
+            fun requestId(requestId: String?) = requestId(JsonField.ofNullable(requestId))
+
+            /**
+             * Sets [Builder.requestId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.requestId] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun requestId(requestId: JsonField<String>) = apply { this.requestId = requestId }
 
             fun systemLanguage(systemLanguage: String?) =
                 systemLanguage(JsonField.ofNullable(systemLanguage))
@@ -434,7 +489,13 @@ private constructor(
              * Further updates to this [Builder] will not mutate the returned instance.
              */
             fun build(): Body =
-                Body(ageGroup, deviceId, systemLanguage, additionalProperties.toMutableMap())
+                Body(
+                    ageGroup,
+                    deviceId,
+                    requestId,
+                    systemLanguage,
+                    additionalProperties.toMutableMap(),
+                )
         }
 
         private var validated: Boolean = false
@@ -446,6 +507,7 @@ private constructor(
 
             ageGroup()
             deviceId()
+            requestId()
             systemLanguage()
             validated = true
         }
@@ -467,6 +529,7 @@ private constructor(
         internal fun validity(): Int =
             (if (ageGroup.asKnown() == null) 0 else 1) +
                 (if (deviceId.asKnown() == null) 0 else 1) +
+                (if (requestId.asKnown() == null) 0 else 1) +
                 (if (systemLanguage.asKnown() == null) 0 else 1)
 
         override fun equals(other: Any?): Boolean {
@@ -477,18 +540,19 @@ private constructor(
             return other is Body &&
                 ageGroup == other.ageGroup &&
                 deviceId == other.deviceId &&
+                requestId == other.requestId &&
                 systemLanguage == other.systemLanguage &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(ageGroup, deviceId, systemLanguage, additionalProperties)
+            Objects.hash(ageGroup, deviceId, requestId, systemLanguage, additionalProperties)
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{ageGroup=$ageGroup, deviceId=$deviceId, systemLanguage=$systemLanguage, additionalProperties=$additionalProperties}"
+            "Body{ageGroup=$ageGroup, deviceId=$deviceId, requestId=$requestId, systemLanguage=$systemLanguage, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

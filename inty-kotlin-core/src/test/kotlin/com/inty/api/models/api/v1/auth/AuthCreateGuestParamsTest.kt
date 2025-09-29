@@ -12,6 +12,7 @@ internal class AuthCreateGuestParamsTest {
         AuthCreateGuestParams.builder()
             .ageGroup("age_group")
             .deviceId("device_id")
+            .requestId("request_id")
             .systemLanguage("system_language")
             .build()
     }
@@ -22,6 +23,7 @@ internal class AuthCreateGuestParamsTest {
             AuthCreateGuestParams.builder()
                 .ageGroup("age_group")
                 .deviceId("device_id")
+                .requestId("request_id")
                 .systemLanguage("system_language")
                 .build()
 
@@ -29,6 +31,7 @@ internal class AuthCreateGuestParamsTest {
 
         assertThat(body.ageGroup()).isEqualTo("age_group")
         assertThat(body.deviceId()).isEqualTo("device_id")
+        assertThat(body.requestId()).isEqualTo("request_id")
         assertThat(body.systemLanguage()).isEqualTo("system_language")
     }
 

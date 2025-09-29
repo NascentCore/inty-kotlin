@@ -23,7 +23,9 @@ internal class UserServiceTest {
         val userService = client.api().v1().users()
 
         val response =
-            userService.deleteAccount(UserDeleteAccountParams.builder().reason("隐私关注").build())
+            userService.deleteAccount(
+                UserDeleteAccountParams.builder().reason("隐私关注").requestId("request_id").build()
+            )
 
         response.validate()
     }

@@ -46,6 +46,7 @@ internal class ServiceParamsTest {
             AuthCreateGuestParams.builder()
                 .ageGroup("age_group")
                 .deviceId("device_id")
+                .requestId("request_id")
                 .systemLanguage("system_language")
                 .putAdditionalHeader("Secret-Header", "42")
                 .putAdditionalQueryParam("secret_query_param", "42")

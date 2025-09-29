@@ -27,6 +27,7 @@ internal class PlanCreateParamsTest {
                     .build()
             )
             .isActive(true)
+            .requestId("request_id")
             .sortOrder(0L)
             .build()
     }
@@ -51,6 +52,7 @@ internal class PlanCreateParamsTest {
                         .build()
                 )
                 .isActive(true)
+                .requestId("request_id")
                 .sortOrder(0L)
                 .build()
 
@@ -73,6 +75,7 @@ internal class PlanCreateParamsTest {
                     .build()
             )
         assertThat(body.isActive()).isEqualTo(true)
+        assertThat(body.requestId()).isEqualTo("request_id")
         assertThat(body.sortOrder()).isEqualTo(0L)
     }
 
