@@ -8,6 +8,7 @@ import com.inty.api.core.JsonValue
 import com.inty.api.models.api.v1.ai.agents.AgentCreateParams
 import com.inty.api.models.api.v1.ai.agents.AgentFollowingParams
 import com.inty.api.models.api.v1.ai.agents.AgentListParams
+import com.inty.api.models.api.v1.ai.agents.AgentMetaData
 import com.inty.api.models.api.v1.ai.agents.AgentRecommendParams
 import com.inty.api.models.api.v1.ai.agents.AgentSearchParams
 import com.inty.api.models.api.v1.ai.agents.AgentUpdateParams
@@ -69,9 +70,7 @@ internal class AgentServiceAsyncTest {
                     )
                     .mainPrompt("main_prompt")
                     .messageExample("message_example")
-                    .metaData(
-                        AgentCreateParams.MetaData.builder().comment("comment").score(0L).build()
-                    )
+                    .metaData(AgentMetaData.builder().comment("comment").score(0L).build())
                     .modePrompt("mode_prompt")
                     .opening("opening")
                     .openingAudioUrl("opening_audio_url")
@@ -159,9 +158,7 @@ internal class AgentServiceAsyncTest {
                     )
                     .mainPrompt("main_prompt")
                     .messageExample("message_example")
-                    .metaData(
-                        AgentUpdateParams.MetaData.builder().comment("comment").score(0L).build()
-                    )
+                    .metaData(AgentMetaData.builder().comment("comment").score(0L).build())
                     .modePrompt("mode_prompt")
                     .name("name")
                     .opening("opening")
