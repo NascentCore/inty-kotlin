@@ -128,7 +128,7 @@ private constructor(
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
      *   responded with an unexpected value).
      */
-    fun metaData(): MetaData? = body.metaData()
+    fun metaData(): AgentMetaData? = body.metaData()
 
     /**
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
@@ -332,7 +332,7 @@ private constructor(
      *
      * Unlike [metaData], this method doesn't throw if the JSON field has an unexpected type.
      */
-    fun _metaData(): JsonField<MetaData> = body._metaData()
+    fun _metaData(): JsonField<AgentMetaData> = body._metaData()
 
     /**
      * Returns the raw JSON value of [modePrompt].
@@ -687,16 +687,16 @@ private constructor(
         }
 
         /** Agent 元数据模型 */
-        fun metaData(metaData: MetaData?) = apply { body.metaData(metaData) }
+        fun metaData(metaData: AgentMetaData?) = apply { body.metaData(metaData) }
 
         /**
          * Sets [Builder.metaData] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.metaData] with a well-typed [MetaData] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.metaData] with a well-typed [AgentMetaData] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun metaData(metaData: JsonField<MetaData>) = apply { body.metaData(metaData) }
+        fun metaData(metaData: JsonField<AgentMetaData>) = apply { body.metaData(metaData) }
 
         fun modePrompt(modePrompt: String?) = apply { body.modePrompt(modePrompt) }
 
@@ -1036,7 +1036,7 @@ private constructor(
         private val llmConfig: JsonField<ModelConfig>,
         private val mainPrompt: JsonField<String>,
         private val messageExample: JsonField<String>,
-        private val metaData: JsonField<MetaData>,
+        private val metaData: JsonField<AgentMetaData>,
         private val modePrompt: JsonField<String>,
         private val name: JsonField<String>,
         private val opening: JsonField<String>,
@@ -1097,7 +1097,7 @@ private constructor(
             messageExample: JsonField<String> = JsonMissing.of(),
             @JsonProperty("meta_data")
             @ExcludeMissing
-            metaData: JsonField<MetaData> = JsonMissing.of(),
+            metaData: JsonField<AgentMetaData> = JsonMissing.of(),
             @JsonProperty("mode_prompt")
             @ExcludeMissing
             modePrompt: JsonField<String> = JsonMissing.of(),
@@ -1263,7 +1263,7 @@ private constructor(
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
          */
-        fun metaData(): MetaData? = metaData.getNullable("meta_data")
+        fun metaData(): AgentMetaData? = metaData.getNullable("meta_data")
 
         /**
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -1493,7 +1493,9 @@ private constructor(
          *
          * Unlike [metaData], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("meta_data") @ExcludeMissing fun _metaData(): JsonField<MetaData> = metaData
+        @JsonProperty("meta_data")
+        @ExcludeMissing
+        fun _metaData(): JsonField<AgentMetaData> = metaData
 
         /**
          * Returns the raw JSON value of [modePrompt].
@@ -1644,7 +1646,7 @@ private constructor(
             private var llmConfig: JsonField<ModelConfig> = JsonMissing.of()
             private var mainPrompt: JsonField<String> = JsonMissing.of()
             private var messageExample: JsonField<String> = JsonMissing.of()
-            private var metaData: JsonField<MetaData> = JsonMissing.of()
+            private var metaData: JsonField<AgentMetaData> = JsonMissing.of()
             private var modePrompt: JsonField<String> = JsonMissing.of()
             private var name: JsonField<String> = JsonMissing.of()
             private var opening: JsonField<String> = JsonMissing.of()
@@ -1909,16 +1911,16 @@ private constructor(
             }
 
             /** Agent 元数据模型 */
-            fun metaData(metaData: MetaData?) = metaData(JsonField.ofNullable(metaData))
+            fun metaData(metaData: AgentMetaData?) = metaData(JsonField.ofNullable(metaData))
 
             /**
              * Sets [Builder.metaData] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.metaData] with a well-typed [MetaData] value
+             * You should usually call [Builder.metaData] with a well-typed [AgentMetaData] value
              * instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun metaData(metaData: JsonField<MetaData>) = apply { this.metaData = metaData }
+            fun metaData(metaData: JsonField<AgentMetaData>) = apply { this.metaData = metaData }
 
             fun modePrompt(modePrompt: String?) = modePrompt(JsonField.ofNullable(modePrompt))
 
@@ -2534,188 +2536,6 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() = "Extensions{additionalProperties=$additionalProperties}"
-    }
-
-    /** Agent 元数据模型 */
-    class MetaData
-    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-    private constructor(
-        private val comment: JsonField<String>,
-        private val score: JsonField<Long>,
-        private val additionalProperties: MutableMap<String, JsonValue>,
-    ) {
-
-        @JsonCreator
-        private constructor(
-            @JsonProperty("comment") @ExcludeMissing comment: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("score") @ExcludeMissing score: JsonField<Long> = JsonMissing.of(),
-        ) : this(comment, score, mutableMapOf())
-
-        /**
-         * Agent 备注信息
-         *
-         * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
-         *   server responded with an unexpected value).
-         */
-        fun comment(): String? = comment.getNullable("comment")
-
-        /**
-         * Agent 评分
-         *
-         * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
-         *   server responded with an unexpected value).
-         */
-        fun score(): Long? = score.getNullable("score")
-
-        /**
-         * Returns the raw JSON value of [comment].
-         *
-         * Unlike [comment], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("comment") @ExcludeMissing fun _comment(): JsonField<String> = comment
-
-        /**
-         * Returns the raw JSON value of [score].
-         *
-         * Unlike [score], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("score") @ExcludeMissing fun _score(): JsonField<Long> = score
-
-        @JsonAnySetter
-        private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
-        }
-
-        @JsonAnyGetter
-        @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
-
-        fun toBuilder() = Builder().from(this)
-
-        companion object {
-
-            /** Returns a mutable builder for constructing an instance of [MetaData]. */
-            fun builder() = Builder()
-        }
-
-        /** A builder for [MetaData]. */
-        class Builder internal constructor() {
-
-            private var comment: JsonField<String> = JsonMissing.of()
-            private var score: JsonField<Long> = JsonMissing.of()
-            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
-
-            internal fun from(metaData: MetaData) = apply {
-                comment = metaData.comment
-                score = metaData.score
-                additionalProperties = metaData.additionalProperties.toMutableMap()
-            }
-
-            /** Agent 备注信息 */
-            fun comment(comment: String?) = comment(JsonField.ofNullable(comment))
-
-            /**
-             * Sets [Builder.comment] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.comment] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun comment(comment: JsonField<String>) = apply { this.comment = comment }
-
-            /** Agent 评分 */
-            fun score(score: Long?) = score(JsonField.ofNullable(score))
-
-            /**
-             * Alias for [Builder.score].
-             *
-             * This unboxed primitive overload exists for backwards compatibility.
-             */
-            fun score(score: Long) = score(score as Long?)
-
-            /**
-             * Sets [Builder.score] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.score] with a well-typed [Long] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
-            fun score(score: JsonField<Long>) = apply { this.score = score }
-
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
-
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
-
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
-
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
-
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
-
-            /**
-             * Returns an immutable instance of [MetaData].
-             *
-             * Further updates to this [Builder] will not mutate the returned instance.
-             */
-            fun build(): MetaData = MetaData(comment, score, additionalProperties.toMutableMap())
-        }
-
-        private var validated: Boolean = false
-
-        fun validate(): MetaData = apply {
-            if (validated) {
-                return@apply
-            }
-
-            comment()
-            score()
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: IntyInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        internal fun validity(): Int =
-            (if (comment.asKnown() == null) 0 else 1) + (if (score.asKnown() == null) 0 else 1)
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return other is MetaData &&
-                comment == other.comment &&
-                score == other.score &&
-                additionalProperties == other.additionalProperties
-        }
-
-        private val hashCode: Int by lazy { Objects.hash(comment, score, additionalProperties) }
-
-        override fun hashCode(): Int = hashCode
-
-        override fun toString() =
-            "MetaData{comment=$comment, score=$score, additionalProperties=$additionalProperties}"
     }
 
     class Settings
