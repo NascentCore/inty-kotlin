@@ -95,7 +95,7 @@ internal class ApiResponsePaginationDataAgentTest {
                                 .mainPrompt("main_prompt")
                                 .messageExample("message_example")
                                 .metaData(
-                                    Agent.MetaData.builder().comment("comment").score(0L).build()
+                                    AgentMetaData.builder().comment("comment").score(0L).build()
                                 )
                                 .modePrompt("mode_prompt")
                                 .opening("opening")
@@ -204,7 +204,7 @@ internal class ApiResponsePaginationDataAgentTest {
                             )
                             .mainPrompt("main_prompt")
                             .messageExample("message_example")
-                            .metaData(Agent.MetaData.builder().comment("comment").score(0L).build())
+                            .metaData(AgentMetaData.builder().comment("comment").score(0L).build())
                             .modePrompt("mode_prompt")
                             .opening("opening")
                             .openingAudioUrl("opening_audio_url")
@@ -317,7 +317,7 @@ internal class ApiResponsePaginationDataAgentTest {
                                 .mainPrompt("main_prompt")
                                 .messageExample("message_example")
                                 .metaData(
-                                    Agent.MetaData.builder().comment("comment").score(0L).build()
+                                    AgentMetaData.builder().comment("comment").score(0L).build()
                                 )
                                 .modePrompt("mode_prompt")
                                 .opening("opening")
