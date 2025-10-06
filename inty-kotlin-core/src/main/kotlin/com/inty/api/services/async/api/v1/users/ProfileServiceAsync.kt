@@ -6,6 +6,8 @@ import com.google.errorprone.annotations.MustBeClosed
 import com.inty.api.core.ClientOptions
 import com.inty.api.core.RequestOptions
 import com.inty.api.core.http.HttpResponseFor
+import com.inty.api.models.api.v1.users.profile.ProfileMeParams
+import com.inty.api.models.api.v1.users.profile.ProfileMeResponse
 import com.inty.api.models.api.v1.users.profile.ProfileRetrieveParams
 import com.inty.api.models.api.v1.users.profile.ProfileRetrieveResponse
 import com.inty.api.models.api.v1.users.profile.ProfileUpdateParams
@@ -44,6 +46,16 @@ interface ProfileServiceAsync {
     /** @see update */
     suspend fun update(requestOptions: RequestOptions): ProfileUpdateResponse =
         update(ProfileUpdateParams.none(), requestOptions)
+
+    /** Get current user profile. */
+    suspend fun me(
+        params: ProfileMeParams = ProfileMeParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): ProfileMeResponse
+
+    /** @see me */
+    suspend fun me(requestOptions: RequestOptions): ProfileMeResponse =
+        me(ProfileMeParams.none(), requestOptions)
 
     /**
      * A view of [ProfileServiceAsync] that provides access to raw HTTP responses for each method.
@@ -90,5 +102,20 @@ interface ProfileServiceAsync {
         @MustBeClosed
         suspend fun update(requestOptions: RequestOptions): HttpResponseFor<ProfileUpdateResponse> =
             update(ProfileUpdateParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `get /api/v1/users/me`, but is otherwise the same as
+         * [ProfileServiceAsync.me].
+         */
+        @MustBeClosed
+        suspend fun me(
+            params: ProfileMeParams = ProfileMeParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<ProfileMeResponse>
+
+        /** @see me */
+        @MustBeClosed
+        suspend fun me(requestOptions: RequestOptions): HttpResponseFor<ProfileMeResponse> =
+            me(ProfileMeParams.none(), requestOptions)
     }
 }
