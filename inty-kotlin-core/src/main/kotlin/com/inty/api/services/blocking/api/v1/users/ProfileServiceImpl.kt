@@ -15,6 +15,8 @@ import com.inty.api.core.http.HttpResponseFor
 import com.inty.api.core.http.json
 import com.inty.api.core.http.parseable
 import com.inty.api.core.prepare
+import com.inty.api.models.api.v1.users.profile.ProfileMeParams
+import com.inty.api.models.api.v1.users.profile.ProfileMeResponse
 import com.inty.api.models.api.v1.users.profile.ProfileRetrieveParams
 import com.inty.api.models.api.v1.users.profile.ProfileRetrieveResponse
 import com.inty.api.models.api.v1.users.profile.ProfileUpdateParams
@@ -45,6 +47,10 @@ class ProfileServiceImpl internal constructor(private val clientOptions: ClientO
     ): ProfileUpdateResponse =
         // put /api/v1/users/profile
         withRawResponse().update(params, requestOptions).parse()
+
+    override fun me(params: ProfileMeParams, requestOptions: RequestOptions): ProfileMeResponse =
+        // get /api/v1/users/me
+        withRawResponse().me(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         ProfileService.WithRawResponse {
@@ -106,6 +112,33 @@ class ProfileServiceImpl internal constructor(private val clientOptions: ClientO
             return errorHandler.handle(response).parseable {
                 response
                     .use { updateHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+            }
+        }
+
+        private val meHandler: Handler<ProfileMeResponse> =
+            jsonHandler<ProfileMeResponse>(clientOptions.jsonMapper)
+
+        override fun me(
+            params: ProfileMeParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<ProfileMeResponse> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("api", "v1", "users", "me")
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response
+                    .use { meHandler.handle(it) }
                     .also {
                         if (requestOptions.responseValidation!!) {
                             it.validate()
