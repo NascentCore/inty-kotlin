@@ -9,7 +9,7 @@ repositories {
 
 allprojects {
     group = "com.inty.api"
-    version = "0.12.0" // x-release-please-version
+    version = "0.13.0" // x-release-please-version
 }
 
 subprojects {
