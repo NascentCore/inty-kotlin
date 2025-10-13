@@ -15,21 +15,6 @@ internal class ProfileServiceTest {
 
     @Disabled("Prism tests are disabled")
     @Test
-    fun retrieve() {
-        val client =
-            IntyOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
-        val profileService = client.api().v1().users().profile()
-
-        val profile = profileService.retrieve()
-
-        profile.validate()
-    }
-
-    @Disabled("Prism tests are disabled")
-    @Test
     fun update() {
         val client =
             IntyOkHttpClient.builder()

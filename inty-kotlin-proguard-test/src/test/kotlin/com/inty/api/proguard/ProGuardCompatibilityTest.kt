@@ -52,6 +52,7 @@ internal class ProGuardCompatibilityTest {
 
         assertThat(client).isNotNull()
         assertThat(client.api()).isNotNull()
+        assertThat(client.v2()).isNotNull()
     }
 
     @Test

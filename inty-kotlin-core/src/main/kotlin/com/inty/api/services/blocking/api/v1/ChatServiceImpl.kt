@@ -54,6 +54,7 @@ class ChatServiceImpl internal constructor(private val clientOptions: ClientOpti
         // delete /api/v1/chats/{chat_id}
         withRawResponse().delete(params, requestOptions).parse()
 
+    @Deprecated("deprecated")
     override fun createCompletion(
         params: ChatCreateCompletionParams,
         requestOptions: RequestOptions,
@@ -173,6 +174,7 @@ class ChatServiceImpl internal constructor(private val clientOptions: ClientOpti
         private val createCompletionHandler: Handler<ApiResponseDict> =
             jsonHandler<ApiResponseDict>(clientOptions.jsonMapper)
 
+        @Deprecated("deprecated")
         override fun createCompletion(
             params: ChatCreateCompletionParams,
             requestOptions: RequestOptions,

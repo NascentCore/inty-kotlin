@@ -8,8 +8,6 @@ import com.inty.api.core.RequestOptions
 import com.inty.api.core.http.HttpResponseFor
 import com.inty.api.models.api.v1.users.profile.ProfileMeParams
 import com.inty.api.models.api.v1.users.profile.ProfileMeResponse
-import com.inty.api.models.api.v1.users.profile.ProfileRetrieveParams
-import com.inty.api.models.api.v1.users.profile.ProfileRetrieveResponse
 import com.inty.api.models.api.v1.users.profile.ProfileUpdateParams
 import com.inty.api.models.api.v1.users.profile.ProfileUpdateResponse
 
@@ -27,17 +25,7 @@ interface ProfileService {
      */
     fun withOptions(modifier: (ClientOptions.Builder) -> Unit): ProfileService
 
-    /** Get current user profile. */
-    fun retrieve(
-        params: ProfileRetrieveParams = ProfileRetrieveParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): ProfileRetrieveResponse
-
-    /** @see retrieve */
-    fun retrieve(requestOptions: RequestOptions): ProfileRetrieveResponse =
-        retrieve(ProfileRetrieveParams.none(), requestOptions)
-
-    /** Update current user profile. */
+    /** Update current user profile, support avatar update */
     fun update(
         params: ProfileUpdateParams = ProfileUpdateParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -66,21 +54,6 @@ interface ProfileService {
          * The original service is not modified.
          */
         fun withOptions(modifier: (ClientOptions.Builder) -> Unit): ProfileService.WithRawResponse
-
-        /**
-         * Returns a raw HTTP response for `get /api/v1/users/profile`, but is otherwise the same as
-         * [ProfileService.retrieve].
-         */
-        @MustBeClosed
-        fun retrieve(
-            params: ProfileRetrieveParams = ProfileRetrieveParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<ProfileRetrieveResponse>
-
-        /** @see retrieve */
-        @MustBeClosed
-        fun retrieve(requestOptions: RequestOptions): HttpResponseFor<ProfileRetrieveResponse> =
-            retrieve(ProfileRetrieveParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `put /api/v1/users/profile`, but is otherwise the same as

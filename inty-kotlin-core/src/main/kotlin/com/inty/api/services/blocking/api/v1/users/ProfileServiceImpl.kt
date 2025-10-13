@@ -17,8 +17,6 @@ import com.inty.api.core.http.parseable
 import com.inty.api.core.prepare
 import com.inty.api.models.api.v1.users.profile.ProfileMeParams
 import com.inty.api.models.api.v1.users.profile.ProfileMeResponse
-import com.inty.api.models.api.v1.users.profile.ProfileRetrieveParams
-import com.inty.api.models.api.v1.users.profile.ProfileRetrieveResponse
 import com.inty.api.models.api.v1.users.profile.ProfileUpdateParams
 import com.inty.api.models.api.v1.users.profile.ProfileUpdateResponse
 
@@ -33,13 +31,6 @@ class ProfileServiceImpl internal constructor(private val clientOptions: ClientO
 
     override fun withOptions(modifier: (ClientOptions.Builder) -> Unit): ProfileService =
         ProfileServiceImpl(clientOptions.toBuilder().apply(modifier).build())
-
-    override fun retrieve(
-        params: ProfileRetrieveParams,
-        requestOptions: RequestOptions,
-    ): ProfileRetrieveResponse =
-        // get /api/v1/users/profile
-        withRawResponse().retrieve(params, requestOptions).parse()
 
     override fun update(
         params: ProfileUpdateParams,
@@ -64,33 +55,6 @@ class ProfileServiceImpl internal constructor(private val clientOptions: ClientO
             ProfileServiceImpl.WithRawResponseImpl(
                 clientOptions.toBuilder().apply(modifier).build()
             )
-
-        private val retrieveHandler: Handler<ProfileRetrieveResponse> =
-            jsonHandler<ProfileRetrieveResponse>(clientOptions.jsonMapper)
-
-        override fun retrieve(
-            params: ProfileRetrieveParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<ProfileRetrieveResponse> {
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("api", "v1", "users", "profile")
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { retrieveHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
-        }
 
         private val updateHandler: Handler<ProfileUpdateResponse> =
             jsonHandler<ProfileUpdateResponse>(clientOptions.jsonMapper)
