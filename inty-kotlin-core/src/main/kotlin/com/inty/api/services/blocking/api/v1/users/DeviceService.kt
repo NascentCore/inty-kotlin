@@ -23,7 +23,7 @@ interface DeviceService {
      */
     fun withOptions(modifier: (ClientOptions.Builder) -> Unit): DeviceService
 
-    /** 注册或更新设备token */
+    /** 在用户未打开 app 时向设备推送消息 */
     fun register(
         params: DeviceRegisterParams,
         requestOptions: RequestOptions = RequestOptions.none(),

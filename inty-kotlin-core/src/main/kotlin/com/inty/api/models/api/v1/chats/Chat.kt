@@ -26,6 +26,7 @@ private constructor(
     private val createdAt: JsonField<OffsetDateTime>,
     private val userId: JsonField<String>,
     private val agentAvatar: JsonField<String>,
+    private val agentBackground: JsonField<String>,
     private val agentIsDeleted: JsonField<Boolean>,
     private val agentName: JsonField<String>,
     private val lastMessage: JsonField<String>,
@@ -46,6 +47,9 @@ private constructor(
         @JsonProperty("agent_avatar")
         @ExcludeMissing
         agentAvatar: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("agent_background")
+        @ExcludeMissing
+        agentBackground: JsonField<String> = JsonMissing.of(),
         @JsonProperty("agent_is_deleted")
         @ExcludeMissing
         agentIsDeleted: JsonField<Boolean> = JsonMissing.of(),
@@ -68,6 +72,7 @@ private constructor(
         createdAt,
         userId,
         agentAvatar,
+        agentBackground,
         agentIsDeleted,
         agentName,
         lastMessage,
@@ -106,6 +111,12 @@ private constructor(
      *   responded with an unexpected value).
      */
     fun agentAvatar(): String? = agentAvatar.getNullable("agent_avatar")
+
+    /**
+     * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
+     *   responded with an unexpected value).
+     */
+    fun agentBackground(): String? = agentBackground.getNullable("agent_background")
 
     /**
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
@@ -183,6 +194,15 @@ private constructor(
     @JsonProperty("agent_avatar")
     @ExcludeMissing
     fun _agentAvatar(): JsonField<String> = agentAvatar
+
+    /**
+     * Returns the raw JSON value of [agentBackground].
+     *
+     * Unlike [agentBackground], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("agent_background")
+    @ExcludeMissing
+    fun _agentBackground(): JsonField<String> = agentBackground
 
     /**
      * Returns the raw JSON value of [agentIsDeleted].
@@ -270,6 +290,7 @@ private constructor(
         private var createdAt: JsonField<OffsetDateTime>? = null
         private var userId: JsonField<String>? = null
         private var agentAvatar: JsonField<String> = JsonMissing.of()
+        private var agentBackground: JsonField<String> = JsonMissing.of()
         private var agentIsDeleted: JsonField<Boolean> = JsonMissing.of()
         private var agentName: JsonField<String> = JsonMissing.of()
         private var lastMessage: JsonField<String> = JsonMissing.of()
@@ -284,6 +305,7 @@ private constructor(
             createdAt = chat.createdAt
             userId = chat.userId
             agentAvatar = chat.agentAvatar
+            agentBackground = chat.agentBackground
             agentIsDeleted = chat.agentIsDeleted
             agentName = chat.agentName
             lastMessage = chat.lastMessage
@@ -344,6 +366,20 @@ private constructor(
          * value.
          */
         fun agentAvatar(agentAvatar: JsonField<String>) = apply { this.agentAvatar = agentAvatar }
+
+        fun agentBackground(agentBackground: String?) =
+            agentBackground(JsonField.ofNullable(agentBackground))
+
+        /**
+         * Sets [Builder.agentBackground] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.agentBackground] with a well-typed [String] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun agentBackground(agentBackground: JsonField<String>) = apply {
+            this.agentBackground = agentBackground
+        }
 
         fun agentIsDeleted(agentIsDeleted: Boolean?) =
             agentIsDeleted(JsonField.ofNullable(agentIsDeleted))
@@ -466,6 +502,7 @@ private constructor(
                 checkRequired("createdAt", createdAt),
                 checkRequired("userId", userId),
                 agentAvatar,
+                agentBackground,
                 agentIsDeleted,
                 agentName,
                 lastMessage,
@@ -488,6 +525,7 @@ private constructor(
         createdAt()
         userId()
         agentAvatar()
+        agentBackground()
         agentIsDeleted()
         agentName()
         lastMessage()
@@ -516,6 +554,7 @@ private constructor(
             (if (createdAt.asKnown() == null) 0 else 1) +
             (if (userId.asKnown() == null) 0 else 1) +
             (if (agentAvatar.asKnown() == null) 0 else 1) +
+            (if (agentBackground.asKnown() == null) 0 else 1) +
             (if (agentIsDeleted.asKnown() == null) 0 else 1) +
             (if (agentName.asKnown() == null) 0 else 1) +
             (if (lastMessage.asKnown() == null) 0 else 1) +
@@ -534,6 +573,7 @@ private constructor(
             createdAt == other.createdAt &&
             userId == other.userId &&
             agentAvatar == other.agentAvatar &&
+            agentBackground == other.agentBackground &&
             agentIsDeleted == other.agentIsDeleted &&
             agentName == other.agentName &&
             lastMessage == other.lastMessage &&
@@ -550,6 +590,7 @@ private constructor(
             createdAt,
             userId,
             agentAvatar,
+            agentBackground,
             agentIsDeleted,
             agentName,
             lastMessage,
@@ -563,5 +604,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Chat{id=$id, agentId=$agentId, createdAt=$createdAt, userId=$userId, agentAvatar=$agentAvatar, agentIsDeleted=$agentIsDeleted, agentName=$agentName, lastMessage=$lastMessage, lastMessageTime=$lastMessageTime, settings=$settings, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
+        "Chat{id=$id, agentId=$agentId, createdAt=$createdAt, userId=$userId, agentAvatar=$agentAvatar, agentBackground=$agentBackground, agentIsDeleted=$agentIsDeleted, agentName=$agentName, lastMessage=$lastMessage, lastMessageTime=$lastMessageTime, settings=$settings, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
 }

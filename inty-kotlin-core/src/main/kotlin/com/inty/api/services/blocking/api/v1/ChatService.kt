@@ -65,7 +65,8 @@ interface ChatService {
     fun delete(chatId: String, requestOptions: RequestOptions): Chat =
         delete(chatId, ChatDeleteParams.none(), requestOptions)
 
-    /** 基于Agent ID的OpenAI风格聊天接口 如果用户还没有和该Agent创建会话，则自动创建 */
+    /** 可以处理包括图片在内的各种消息类型，媒体类型应该先上传，然后将 URL 作为索引发送到此 API */
+    @Deprecated("deprecated")
     fun createCompletion(
         agentId: String,
         params: ChatCreateCompletionParams,
@@ -74,6 +75,7 @@ interface ChatService {
         createCompletion(params.toBuilder().agentId(agentId).build(), requestOptions)
 
     /** @see createCompletion */
+    @Deprecated("deprecated")
     fun createCompletion(
         params: ChatCreateCompletionParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -164,6 +166,7 @@ interface ChatService {
          * Returns a raw HTTP response for `post /api/v1/chat/completions/{agent_id}`, but is
          * otherwise the same as [ChatService.createCompletion].
          */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun createCompletion(
             agentId: String,
@@ -173,6 +176,7 @@ interface ChatService {
             createCompletion(params.toBuilder().agentId(agentId).build(), requestOptions)
 
         /** @see createCompletion */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun createCompletion(
             params: ChatCreateCompletionParams,

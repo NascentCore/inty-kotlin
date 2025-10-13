@@ -17,7 +17,7 @@ import com.inty.api.errors.IntyInvalidDataException
 import java.util.Collections
 import java.util.Objects
 
-/** Update current user profile. */
+/** Update current user profile, support avatar update */
 class ProfileUpdateParams
 private constructor(
     private val body: Body,
