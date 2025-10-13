@@ -18,7 +18,7 @@ import com.inty.api.errors.IntyInvalidDataException
 import java.util.Collections
 import java.util.Objects
 
-/** 注册或更新设备token */
+/** 在用户未打开 app 时向设备推送消息 */
 class DeviceRegisterParams
 private constructor(
     private val body: Body,

@@ -4,6 +4,7 @@ package com.inty.api.client
 
 import com.inty.api.core.ClientOptions
 import com.inty.api.services.async.ApiServiceAsync
+import com.inty.api.services.async.V2ServiceAsync
 
 /**
  * A client for interacting with the Inty REST API asynchronously. You can also switch to
@@ -43,6 +44,8 @@ interface IntyClientAsync {
 
     fun api(): ApiServiceAsync
 
+    fun v2(): V2ServiceAsync
+
     /**
      * Closes this client, relinquishing any underlying resources.
      *
@@ -67,5 +70,7 @@ interface IntyClientAsync {
         fun withOptions(modifier: (ClientOptions.Builder) -> Unit): IntyClientAsync.WithRawResponse
 
         fun api(): ApiServiceAsync.WithRawResponse
+
+        fun v2(): V2ServiceAsync.WithRawResponse
     }
 }

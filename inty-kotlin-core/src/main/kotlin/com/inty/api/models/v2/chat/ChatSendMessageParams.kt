@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package com.inty.api.models.api.v1.chats
+package com.inty.api.models.v2.chat
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -21,8 +21,7 @@ import java.util.Collections
 import java.util.Objects
 
 /** 可以处理包括图片在内的各种消息类型，媒体类型应该先上传，然后将 URL 作为索引发送到此 API */
-@Deprecated("deprecated")
-class ChatCreateCompletionParams
+class ChatSendMessageParams
 private constructor(
     private val agentId: String?,
     private val body: Body,
@@ -110,7 +109,7 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of [ChatCreateCompletionParams].
+         * Returns a mutable builder for constructing an instance of [ChatSendMessageParams].
          *
          * The following fields are required:
          * ```kotlin
@@ -120,7 +119,7 @@ private constructor(
         fun builder() = Builder()
     }
 
-    /** A builder for [ChatCreateCompletionParams]. */
+    /** A builder for [ChatSendMessageParams]. */
     class Builder internal constructor() {
 
         private var agentId: String? = null
@@ -128,11 +127,11 @@ private constructor(
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
-        internal fun from(chatCreateCompletionParams: ChatCreateCompletionParams) = apply {
-            agentId = chatCreateCompletionParams.agentId
-            body = chatCreateCompletionParams.body.toBuilder()
-            additionalHeaders = chatCreateCompletionParams.additionalHeaders.toBuilder()
-            additionalQueryParams = chatCreateCompletionParams.additionalQueryParams.toBuilder()
+        internal fun from(chatSendMessageParams: ChatSendMessageParams) = apply {
+            agentId = chatSendMessageParams.agentId
+            body = chatSendMessageParams.body.toBuilder()
+            additionalHeaders = chatSendMessageParams.additionalHeaders.toBuilder()
+            additionalQueryParams = chatSendMessageParams.additionalQueryParams.toBuilder()
         }
 
         fun agentId(agentId: String?) = apply { this.agentId = agentId }
@@ -328,7 +327,7 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [ChatCreateCompletionParams].
+         * Returns an immutable instance of [ChatSendMessageParams].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
@@ -339,8 +338,8 @@ private constructor(
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): ChatCreateCompletionParams =
-            ChatCreateCompletionParams(
+        fun build(): ChatSendMessageParams =
+            ChatSendMessageParams(
                 agentId,
                 body.build(),
                 additionalHeaders.build(),
@@ -862,7 +861,7 @@ private constructor(
             return true
         }
 
-        return other is ChatCreateCompletionParams &&
+        return other is ChatSendMessageParams &&
             agentId == other.agentId &&
             body == other.body &&
             additionalHeaders == other.additionalHeaders &&
@@ -873,5 +872,5 @@ private constructor(
         Objects.hash(agentId, body, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "ChatCreateCompletionParams{agentId=$agentId, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "ChatSendMessageParams{agentId=$agentId, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

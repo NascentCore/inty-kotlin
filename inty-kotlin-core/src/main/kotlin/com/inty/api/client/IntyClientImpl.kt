@@ -6,6 +6,8 @@ import com.inty.api.core.ClientOptions
 import com.inty.api.core.getPackageVersion
 import com.inty.api.services.blocking.ApiService
 import com.inty.api.services.blocking.ApiServiceImpl
+import com.inty.api.services.blocking.V2Service
+import com.inty.api.services.blocking.V2ServiceImpl
 
 class IntyClientImpl(private val clientOptions: ClientOptions) : IntyClient {
 
@@ -26,6 +28,8 @@ class IntyClientImpl(private val clientOptions: ClientOptions) : IntyClient {
 
     private val api: ApiService by lazy { ApiServiceImpl(clientOptionsWithUserAgent) }
 
+    private val v2: V2Service by lazy { V2ServiceImpl(clientOptionsWithUserAgent) }
+
     override fun async(): IntyClientAsync = async
 
     override fun withRawResponse(): IntyClient.WithRawResponse = withRawResponse
@@ -34,6 +38,8 @@ class IntyClientImpl(private val clientOptions: ClientOptions) : IntyClient {
         IntyClientImpl(clientOptions.toBuilder().apply(modifier).build())
 
     override fun api(): ApiService = api
+
+    override fun v2(): V2Service = v2
 
     override fun close() = clientOptions.close()
 
@@ -44,11 +50,17 @@ class IntyClientImpl(private val clientOptions: ClientOptions) : IntyClient {
             ApiServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val v2: V2Service.WithRawResponse by lazy {
+            V2ServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: (ClientOptions.Builder) -> Unit
         ): IntyClient.WithRawResponse =
             IntyClientImpl.WithRawResponseImpl(clientOptions.toBuilder().apply(modifier).build())
 
         override fun api(): ApiService.WithRawResponse = api
+
+        override fun v2(): V2Service.WithRawResponse = v2
     }
 }
