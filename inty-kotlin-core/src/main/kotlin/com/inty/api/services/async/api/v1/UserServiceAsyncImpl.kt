@@ -19,8 +19,6 @@ import com.inty.api.models.api.v1.users.UserDeleteAccountParams
 import com.inty.api.models.api.v1.users.UserDeleteAccountResponse
 import com.inty.api.services.async.api.v1.users.DeletionServiceAsync
 import com.inty.api.services.async.api.v1.users.DeletionServiceAsyncImpl
-import com.inty.api.services.async.api.v1.users.DeviceServiceAsync
-import com.inty.api.services.async.api.v1.users.DeviceServiceAsyncImpl
 import com.inty.api.services.async.api.v1.users.ProfileServiceAsync
 import com.inty.api.services.async.api.v1.users.ProfileServiceAsyncImpl
 
@@ -33,8 +31,6 @@ class UserServiceAsyncImpl internal constructor(private val clientOptions: Clien
 
     private val profile: ProfileServiceAsync by lazy { ProfileServiceAsyncImpl(clientOptions) }
 
-    private val device: DeviceServiceAsync by lazy { DeviceServiceAsyncImpl(clientOptions) }
-
     private val deletion: DeletionServiceAsync by lazy { DeletionServiceAsyncImpl(clientOptions) }
 
     override fun withRawResponse(): UserServiceAsync.WithRawResponse = withRawResponse
@@ -43,8 +39,6 @@ class UserServiceAsyncImpl internal constructor(private val clientOptions: Clien
         UserServiceAsyncImpl(clientOptions.toBuilder().apply(modifier).build())
 
     override fun profile(): ProfileServiceAsync = profile
-
-    override fun device(): DeviceServiceAsync = device
 
     override fun deletion(): DeletionServiceAsync = deletion
 
@@ -65,10 +59,6 @@ class UserServiceAsyncImpl internal constructor(private val clientOptions: Clien
             ProfileServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
-        private val device: DeviceServiceAsync.WithRawResponse by lazy {
-            DeviceServiceAsyncImpl.WithRawResponseImpl(clientOptions)
-        }
-
         private val deletion: DeletionServiceAsync.WithRawResponse by lazy {
             DeletionServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
@@ -81,8 +71,6 @@ class UserServiceAsyncImpl internal constructor(private val clientOptions: Clien
             )
 
         override fun profile(): ProfileServiceAsync.WithRawResponse = profile
-
-        override fun device(): DeviceServiceAsync.WithRawResponse = device
 
         override fun deletion(): DeletionServiceAsync.WithRawResponse = deletion
 
