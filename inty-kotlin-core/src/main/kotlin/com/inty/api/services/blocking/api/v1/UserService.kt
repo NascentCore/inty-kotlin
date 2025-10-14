@@ -9,7 +9,6 @@ import com.inty.api.core.http.HttpResponseFor
 import com.inty.api.models.api.v1.users.UserDeleteAccountParams
 import com.inty.api.models.api.v1.users.UserDeleteAccountResponse
 import com.inty.api.services.blocking.api.v1.users.DeletionService
-import com.inty.api.services.blocking.api.v1.users.DeviceService
 import com.inty.api.services.blocking.api.v1.users.ProfileService
 
 interface UserService {
@@ -27,8 +26,6 @@ interface UserService {
     fun withOptions(modifier: (ClientOptions.Builder) -> Unit): UserService
 
     fun profile(): ProfileService
-
-    fun device(): DeviceService
 
     fun deletion(): DeletionService
 
@@ -53,8 +50,6 @@ interface UserService {
         fun withOptions(modifier: (ClientOptions.Builder) -> Unit): UserService.WithRawResponse
 
         fun profile(): ProfileService.WithRawResponse
-
-        fun device(): DeviceService.WithRawResponse
 
         fun deletion(): DeletionService.WithRawResponse
 

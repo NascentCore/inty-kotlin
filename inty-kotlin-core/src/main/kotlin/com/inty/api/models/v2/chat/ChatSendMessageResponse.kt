@@ -716,7 +716,7 @@ private constructor(
             private constructor(
                 private val content: JsonField<String>,
                 private val role: JsonField<String>,
-                private val id: JsonField<String>,
+                private val id: JsonField<Long>,
                 private val audioUrl: JsonField<String>,
                 private val metaData: JsonField<MetaData>,
                 private val timestamp: JsonField<String>,
@@ -731,7 +731,7 @@ private constructor(
                     @JsonProperty("role")
                     @ExcludeMissing
                     role: JsonField<String> = JsonMissing.of(),
-                    @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
+                    @JsonProperty("id") @ExcludeMissing id: JsonField<Long> = JsonMissing.of(),
                     @JsonProperty("audio_url")
                     @ExcludeMissing
                     audioUrl: JsonField<String> = JsonMissing.of(),
@@ -761,7 +761,7 @@ private constructor(
                  * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g.
                  *   if the server responded with an unexpected value).
                  */
-                fun id(): String? = id.getNullable("id")
+                fun id(): Long? = id.getNullable("id")
 
                 /**
                  * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g.
@@ -802,7 +802,7 @@ private constructor(
                  *
                  * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
                  */
-                @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
+                @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<Long> = id
 
                 /**
                  * Returns the raw JSON value of [audioUrl].
@@ -865,7 +865,7 @@ private constructor(
 
                     private var content: JsonField<String>? = null
                     private var role: JsonField<String>? = null
-                    private var id: JsonField<String> = JsonMissing.of()
+                    private var id: JsonField<Long> = JsonMissing.of()
                     private var audioUrl: JsonField<String> = JsonMissing.of()
                     private var metaData: JsonField<MetaData> = JsonMissing.of()
                     private var timestamp: JsonField<String> = JsonMissing.of()
@@ -903,16 +903,23 @@ private constructor(
                      */
                     fun role(role: JsonField<String>) = apply { this.role = role }
 
-                    fun id(id: String?) = id(JsonField.ofNullable(id))
+                    fun id(id: Long?) = id(JsonField.ofNullable(id))
+
+                    /**
+                     * Alias for [Builder.id].
+                     *
+                     * This unboxed primitive overload exists for backwards compatibility.
+                     */
+                    fun id(id: Long) = id(id as Long?)
 
                     /**
                      * Sets [Builder.id] to an arbitrary JSON value.
                      *
-                     * You should usually call [Builder.id] with a well-typed [String] value
-                     * instead. This method is primarily for setting the field to an undocumented or
-                     * not yet supported value.
+                     * You should usually call [Builder.id] with a well-typed [Long] value instead.
+                     * This method is primarily for setting the field to an undocumented or not yet
+                     * supported value.
                      */
-                    fun id(id: JsonField<String>) = apply { this.id = id }
+                    fun id(id: JsonField<Long>) = apply { this.id = id }
 
                     fun audioUrl(audioUrl: String?) = audioUrl(JsonField.ofNullable(audioUrl))
 

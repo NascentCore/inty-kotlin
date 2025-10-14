@@ -26,7 +26,7 @@ internal class ChatSendMessageResponseTest {
                                     ChatSendMessageResponse.Data.Choice.Message.builder()
                                         .content("content")
                                         .role("role")
-                                        .id("id")
+                                        .id(0L)
                                         .audioUrl("audio_url")
                                         .metaData(
                                             ChatSendMessageResponse.Data.Choice.Message.MetaData
@@ -66,7 +66,7 @@ internal class ChatSendMessageResponseTest {
                                 ChatSendMessageResponse.Data.Choice.Message.builder()
                                     .content("content")
                                     .role("role")
-                                    .id("id")
+                                    .id(0L)
                                     .audioUrl("audio_url")
                                     .metaData(
                                         ChatSendMessageResponse.Data.Choice.Message.MetaData
@@ -110,7 +110,7 @@ internal class ChatSendMessageResponseTest {
                                     ChatSendMessageResponse.Data.Choice.Message.builder()
                                         .content("content")
                                         .role("role")
-                                        .id("id")
+                                        .id(0L)
                                         .audioUrl("audio_url")
                                         .metaData(
                                             ChatSendMessageResponse.Data.Choice.Message.MetaData

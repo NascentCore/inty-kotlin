@@ -16,7 +16,7 @@ import com.inty.api.core.http.json
 import com.inty.api.core.http.parseable
 import com.inty.api.core.prepare
 import com.inty.api.models.api.v1.report.ReportCreateParams
-import com.inty.api.models.api.v1.users.device.ApiResponse
+import com.inty.api.models.api.v1.report.ReportCreateResponse
 
 class ReportServiceImpl internal constructor(private val clientOptions: ClientOptions) :
     ReportService {
@@ -30,7 +30,10 @@ class ReportServiceImpl internal constructor(private val clientOptions: ClientOp
     override fun withOptions(modifier: (ClientOptions.Builder) -> Unit): ReportService =
         ReportServiceImpl(clientOptions.toBuilder().apply(modifier).build())
 
-    override fun create(params: ReportCreateParams, requestOptions: RequestOptions): ApiResponse =
+    override fun create(
+        params: ReportCreateParams,
+        requestOptions: RequestOptions,
+    ): ReportCreateResponse =
         // post /api/v1/report/
         withRawResponse().create(params, requestOptions).parse()
 
@@ -45,13 +48,13 @@ class ReportServiceImpl internal constructor(private val clientOptions: ClientOp
         ): ReportService.WithRawResponse =
             ReportServiceImpl.WithRawResponseImpl(clientOptions.toBuilder().apply(modifier).build())
 
-        private val createHandler: Handler<ApiResponse> =
-            jsonHandler<ApiResponse>(clientOptions.jsonMapper)
+        private val createHandler: Handler<ReportCreateResponse> =
+            jsonHandler<ReportCreateResponse>(clientOptions.jsonMapper)
 
         override fun create(
             params: ReportCreateParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<ApiResponse> {
+        ): HttpResponseFor<ReportCreateResponse> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)

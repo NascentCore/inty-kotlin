@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package com.inty.api.models.api.v1.users.device
+package com.inty.api.models.api.v1.report
 
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.inty.api.core.JsonValue
@@ -8,38 +8,38 @@ import com.inty.api.core.jsonMapper
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-internal class ApiResponseTest {
+internal class ReportCreateResponseTest {
 
     @Test
     fun create() {
-        val apiResponse =
-            ApiResponse.builder()
+        val reportCreateResponse =
+            ReportCreateResponse.builder()
                 .code(0L)
                 .data(JsonValue.from(mapOf<String, Any>()))
                 .message("message")
                 .build()
 
-        assertThat(apiResponse.code()).isEqualTo(0L)
-        assertThat(apiResponse._data()).isEqualTo(JsonValue.from(mapOf<String, Any>()))
-        assertThat(apiResponse.message()).isEqualTo("message")
+        assertThat(reportCreateResponse.code()).isEqualTo(0L)
+        assertThat(reportCreateResponse._data()).isEqualTo(JsonValue.from(mapOf<String, Any>()))
+        assertThat(reportCreateResponse.message()).isEqualTo("message")
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val apiResponse =
-            ApiResponse.builder()
+        val reportCreateResponse =
+            ReportCreateResponse.builder()
                 .code(0L)
                 .data(JsonValue.from(mapOf<String, Any>()))
                 .message("message")
                 .build()
 
-        val roundtrippedApiResponse =
+        val roundtrippedReportCreateResponse =
             jsonMapper.readValue(
-                jsonMapper.writeValueAsString(apiResponse),
-                jacksonTypeRef<ApiResponse>(),
+                jsonMapper.writeValueAsString(reportCreateResponse),
+                jacksonTypeRef<ReportCreateResponse>(),
             )
 
-        assertThat(roundtrippedApiResponse).isEqualTo(apiResponse)
+        assertThat(roundtrippedReportCreateResponse).isEqualTo(reportCreateResponse)
     }
 }

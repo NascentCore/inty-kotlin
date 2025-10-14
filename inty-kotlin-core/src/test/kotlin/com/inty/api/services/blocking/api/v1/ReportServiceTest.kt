@@ -22,7 +22,7 @@ internal class ReportServiceTest {
                 .build()
         val reportService = client.api().v1().report()
 
-        val apiResponse =
+        val report =
             reportService.create(
                 ReportCreateParams.builder()
                     .addReasonId(0L)
@@ -34,6 +34,6 @@ internal class ReportServiceTest {
                     .build()
             )
 
-        apiResponse.validate()
+        report.validate()
     }
 }
