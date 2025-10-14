@@ -7,7 +7,7 @@ import com.inty.api.core.ClientOptions
 import com.inty.api.core.RequestOptions
 import com.inty.api.core.http.HttpResponseFor
 import com.inty.api.models.api.v1.report.ReportCreateParams
-import com.inty.api.models.api.v1.users.device.ApiResponse
+import com.inty.api.models.api.v1.report.ReportCreateResponse
 
 interface ReportServiceAsync {
 
@@ -27,7 +27,7 @@ interface ReportServiceAsync {
     suspend fun create(
         params: ReportCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): ApiResponse
+    ): ReportCreateResponse
 
     /**
      * A view of [ReportServiceAsync] that provides access to raw HTTP responses for each method.
@@ -51,6 +51,6 @@ interface ReportServiceAsync {
         suspend fun create(
             params: ReportCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<ApiResponse>
+        ): HttpResponseFor<ReportCreateResponse>
     }
 }

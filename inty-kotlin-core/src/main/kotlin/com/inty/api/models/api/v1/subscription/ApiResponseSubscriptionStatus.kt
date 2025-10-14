@@ -213,11 +213,14 @@ private constructor(
         private val chatLimitPerDay: JsonField<Long>,
         private val featureList: JsonField<List<FeatureList>>,
         private val features: JsonField<Features>,
+        private val guestChat24hLimit: JsonField<Long>,
+        private val guestVoice24hLimit: JsonField<Long>,
         private val hasEverSubscribed: JsonField<Boolean>,
         private val plan: JsonField<SubscriptionPlan>,
         private val remainingDays: JsonField<Long>,
         private val subscription: JsonField<UserSubscription>,
         private val totalChatLimit: JsonField<Long>,
+        private val voice24hLimit: JsonField<Long>,
         private val willAutoRenew: JsonField<Boolean>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
@@ -248,6 +251,12 @@ private constructor(
             @JsonProperty("features")
             @ExcludeMissing
             features: JsonField<Features> = JsonMissing.of(),
+            @JsonProperty("guest_chat_24h_limit")
+            @ExcludeMissing
+            guestChat24hLimit: JsonField<Long> = JsonMissing.of(),
+            @JsonProperty("guest_voice_24h_limit")
+            @ExcludeMissing
+            guestVoice24hLimit: JsonField<Long> = JsonMissing.of(),
             @JsonProperty("has_ever_subscribed")
             @ExcludeMissing
             hasEverSubscribed: JsonField<Boolean> = JsonMissing.of(),
@@ -263,6 +272,9 @@ private constructor(
             @JsonProperty("total_chat_limit")
             @ExcludeMissing
             totalChatLimit: JsonField<Long> = JsonMissing.of(),
+            @JsonProperty("voice_24h_limit")
+            @ExcludeMissing
+            voice24hLimit: JsonField<Long> = JsonMissing.of(),
             @JsonProperty("will_auto_renew")
             @ExcludeMissing
             willAutoRenew: JsonField<Boolean> = JsonMissing.of(),
@@ -275,11 +287,14 @@ private constructor(
             chatLimitPerDay,
             featureList,
             features,
+            guestChat24hLimit,
+            guestVoice24hLimit,
             hasEverSubscribed,
             plan,
             remainingDays,
             subscription,
             totalChatLimit,
+            voice24hLimit,
             willAutoRenew,
             mutableMapOf(),
         )
@@ -350,6 +365,22 @@ private constructor(
         fun features(): Features? = features.getNullable("features")
 
         /**
+         * 24小时内聊天次数限制（游客用户）
+         *
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun guestChat24hLimit(): Long? = guestChat24hLimit.getNullable("guest_chat_24h_limit")
+
+        /**
+         * 24小时内语音生成次数限制（游客用户）
+         *
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun guestVoice24hLimit(): Long? = guestVoice24hLimit.getNullable("guest_voice_24h_limit")
+
+        /**
          * 是否曾经有过订阅记录
          *
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -388,6 +419,14 @@ private constructor(
          *   server responded with an unexpected value).
          */
         fun totalChatLimit(): Long? = totalChatLimit.getNullable("total_chat_limit")
+
+        /**
+         * 24小时内语音生成次数限制
+         *
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun voice24hLimit(): Long? = voice24hLimit.getNullable("voice_24h_limit")
 
         /**
          * 是否会自动续费
@@ -474,6 +513,26 @@ private constructor(
         @JsonProperty("features") @ExcludeMissing fun _features(): JsonField<Features> = features
 
         /**
+         * Returns the raw JSON value of [guestChat24hLimit].
+         *
+         * Unlike [guestChat24hLimit], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("guest_chat_24h_limit")
+        @ExcludeMissing
+        fun _guestChat24hLimit(): JsonField<Long> = guestChat24hLimit
+
+        /**
+         * Returns the raw JSON value of [guestVoice24hLimit].
+         *
+         * Unlike [guestVoice24hLimit], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("guest_voice_24h_limit")
+        @ExcludeMissing
+        fun _guestVoice24hLimit(): JsonField<Long> = guestVoice24hLimit
+
+        /**
          * Returns the raw JSON value of [hasEverSubscribed].
          *
          * Unlike [hasEverSubscribed], this method doesn't throw if the JSON field has an unexpected
@@ -519,6 +578,16 @@ private constructor(
         @JsonProperty("total_chat_limit")
         @ExcludeMissing
         fun _totalChatLimit(): JsonField<Long> = totalChatLimit
+
+        /**
+         * Returns the raw JSON value of [voice24hLimit].
+         *
+         * Unlike [voice24hLimit], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("voice_24h_limit")
+        @ExcludeMissing
+        fun _voice24hLimit(): JsonField<Long> = voice24hLimit
 
         /**
          * Returns the raw JSON value of [willAutoRenew].
@@ -567,11 +636,14 @@ private constructor(
             private var chatLimitPerDay: JsonField<Long> = JsonMissing.of()
             private var featureList: JsonField<MutableList<FeatureList>>? = null
             private var features: JsonField<Features> = JsonMissing.of()
+            private var guestChat24hLimit: JsonField<Long> = JsonMissing.of()
+            private var guestVoice24hLimit: JsonField<Long> = JsonMissing.of()
             private var hasEverSubscribed: JsonField<Boolean> = JsonMissing.of()
             private var plan: JsonField<SubscriptionPlan> = JsonMissing.of()
             private var remainingDays: JsonField<Long> = JsonMissing.of()
             private var subscription: JsonField<UserSubscription> = JsonMissing.of()
             private var totalChatLimit: JsonField<Long> = JsonMissing.of()
+            private var voice24hLimit: JsonField<Long> = JsonMissing.of()
             private var willAutoRenew: JsonField<Boolean> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -584,11 +656,14 @@ private constructor(
                 chatLimitPerDay = data.chatLimitPerDay
                 featureList = data.featureList.map { it.toMutableList() }
                 features = data.features
+                guestChat24hLimit = data.guestChat24hLimit
+                guestVoice24hLimit = data.guestVoice24hLimit
                 hasEverSubscribed = data.hasEverSubscribed
                 plan = data.plan
                 remainingDays = data.remainingDays
                 subscription = data.subscription
                 totalChatLimit = data.totalChatLimit
+                voice24hLimit = data.voice24hLimit
                 willAutoRenew = data.willAutoRenew
                 additionalProperties = data.additionalProperties.toMutableMap()
             }
@@ -727,6 +802,52 @@ private constructor(
              */
             fun features(features: JsonField<Features>) = apply { this.features = features }
 
+            /** 24小时内聊天次数限制（游客用户） */
+            fun guestChat24hLimit(guestChat24hLimit: Long?) =
+                guestChat24hLimit(JsonField.ofNullable(guestChat24hLimit))
+
+            /**
+             * Alias for [Builder.guestChat24hLimit].
+             *
+             * This unboxed primitive overload exists for backwards compatibility.
+             */
+            fun guestChat24hLimit(guestChat24hLimit: Long) =
+                guestChat24hLimit(guestChat24hLimit as Long?)
+
+            /**
+             * Sets [Builder.guestChat24hLimit] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.guestChat24hLimit] with a well-typed [Long] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun guestChat24hLimit(guestChat24hLimit: JsonField<Long>) = apply {
+                this.guestChat24hLimit = guestChat24hLimit
+            }
+
+            /** 24小时内语音生成次数限制（游客用户） */
+            fun guestVoice24hLimit(guestVoice24hLimit: Long?) =
+                guestVoice24hLimit(JsonField.ofNullable(guestVoice24hLimit))
+
+            /**
+             * Alias for [Builder.guestVoice24hLimit].
+             *
+             * This unboxed primitive overload exists for backwards compatibility.
+             */
+            fun guestVoice24hLimit(guestVoice24hLimit: Long) =
+                guestVoice24hLimit(guestVoice24hLimit as Long?)
+
+            /**
+             * Sets [Builder.guestVoice24hLimit] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.guestVoice24hLimit] with a well-typed [Long] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun guestVoice24hLimit(guestVoice24hLimit: JsonField<Long>) = apply {
+                this.guestVoice24hLimit = guestVoice24hLimit
+            }
+
             /** 是否曾经有过订阅记录 */
             fun hasEverSubscribed(hasEverSubscribed: Boolean) =
                 hasEverSubscribed(JsonField.of(hasEverSubscribed))
@@ -813,6 +934,28 @@ private constructor(
                 this.totalChatLimit = totalChatLimit
             }
 
+            /** 24小时内语音生成次数限制 */
+            fun voice24hLimit(voice24hLimit: Long?) =
+                voice24hLimit(JsonField.ofNullable(voice24hLimit))
+
+            /**
+             * Alias for [Builder.voice24hLimit].
+             *
+             * This unboxed primitive overload exists for backwards compatibility.
+             */
+            fun voice24hLimit(voice24hLimit: Long) = voice24hLimit(voice24hLimit as Long?)
+
+            /**
+             * Sets [Builder.voice24hLimit] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.voice24hLimit] with a well-typed [Long] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun voice24hLimit(voice24hLimit: JsonField<Long>) = apply {
+                this.voice24hLimit = voice24hLimit
+            }
+
             /** 是否会自动续费 */
             fun willAutoRenew(willAutoRenew: Boolean) = willAutoRenew(JsonField.of(willAutoRenew))
 
@@ -869,11 +1012,14 @@ private constructor(
                     chatLimitPerDay,
                     (featureList ?: JsonMissing.of()).map { it.toImmutable() },
                     features,
+                    guestChat24hLimit,
+                    guestVoice24hLimit,
                     hasEverSubscribed,
                     plan,
                     remainingDays,
                     subscription,
                     totalChatLimit,
+                    voice24hLimit,
                     willAutoRenew,
                     additionalProperties.toMutableMap(),
                 )
@@ -894,11 +1040,14 @@ private constructor(
             chatLimitPerDay()
             featureList()?.forEach { it.validate() }
             features()?.validate()
+            guestChat24hLimit()
+            guestVoice24hLimit()
             hasEverSubscribed()
             plan()?.validate()
             remainingDays()
             subscription()?.validate()
             totalChatLimit()
+            voice24hLimit()
             willAutoRenew()
             validated = true
         }
@@ -926,11 +1075,14 @@ private constructor(
                 (if (chatLimitPerDay.asKnown() == null) 0 else 1) +
                 (featureList.asKnown()?.sumOf { it.validity().toInt() } ?: 0) +
                 (features.asKnown()?.validity() ?: 0) +
+                (if (guestChat24hLimit.asKnown() == null) 0 else 1) +
+                (if (guestVoice24hLimit.asKnown() == null) 0 else 1) +
                 (if (hasEverSubscribed.asKnown() == null) 0 else 1) +
                 (plan.asKnown()?.validity() ?: 0) +
                 (if (remainingDays.asKnown() == null) 0 else 1) +
                 (subscription.asKnown()?.validity() ?: 0) +
                 (if (totalChatLimit.asKnown() == null) 0 else 1) +
+                (if (voice24hLimit.asKnown() == null) 0 else 1) +
                 (if (willAutoRenew.asKnown() == null) 0 else 1)
 
         /** 权益功能信息 */
@@ -1457,11 +1609,14 @@ private constructor(
                 chatLimitPerDay == other.chatLimitPerDay &&
                 featureList == other.featureList &&
                 features == other.features &&
+                guestChat24hLimit == other.guestChat24hLimit &&
+                guestVoice24hLimit == other.guestVoice24hLimit &&
                 hasEverSubscribed == other.hasEverSubscribed &&
                 plan == other.plan &&
                 remainingDays == other.remainingDays &&
                 subscription == other.subscription &&
                 totalChatLimit == other.totalChatLimit &&
+                voice24hLimit == other.voice24hLimit &&
                 willAutoRenew == other.willAutoRenew &&
                 additionalProperties == other.additionalProperties
         }
@@ -1476,11 +1631,14 @@ private constructor(
                 chatLimitPerDay,
                 featureList,
                 features,
+                guestChat24hLimit,
+                guestVoice24hLimit,
                 hasEverSubscribed,
                 plan,
                 remainingDays,
                 subscription,
                 totalChatLimit,
+                voice24hLimit,
                 willAutoRenew,
                 additionalProperties,
             )
@@ -1489,7 +1647,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Data{isSubscribed=$isSubscribed, subscriptionStatus=$subscriptionStatus, agentCreationLimit=$agentCreationLimit, backgroundGenerationLimitPerDay=$backgroundGenerationLimitPerDay, chat24hLimit=$chat24hLimit, chatLimitPerDay=$chatLimitPerDay, featureList=$featureList, features=$features, hasEverSubscribed=$hasEverSubscribed, plan=$plan, remainingDays=$remainingDays, subscription=$subscription, totalChatLimit=$totalChatLimit, willAutoRenew=$willAutoRenew, additionalProperties=$additionalProperties}"
+            "Data{isSubscribed=$isSubscribed, subscriptionStatus=$subscriptionStatus, agentCreationLimit=$agentCreationLimit, backgroundGenerationLimitPerDay=$backgroundGenerationLimitPerDay, chat24hLimit=$chat24hLimit, chatLimitPerDay=$chatLimitPerDay, featureList=$featureList, features=$features, guestChat24hLimit=$guestChat24hLimit, guestVoice24hLimit=$guestVoice24hLimit, hasEverSubscribed=$hasEverSubscribed, plan=$plan, remainingDays=$remainingDays, subscription=$subscription, totalChatLimit=$totalChatLimit, voice24hLimit=$voice24hLimit, willAutoRenew=$willAutoRenew, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

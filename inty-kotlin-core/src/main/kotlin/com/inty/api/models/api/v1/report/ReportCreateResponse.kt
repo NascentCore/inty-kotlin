@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package com.inty.api.models.api.v1.users.device
+package com.inty.api.models.api.v1.report
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -14,7 +14,7 @@ import com.inty.api.errors.IntyInvalidDataException
 import java.util.Collections
 import java.util.Objects
 
-class ApiResponse
+class ReportCreateResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val code: JsonField<Long>,
@@ -72,11 +72,11 @@ private constructor(
 
     companion object {
 
-        /** Returns a mutable builder for constructing an instance of [ApiResponse]. */
+        /** Returns a mutable builder for constructing an instance of [ReportCreateResponse]. */
         fun builder() = Builder()
     }
 
-    /** A builder for [ApiResponse]. */
+    /** A builder for [ReportCreateResponse]. */
     class Builder internal constructor() {
 
         private var code: JsonField<Long> = JsonMissing.of()
@@ -84,11 +84,11 @@ private constructor(
         private var message: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        internal fun from(apiResponse: ApiResponse) = apply {
-            code = apiResponse.code
-            data = apiResponse.data
-            message = apiResponse.message
-            additionalProperties = apiResponse.additionalProperties.toMutableMap()
+        internal fun from(reportCreateResponse: ReportCreateResponse) = apply {
+            code = reportCreateResponse.code
+            data = reportCreateResponse.data
+            message = reportCreateResponse.message
+            additionalProperties = reportCreateResponse.additionalProperties.toMutableMap()
         }
 
         fun code(code: Long) = code(JsonField.of(code))
@@ -133,17 +133,17 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [ApiResponse].
+         * Returns an immutable instance of [ReportCreateResponse].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          */
-        fun build(): ApiResponse =
-            ApiResponse(code, data, message, additionalProperties.toMutableMap())
+        fun build(): ReportCreateResponse =
+            ReportCreateResponse(code, data, message, additionalProperties.toMutableMap())
     }
 
     private var validated: Boolean = false
 
-    fun validate(): ApiResponse = apply {
+    fun validate(): ReportCreateResponse = apply {
         if (validated) {
             return@apply
         }
@@ -174,7 +174,7 @@ private constructor(
             return true
         }
 
-        return other is ApiResponse &&
+        return other is ReportCreateResponse &&
             code == other.code &&
             data == other.data &&
             message == other.message &&
@@ -186,5 +186,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "ApiResponse{code=$code, data=$data, message=$message, additionalProperties=$additionalProperties}"
+        "ReportCreateResponse{code=$code, data=$data, message=$message, additionalProperties=$additionalProperties}"
 }
