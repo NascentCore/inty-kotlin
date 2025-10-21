@@ -207,6 +207,7 @@ private constructor(
     private constructor(
         private val isSubscribed: JsonField<Boolean>,
         private val subscriptionStatus: JsonField<String>,
+        private val agentCreation24hLimit: JsonField<Long>,
         private val agentCreationLimit: JsonField<Long>,
         private val backgroundGenerationLimitPerDay: JsonField<Long>,
         private val chat24hLimit: JsonField<Long>,
@@ -216,6 +217,7 @@ private constructor(
         private val guestChat24hLimit: JsonField<Long>,
         private val guestVoice24hLimit: JsonField<Long>,
         private val hasEverSubscribed: JsonField<Boolean>,
+        private val imageGen24hLimit: JsonField<Long>,
         private val plan: JsonField<SubscriptionPlan>,
         private val remainingDays: JsonField<Long>,
         private val subscription: JsonField<UserSubscription>,
@@ -233,6 +235,9 @@ private constructor(
             @JsonProperty("subscription_status")
             @ExcludeMissing
             subscriptionStatus: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("agent_creation_24h_limit")
+            @ExcludeMissing
+            agentCreation24hLimit: JsonField<Long> = JsonMissing.of(),
             @JsonProperty("agent_creation_limit")
             @ExcludeMissing
             agentCreationLimit: JsonField<Long> = JsonMissing.of(),
@@ -260,6 +265,9 @@ private constructor(
             @JsonProperty("has_ever_subscribed")
             @ExcludeMissing
             hasEverSubscribed: JsonField<Boolean> = JsonMissing.of(),
+            @JsonProperty("image_gen_24h_limit")
+            @ExcludeMissing
+            imageGen24hLimit: JsonField<Long> = JsonMissing.of(),
             @JsonProperty("plan")
             @ExcludeMissing
             plan: JsonField<SubscriptionPlan> = JsonMissing.of(),
@@ -281,6 +289,7 @@ private constructor(
         ) : this(
             isSubscribed,
             subscriptionStatus,
+            agentCreation24hLimit,
             agentCreationLimit,
             backgroundGenerationLimitPerDay,
             chat24hLimit,
@@ -290,6 +299,7 @@ private constructor(
             guestChat24hLimit,
             guestVoice24hLimit,
             hasEverSubscribed,
+            imageGen24hLimit,
             plan,
             remainingDays,
             subscription,
@@ -316,7 +326,16 @@ private constructor(
         fun subscriptionStatus(): String = subscriptionStatus.getRequired("subscription_status")
 
         /**
-         * Agent创建数量限制
+         * 24小时内Agent创建数量限制
+         *
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun agentCreation24hLimit(): Long? =
+            agentCreation24hLimit.getNullable("agent_creation_24h_limit")
+
+        /**
+         * Agent创建数量限制（已废弃，使用agent_creation_24h_limit）
          *
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
@@ -324,7 +343,7 @@ private constructor(
         fun agentCreationLimit(): Long? = agentCreationLimit.getNullable("agent_creation_limit")
 
         /**
-         * 每日背景图生成次数限制
+         * 每日背景图生成次数限制（已废弃，使用image_gen_24h_limit）
          *
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
@@ -387,6 +406,14 @@ private constructor(
          *   server responded with an unexpected value).
          */
         fun hasEverSubscribed(): Boolean? = hasEverSubscribed.getNullable("has_ever_subscribed")
+
+        /**
+         * 24小时内图片生成次数限制
+         *
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun imageGen24hLimit(): Long? = imageGen24hLimit.getNullable("image_gen_24h_limit")
 
         /**
          * 订阅计划响应模型
@@ -455,6 +482,16 @@ private constructor(
         @JsonProperty("subscription_status")
         @ExcludeMissing
         fun _subscriptionStatus(): JsonField<String> = subscriptionStatus
+
+        /**
+         * Returns the raw JSON value of [agentCreation24hLimit].
+         *
+         * Unlike [agentCreation24hLimit], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("agent_creation_24h_limit")
+        @ExcludeMissing
+        fun _agentCreation24hLimit(): JsonField<Long> = agentCreation24hLimit
 
         /**
          * Returns the raw JSON value of [agentCreationLimit].
@@ -541,6 +578,16 @@ private constructor(
         @JsonProperty("has_ever_subscribed")
         @ExcludeMissing
         fun _hasEverSubscribed(): JsonField<Boolean> = hasEverSubscribed
+
+        /**
+         * Returns the raw JSON value of [imageGen24hLimit].
+         *
+         * Unlike [imageGen24hLimit], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("image_gen_24h_limit")
+        @ExcludeMissing
+        fun _imageGen24hLimit(): JsonField<Long> = imageGen24hLimit
 
         /**
          * Returns the raw JSON value of [plan].
@@ -630,6 +677,7 @@ private constructor(
 
             private var isSubscribed: JsonField<Boolean>? = null
             private var subscriptionStatus: JsonField<String>? = null
+            private var agentCreation24hLimit: JsonField<Long> = JsonMissing.of()
             private var agentCreationLimit: JsonField<Long> = JsonMissing.of()
             private var backgroundGenerationLimitPerDay: JsonField<Long> = JsonMissing.of()
             private var chat24hLimit: JsonField<Long> = JsonMissing.of()
@@ -639,6 +687,7 @@ private constructor(
             private var guestChat24hLimit: JsonField<Long> = JsonMissing.of()
             private var guestVoice24hLimit: JsonField<Long> = JsonMissing.of()
             private var hasEverSubscribed: JsonField<Boolean> = JsonMissing.of()
+            private var imageGen24hLimit: JsonField<Long> = JsonMissing.of()
             private var plan: JsonField<SubscriptionPlan> = JsonMissing.of()
             private var remainingDays: JsonField<Long> = JsonMissing.of()
             private var subscription: JsonField<UserSubscription> = JsonMissing.of()
@@ -650,6 +699,7 @@ private constructor(
             internal fun from(data: Data) = apply {
                 isSubscribed = data.isSubscribed
                 subscriptionStatus = data.subscriptionStatus
+                agentCreation24hLimit = data.agentCreation24hLimit
                 agentCreationLimit = data.agentCreationLimit
                 backgroundGenerationLimitPerDay = data.backgroundGenerationLimitPerDay
                 chat24hLimit = data.chat24hLimit
@@ -659,6 +709,7 @@ private constructor(
                 guestChat24hLimit = data.guestChat24hLimit
                 guestVoice24hLimit = data.guestVoice24hLimit
                 hasEverSubscribed = data.hasEverSubscribed
+                imageGen24hLimit = data.imageGen24hLimit
                 plan = data.plan
                 remainingDays = data.remainingDays
                 subscription = data.subscription
@@ -697,7 +748,30 @@ private constructor(
                 this.subscriptionStatus = subscriptionStatus
             }
 
-            /** Agent创建数量限制 */
+            /** 24小时内Agent创建数量限制 */
+            fun agentCreation24hLimit(agentCreation24hLimit: Long?) =
+                agentCreation24hLimit(JsonField.ofNullable(agentCreation24hLimit))
+
+            /**
+             * Alias for [Builder.agentCreation24hLimit].
+             *
+             * This unboxed primitive overload exists for backwards compatibility.
+             */
+            fun agentCreation24hLimit(agentCreation24hLimit: Long) =
+                agentCreation24hLimit(agentCreation24hLimit as Long?)
+
+            /**
+             * Sets [Builder.agentCreation24hLimit] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.agentCreation24hLimit] with a well-typed [Long]
+             * value instead. This method is primarily for setting the field to an undocumented or
+             * not yet supported value.
+             */
+            fun agentCreation24hLimit(agentCreation24hLimit: JsonField<Long>) = apply {
+                this.agentCreation24hLimit = agentCreation24hLimit
+            }
+
+            /** Agent创建数量限制（已废弃，使用agent_creation_24h_limit） */
             fun agentCreationLimit(agentCreationLimit: Long) =
                 agentCreationLimit(JsonField.of(agentCreationLimit))
 
@@ -712,7 +786,7 @@ private constructor(
                 this.agentCreationLimit = agentCreationLimit
             }
 
-            /** 每日背景图生成次数限制 */
+            /** 每日背景图生成次数限制（已废弃，使用image_gen_24h_limit） */
             fun backgroundGenerationLimitPerDay(backgroundGenerationLimitPerDay: Long) =
                 backgroundGenerationLimitPerDay(JsonField.of(backgroundGenerationLimitPerDay))
 
@@ -863,6 +937,29 @@ private constructor(
                 this.hasEverSubscribed = hasEverSubscribed
             }
 
+            /** 24小时内图片生成次数限制 */
+            fun imageGen24hLimit(imageGen24hLimit: Long?) =
+                imageGen24hLimit(JsonField.ofNullable(imageGen24hLimit))
+
+            /**
+             * Alias for [Builder.imageGen24hLimit].
+             *
+             * This unboxed primitive overload exists for backwards compatibility.
+             */
+            fun imageGen24hLimit(imageGen24hLimit: Long) =
+                imageGen24hLimit(imageGen24hLimit as Long?)
+
+            /**
+             * Sets [Builder.imageGen24hLimit] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.imageGen24hLimit] with a well-typed [Long] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun imageGen24hLimit(imageGen24hLimit: JsonField<Long>) = apply {
+                this.imageGen24hLimit = imageGen24hLimit
+            }
+
             /** 订阅计划响应模型 */
             fun plan(plan: SubscriptionPlan?) = plan(JsonField.ofNullable(plan))
 
@@ -1006,6 +1103,7 @@ private constructor(
                 Data(
                     checkRequired("isSubscribed", isSubscribed),
                     checkRequired("subscriptionStatus", subscriptionStatus),
+                    agentCreation24hLimit,
                     agentCreationLimit,
                     backgroundGenerationLimitPerDay,
                     chat24hLimit,
@@ -1015,6 +1113,7 @@ private constructor(
                     guestChat24hLimit,
                     guestVoice24hLimit,
                     hasEverSubscribed,
+                    imageGen24hLimit,
                     plan,
                     remainingDays,
                     subscription,
@@ -1034,6 +1133,7 @@ private constructor(
 
             isSubscribed()
             subscriptionStatus()
+            agentCreation24hLimit()
             agentCreationLimit()
             backgroundGenerationLimitPerDay()
             chat24hLimit()
@@ -1043,6 +1143,7 @@ private constructor(
             guestChat24hLimit()
             guestVoice24hLimit()
             hasEverSubscribed()
+            imageGen24hLimit()
             plan()?.validate()
             remainingDays()
             subscription()?.validate()
@@ -1069,6 +1170,7 @@ private constructor(
         internal fun validity(): Int =
             (if (isSubscribed.asKnown() == null) 0 else 1) +
                 (if (subscriptionStatus.asKnown() == null) 0 else 1) +
+                (if (agentCreation24hLimit.asKnown() == null) 0 else 1) +
                 (if (agentCreationLimit.asKnown() == null) 0 else 1) +
                 (if (backgroundGenerationLimitPerDay.asKnown() == null) 0 else 1) +
                 (if (chat24hLimit.asKnown() == null) 0 else 1) +
@@ -1078,6 +1180,7 @@ private constructor(
                 (if (guestChat24hLimit.asKnown() == null) 0 else 1) +
                 (if (guestVoice24hLimit.asKnown() == null) 0 else 1) +
                 (if (hasEverSubscribed.asKnown() == null) 0 else 1) +
+                (if (imageGen24hLimit.asKnown() == null) 0 else 1) +
                 (plan.asKnown()?.validity() ?: 0) +
                 (if (remainingDays.asKnown() == null) 0 else 1) +
                 (subscription.asKnown()?.validity() ?: 0) +
@@ -1603,6 +1706,7 @@ private constructor(
             return other is Data &&
                 isSubscribed == other.isSubscribed &&
                 subscriptionStatus == other.subscriptionStatus &&
+                agentCreation24hLimit == other.agentCreation24hLimit &&
                 agentCreationLimit == other.agentCreationLimit &&
                 backgroundGenerationLimitPerDay == other.backgroundGenerationLimitPerDay &&
                 chat24hLimit == other.chat24hLimit &&
@@ -1612,6 +1716,7 @@ private constructor(
                 guestChat24hLimit == other.guestChat24hLimit &&
                 guestVoice24hLimit == other.guestVoice24hLimit &&
                 hasEverSubscribed == other.hasEverSubscribed &&
+                imageGen24hLimit == other.imageGen24hLimit &&
                 plan == other.plan &&
                 remainingDays == other.remainingDays &&
                 subscription == other.subscription &&
@@ -1625,6 +1730,7 @@ private constructor(
             Objects.hash(
                 isSubscribed,
                 subscriptionStatus,
+                agentCreation24hLimit,
                 agentCreationLimit,
                 backgroundGenerationLimitPerDay,
                 chat24hLimit,
@@ -1634,6 +1740,7 @@ private constructor(
                 guestChat24hLimit,
                 guestVoice24hLimit,
                 hasEverSubscribed,
+                imageGen24hLimit,
                 plan,
                 remainingDays,
                 subscription,
@@ -1647,7 +1754,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Data{isSubscribed=$isSubscribed, subscriptionStatus=$subscriptionStatus, agentCreationLimit=$agentCreationLimit, backgroundGenerationLimitPerDay=$backgroundGenerationLimitPerDay, chat24hLimit=$chat24hLimit, chatLimitPerDay=$chatLimitPerDay, featureList=$featureList, features=$features, guestChat24hLimit=$guestChat24hLimit, guestVoice24hLimit=$guestVoice24hLimit, hasEverSubscribed=$hasEverSubscribed, plan=$plan, remainingDays=$remainingDays, subscription=$subscription, totalChatLimit=$totalChatLimit, voice24hLimit=$voice24hLimit, willAutoRenew=$willAutoRenew, additionalProperties=$additionalProperties}"
+            "Data{isSubscribed=$isSubscribed, subscriptionStatus=$subscriptionStatus, agentCreation24hLimit=$agentCreation24hLimit, agentCreationLimit=$agentCreationLimit, backgroundGenerationLimitPerDay=$backgroundGenerationLimitPerDay, chat24hLimit=$chat24hLimit, chatLimitPerDay=$chatLimitPerDay, featureList=$featureList, features=$features, guestChat24hLimit=$guestChat24hLimit, guestVoice24hLimit=$guestVoice24hLimit, hasEverSubscribed=$hasEverSubscribed, imageGen24hLimit=$imageGen24hLimit, plan=$plan, remainingDays=$remainingDays, subscription=$subscription, totalChatLimit=$totalChatLimit, voice24hLimit=$voice24hLimit, willAutoRenew=$willAutoRenew, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

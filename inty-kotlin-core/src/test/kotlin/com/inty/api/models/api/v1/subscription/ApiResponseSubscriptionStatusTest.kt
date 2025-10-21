@@ -22,6 +22,7 @@ internal class ApiResponseSubscriptionStatusTest {
                     ApiResponseSubscriptionStatus.Data.builder()
                         .isSubscribed(true)
                         .subscriptionStatus("subscription_status")
+                        .agentCreation24hLimit(0L)
                         .agentCreationLimit(0L)
                         .backgroundGenerationLimitPerDay(0L)
                         .chat24hLimit(0L)
@@ -45,6 +46,7 @@ internal class ApiResponseSubscriptionStatusTest {
                         .guestChat24hLimit(0L)
                         .guestVoice24hLimit(0L)
                         .hasEverSubscribed(true)
+                        .imageGen24hLimit(0L)
                         .plan(
                             SubscriptionPlan.builder()
                                 .id("id")
@@ -130,6 +132,7 @@ internal class ApiResponseSubscriptionStatusTest {
                 ApiResponseSubscriptionStatus.Data.builder()
                     .isSubscribed(true)
                     .subscriptionStatus("subscription_status")
+                    .agentCreation24hLimit(0L)
                     .agentCreationLimit(0L)
                     .backgroundGenerationLimitPerDay(0L)
                     .chat24hLimit(0L)
@@ -153,6 +156,7 @@ internal class ApiResponseSubscriptionStatusTest {
                     .guestChat24hLimit(0L)
                     .guestVoice24hLimit(0L)
                     .hasEverSubscribed(true)
+                    .imageGen24hLimit(0L)
                     .plan(
                         SubscriptionPlan.builder()
                             .id("id")
@@ -242,6 +246,7 @@ internal class ApiResponseSubscriptionStatusTest {
                     ApiResponseSubscriptionStatus.Data.builder()
                         .isSubscribed(true)
                         .subscriptionStatus("subscription_status")
+                        .agentCreation24hLimit(0L)
                         .agentCreationLimit(0L)
                         .backgroundGenerationLimitPerDay(0L)
                         .chat24hLimit(0L)
@@ -265,6 +270,7 @@ internal class ApiResponseSubscriptionStatusTest {
                         .guestChat24hLimit(0L)
                         .guestVoice24hLimit(0L)
                         .hasEverSubscribed(true)
+                        .imageGen24hLimit(0L)
                         .plan(
                             SubscriptionPlan.builder()
                                 .id("id")

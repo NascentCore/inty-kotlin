@@ -24,6 +24,7 @@ interface ChatServiceAsync {
     fun withOptions(modifier: (ClientOptions.Builder) -> Unit): ChatServiceAsync
 
     /** 可以处理包括图片在内的各种消息类型，媒体类型应该先上传，然后将 URL 作为索引发送到此 API */
+    @Deprecated("deprecated")
     suspend fun sendMessage(
         agentId: String,
         params: ChatSendMessageParams,
@@ -32,6 +33,7 @@ interface ChatServiceAsync {
         sendMessage(params.toBuilder().agentId(agentId).build(), requestOptions)
 
     /** @see sendMessage */
+    @Deprecated("deprecated")
     suspend fun sendMessage(
         params: ChatSendMessageParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -51,6 +53,7 @@ interface ChatServiceAsync {
          * Returns a raw HTTP response for `post /api/v2/chat/completions/{agent_id}`, but is
          * otherwise the same as [ChatServiceAsync.sendMessage].
          */
+        @Deprecated("deprecated")
         @MustBeClosed
         suspend fun sendMessage(
             agentId: String,
@@ -60,6 +63,7 @@ interface ChatServiceAsync {
             sendMessage(params.toBuilder().agentId(agentId).build(), requestOptions)
 
         /** @see sendMessage */
+        @Deprecated("deprecated")
         @MustBeClosed
         suspend fun sendMessage(
             params: ChatSendMessageParams,

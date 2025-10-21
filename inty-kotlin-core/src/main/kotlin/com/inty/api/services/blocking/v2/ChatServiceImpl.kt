@@ -30,6 +30,7 @@ class ChatServiceImpl internal constructor(private val clientOptions: ClientOpti
     override fun withOptions(modifier: (ClientOptions.Builder) -> Unit): ChatService =
         ChatServiceImpl(clientOptions.toBuilder().apply(modifier).build())
 
+    @Deprecated("deprecated")
     override fun sendMessage(
         params: ChatSendMessageParams,
         requestOptions: RequestOptions,
@@ -51,6 +52,7 @@ class ChatServiceImpl internal constructor(private val clientOptions: ClientOpti
         private val sendMessageHandler: Handler<ChatSendMessageResponse> =
             jsonHandler<ChatSendMessageResponse>(clientOptions.jsonMapper)
 
+        @Deprecated("deprecated")
         override fun sendMessage(
             params: ChatSendMessageParams,
             requestOptions: RequestOptions,

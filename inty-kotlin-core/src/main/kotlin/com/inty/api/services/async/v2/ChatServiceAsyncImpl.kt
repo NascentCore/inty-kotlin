@@ -31,6 +31,7 @@ class ChatServiceAsyncImpl internal constructor(private val clientOptions: Clien
     override fun withOptions(modifier: (ClientOptions.Builder) -> Unit): ChatServiceAsync =
         ChatServiceAsyncImpl(clientOptions.toBuilder().apply(modifier).build())
 
+    @Deprecated("deprecated")
     override suspend fun sendMessage(
         params: ChatSendMessageParams,
         requestOptions: RequestOptions,
@@ -54,6 +55,7 @@ class ChatServiceAsyncImpl internal constructor(private val clientOptions: Clien
         private val sendMessageHandler: Handler<ChatSendMessageResponse> =
             jsonHandler<ChatSendMessageResponse>(clientOptions.jsonMapper)
 
+        @Deprecated("deprecated")
         override suspend fun sendMessage(
             params: ChatSendMessageParams,
             requestOptions: RequestOptions,

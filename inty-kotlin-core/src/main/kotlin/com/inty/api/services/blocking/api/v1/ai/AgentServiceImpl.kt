@@ -18,6 +18,7 @@ import com.inty.api.core.http.parseable
 import com.inty.api.core.prepare
 import com.inty.api.models.api.v1.ai.agents.Agent
 import com.inty.api.models.api.v1.ai.agents.AgentCreateParams
+import com.inty.api.models.api.v1.ai.agents.AgentCreateResponse
 import com.inty.api.models.api.v1.ai.agents.AgentDeleteParams
 import com.inty.api.models.api.v1.ai.agents.AgentFollowAgentParams
 import com.inty.api.models.api.v1.ai.agents.AgentFollowingParams
@@ -47,7 +48,7 @@ class AgentServiceImpl internal constructor(private val clientOptions: ClientOpt
     override fun create(
         params: AgentCreateParams,
         requestOptions: RequestOptions,
-    ): ApiResponseAgent =
+    ): AgentCreateResponse =
         // post /api/v1/ai/agents
         withRawResponse().create(params, requestOptions).parse()
 
@@ -116,13 +117,13 @@ class AgentServiceImpl internal constructor(private val clientOptions: ClientOpt
         ): AgentService.WithRawResponse =
             AgentServiceImpl.WithRawResponseImpl(clientOptions.toBuilder().apply(modifier).build())
 
-        private val createHandler: Handler<ApiResponseAgent> =
-            jsonHandler<ApiResponseAgent>(clientOptions.jsonMapper)
+        private val createHandler: Handler<AgentCreateResponse> =
+            jsonHandler<AgentCreateResponse>(clientOptions.jsonMapper)
 
         override fun create(
             params: AgentCreateParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<ApiResponseAgent> {
+        ): HttpResponseFor<AgentCreateResponse> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)

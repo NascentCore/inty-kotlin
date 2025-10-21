@@ -31,7 +31,7 @@ internal class AgentServiceTest {
                 .build()
         val agentService = client.api().v1().ai().agents()
 
-        val apiResponseAgent =
+        val agent =
             agentService.create(
                 AgentCreateParams.builder()
                     .gender("gender")
@@ -91,7 +91,7 @@ internal class AgentServiceTest {
                     .build()
             )
 
-        apiResponseAgent.validate()
+        agent.validate()
     }
 
     @Disabled("Prism tests are disabled")

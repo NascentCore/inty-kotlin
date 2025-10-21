@@ -21,6 +21,7 @@ import java.util.Collections
 import java.util.Objects
 
 /** 可以处理包括图片在内的各种消息类型，媒体类型应该先上传，然后将 URL 作为索引发送到此 API */
+@Deprecated("deprecated")
 class ChatSendMessageParams
 private constructor(
     private val agentId: String?,

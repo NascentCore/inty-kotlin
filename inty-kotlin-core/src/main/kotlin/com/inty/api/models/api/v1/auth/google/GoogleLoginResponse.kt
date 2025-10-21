@@ -382,6 +382,7 @@ private constructor(
             private val isNewUser: JsonField<Boolean>,
             private val nickname: JsonField<String>,
             private val ageGroup: JsonField<String>,
+            private val description: JsonField<String>,
             private val gender: JsonField<Gender>,
             private val phone: JsonField<String>,
             private val systemLanguage: JsonField<String>,
@@ -407,6 +408,9 @@ private constructor(
                 @JsonProperty("age_group")
                 @ExcludeMissing
                 ageGroup: JsonField<String> = JsonMissing.of(),
+                @JsonProperty("description")
+                @ExcludeMissing
+                description: JsonField<String> = JsonMissing.of(),
                 @JsonProperty("gender")
                 @ExcludeMissing
                 gender: JsonField<Gender> = JsonMissing.of(),
@@ -422,6 +426,7 @@ private constructor(
                 isNewUser,
                 nickname,
                 ageGroup,
+                description,
                 gender,
                 phone,
                 systemLanguage,
@@ -477,6 +482,12 @@ private constructor(
              *   the server responded with an unexpected value).
              */
             fun ageGroup(): String? = ageGroup.getNullable("age_group")
+
+            /**
+             * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if
+             *   the server responded with an unexpected value).
+             */
+            fun description(): String? = description.getNullable("description")
 
             /**
              * 性别
@@ -556,6 +567,16 @@ private constructor(
             @JsonProperty("age_group") @ExcludeMissing fun _ageGroup(): JsonField<String> = ageGroup
 
             /**
+             * Returns the raw JSON value of [description].
+             *
+             * Unlike [description], this method doesn't throw if the JSON field has an unexpected
+             * type.
+             */
+            @JsonProperty("description")
+            @ExcludeMissing
+            fun _description(): JsonField<String> = description
+
+            /**
              * Returns the raw JSON value of [gender].
              *
              * Unlike [gender], this method doesn't throw if the JSON field has an unexpected type.
@@ -619,6 +640,7 @@ private constructor(
                 private var isNewUser: JsonField<Boolean>? = null
                 private var nickname: JsonField<String>? = null
                 private var ageGroup: JsonField<String> = JsonMissing.of()
+                private var description: JsonField<String> = JsonMissing.of()
                 private var gender: JsonField<Gender> = JsonMissing.of()
                 private var phone: JsonField<String> = JsonMissing.of()
                 private var systemLanguage: JsonField<String> = JsonMissing.of()
@@ -632,6 +654,7 @@ private constructor(
                     isNewUser = user.isNewUser
                     nickname = user.nickname
                     ageGroup = user.ageGroup
+                    description = user.description
                     gender = user.gender
                     phone = user.phone
                     systemLanguage = user.systemLanguage
@@ -715,6 +738,20 @@ private constructor(
                  * yet supported value.
                  */
                 fun ageGroup(ageGroup: JsonField<String>) = apply { this.ageGroup = ageGroup }
+
+                fun description(description: String?) =
+                    description(JsonField.ofNullable(description))
+
+                /**
+                 * Sets [Builder.description] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.description] with a well-typed [String] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun description(description: JsonField<String>) = apply {
+                    this.description = description
+                }
 
                 /** 性别 */
                 fun gender(gender: Gender?) = gender(JsonField.ofNullable(gender))
@@ -801,6 +838,7 @@ private constructor(
                         checkRequired("isNewUser", isNewUser),
                         checkRequired("nickname", nickname),
                         ageGroup,
+                        description,
                         gender,
                         phone,
                         systemLanguage,
@@ -822,6 +860,7 @@ private constructor(
                 isNewUser()
                 nickname()
                 ageGroup()
+                description()
                 gender()?.validate()
                 phone()
                 systemLanguage()
@@ -850,6 +889,7 @@ private constructor(
                     (if (isNewUser.asKnown() == null) 0 else 1) +
                     (if (nickname.asKnown() == null) 0 else 1) +
                     (if (ageGroup.asKnown() == null) 0 else 1) +
+                    (if (description.asKnown() == null) 0 else 1) +
                     (gender.asKnown()?.validity() ?: 0) +
                     (if (phone.asKnown() == null) 0 else 1) +
                     (if (systemLanguage.asKnown() == null) 0 else 1)
@@ -1003,6 +1043,7 @@ private constructor(
                     isNewUser == other.isNewUser &&
                     nickname == other.nickname &&
                     ageGroup == other.ageGroup &&
+                    description == other.description &&
                     gender == other.gender &&
                     phone == other.phone &&
                     systemLanguage == other.systemLanguage &&
@@ -1018,6 +1059,7 @@ private constructor(
                     isNewUser,
                     nickname,
                     ageGroup,
+                    description,
                     gender,
                     phone,
                     systemLanguage,
@@ -1028,7 +1070,7 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "User{id=$id, authType=$authType, avatar=$avatar, email=$email, isNewUser=$isNewUser, nickname=$nickname, ageGroup=$ageGroup, gender=$gender, phone=$phone, systemLanguage=$systemLanguage, additionalProperties=$additionalProperties}"
+                "User{id=$id, authType=$authType, avatar=$avatar, email=$email, isNewUser=$isNewUser, nickname=$nickname, ageGroup=$ageGroup, description=$description, gender=$gender, phone=$phone, systemLanguage=$systemLanguage, additionalProperties=$additionalProperties}"
         }
 
         override fun equals(other: Any?): Boolean {
