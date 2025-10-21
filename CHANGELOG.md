@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.16.0 (2025-10-21)
+
+Full Changelog: [v0.15.0...v0.16.0](https://github.com/NascentCore/inty-kotlin/compare/v0.15.0...v0.16.0)
+
+### Features
+
+* **api:** manual updates ([c201abf](https://github.com/NascentCore/inty-kotlin/commit/c201abf6ad7602da9b3eb7290842afe19eb6b12d))
+
 ## 0.15.0 (2025-10-14)
 
 Full Changelog: [v0.14.0...v0.15.0](https://github.com/NascentCore/inty-kotlin/compare/v0.14.0...v0.15.0)
