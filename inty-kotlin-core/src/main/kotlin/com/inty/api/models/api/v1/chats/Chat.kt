@@ -27,8 +27,11 @@ private constructor(
     private val userId: JsonField<String>,
     private val agentAvatar: JsonField<String>,
     private val agentBackground: JsonField<String>,
+    private val agentIntro: JsonField<String>,
     private val agentIsDeleted: JsonField<Boolean>,
     private val agentName: JsonField<String>,
+    private val agentOpening: JsonField<String>,
+    private val agentOpeningAudioUrl: JsonField<String>,
     private val lastMessage: JsonField<String>,
     private val lastMessageTime: JsonField<OffsetDateTime>,
     private val settings: JsonField<ChatSettings>,
@@ -50,10 +53,19 @@ private constructor(
         @JsonProperty("agent_background")
         @ExcludeMissing
         agentBackground: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("agent_intro")
+        @ExcludeMissing
+        agentIntro: JsonField<String> = JsonMissing.of(),
         @JsonProperty("agent_is_deleted")
         @ExcludeMissing
         agentIsDeleted: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("agent_name") @ExcludeMissing agentName: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("agent_opening")
+        @ExcludeMissing
+        agentOpening: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("agent_opening_audio_url")
+        @ExcludeMissing
+        agentOpeningAudioUrl: JsonField<String> = JsonMissing.of(),
         @JsonProperty("last_message")
         @ExcludeMissing
         lastMessage: JsonField<String> = JsonMissing.of(),
@@ -73,8 +85,11 @@ private constructor(
         userId,
         agentAvatar,
         agentBackground,
+        agentIntro,
         agentIsDeleted,
         agentName,
+        agentOpening,
+        agentOpeningAudioUrl,
         lastMessage,
         lastMessageTime,
         settings,
@@ -122,6 +137,12 @@ private constructor(
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
      *   responded with an unexpected value).
      */
+    fun agentIntro(): String? = agentIntro.getNullable("agent_intro")
+
+    /**
+     * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
+     *   responded with an unexpected value).
+     */
     fun agentIsDeleted(): Boolean? = agentIsDeleted.getNullable("agent_is_deleted")
 
     /**
@@ -129,6 +150,19 @@ private constructor(
      *   responded with an unexpected value).
      */
     fun agentName(): String? = agentName.getNullable("agent_name")
+
+    /**
+     * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
+     *   responded with an unexpected value).
+     */
+    fun agentOpening(): String? = agentOpening.getNullable("agent_opening")
+
+    /**
+     * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
+     *   responded with an unexpected value).
+     */
+    fun agentOpeningAudioUrl(): String? =
+        agentOpeningAudioUrl.getNullable("agent_opening_audio_url")
 
     /**
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
@@ -205,6 +239,13 @@ private constructor(
     fun _agentBackground(): JsonField<String> = agentBackground
 
     /**
+     * Returns the raw JSON value of [agentIntro].
+     *
+     * Unlike [agentIntro], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("agent_intro") @ExcludeMissing fun _agentIntro(): JsonField<String> = agentIntro
+
+    /**
      * Returns the raw JSON value of [agentIsDeleted].
      *
      * Unlike [agentIsDeleted], this method doesn't throw if the JSON field has an unexpected type.
@@ -219,6 +260,25 @@ private constructor(
      * Unlike [agentName], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("agent_name") @ExcludeMissing fun _agentName(): JsonField<String> = agentName
+
+    /**
+     * Returns the raw JSON value of [agentOpening].
+     *
+     * Unlike [agentOpening], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("agent_opening")
+    @ExcludeMissing
+    fun _agentOpening(): JsonField<String> = agentOpening
+
+    /**
+     * Returns the raw JSON value of [agentOpeningAudioUrl].
+     *
+     * Unlike [agentOpeningAudioUrl], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("agent_opening_audio_url")
+    @ExcludeMissing
+    fun _agentOpeningAudioUrl(): JsonField<String> = agentOpeningAudioUrl
 
     /**
      * Returns the raw JSON value of [lastMessage].
@@ -291,8 +351,11 @@ private constructor(
         private var userId: JsonField<String>? = null
         private var agentAvatar: JsonField<String> = JsonMissing.of()
         private var agentBackground: JsonField<String> = JsonMissing.of()
+        private var agentIntro: JsonField<String> = JsonMissing.of()
         private var agentIsDeleted: JsonField<Boolean> = JsonMissing.of()
         private var agentName: JsonField<String> = JsonMissing.of()
+        private var agentOpening: JsonField<String> = JsonMissing.of()
+        private var agentOpeningAudioUrl: JsonField<String> = JsonMissing.of()
         private var lastMessage: JsonField<String> = JsonMissing.of()
         private var lastMessageTime: JsonField<OffsetDateTime> = JsonMissing.of()
         private var settings: JsonField<ChatSettings> = JsonMissing.of()
@@ -306,8 +369,11 @@ private constructor(
             userId = chat.userId
             agentAvatar = chat.agentAvatar
             agentBackground = chat.agentBackground
+            agentIntro = chat.agentIntro
             agentIsDeleted = chat.agentIsDeleted
             agentName = chat.agentName
+            agentOpening = chat.agentOpening
+            agentOpeningAudioUrl = chat.agentOpeningAudioUrl
             lastMessage = chat.lastMessage
             lastMessageTime = chat.lastMessageTime
             settings = chat.settings
@@ -381,6 +447,17 @@ private constructor(
             this.agentBackground = agentBackground
         }
 
+        fun agentIntro(agentIntro: String?) = agentIntro(JsonField.ofNullable(agentIntro))
+
+        /**
+         * Sets [Builder.agentIntro] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.agentIntro] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun agentIntro(agentIntro: JsonField<String>) = apply { this.agentIntro = agentIntro }
+
         fun agentIsDeleted(agentIsDeleted: Boolean?) =
             agentIsDeleted(JsonField.ofNullable(agentIsDeleted))
 
@@ -412,6 +489,33 @@ private constructor(
          * value.
          */
         fun agentName(agentName: JsonField<String>) = apply { this.agentName = agentName }
+
+        fun agentOpening(agentOpening: String?) = agentOpening(JsonField.ofNullable(agentOpening))
+
+        /**
+         * Sets [Builder.agentOpening] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.agentOpening] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun agentOpening(agentOpening: JsonField<String>) = apply {
+            this.agentOpening = agentOpening
+        }
+
+        fun agentOpeningAudioUrl(agentOpeningAudioUrl: String?) =
+            agentOpeningAudioUrl(JsonField.ofNullable(agentOpeningAudioUrl))
+
+        /**
+         * Sets [Builder.agentOpeningAudioUrl] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.agentOpeningAudioUrl] with a well-typed [String] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun agentOpeningAudioUrl(agentOpeningAudioUrl: JsonField<String>) = apply {
+            this.agentOpeningAudioUrl = agentOpeningAudioUrl
+        }
 
         fun lastMessage(lastMessage: String?) = lastMessage(JsonField.ofNullable(lastMessage))
 
@@ -503,8 +607,11 @@ private constructor(
                 checkRequired("userId", userId),
                 agentAvatar,
                 agentBackground,
+                agentIntro,
                 agentIsDeleted,
                 agentName,
+                agentOpening,
+                agentOpeningAudioUrl,
                 lastMessage,
                 lastMessageTime,
                 settings,
@@ -526,8 +633,11 @@ private constructor(
         userId()
         agentAvatar()
         agentBackground()
+        agentIntro()
         agentIsDeleted()
         agentName()
+        agentOpening()
+        agentOpeningAudioUrl()
         lastMessage()
         lastMessageTime()
         settings()?.validate()
@@ -555,8 +665,11 @@ private constructor(
             (if (userId.asKnown() == null) 0 else 1) +
             (if (agentAvatar.asKnown() == null) 0 else 1) +
             (if (agentBackground.asKnown() == null) 0 else 1) +
+            (if (agentIntro.asKnown() == null) 0 else 1) +
             (if (agentIsDeleted.asKnown() == null) 0 else 1) +
             (if (agentName.asKnown() == null) 0 else 1) +
+            (if (agentOpening.asKnown() == null) 0 else 1) +
+            (if (agentOpeningAudioUrl.asKnown() == null) 0 else 1) +
             (if (lastMessage.asKnown() == null) 0 else 1) +
             (if (lastMessageTime.asKnown() == null) 0 else 1) +
             (settings.asKnown()?.validity() ?: 0) +
@@ -574,8 +687,11 @@ private constructor(
             userId == other.userId &&
             agentAvatar == other.agentAvatar &&
             agentBackground == other.agentBackground &&
+            agentIntro == other.agentIntro &&
             agentIsDeleted == other.agentIsDeleted &&
             agentName == other.agentName &&
+            agentOpening == other.agentOpening &&
+            agentOpeningAudioUrl == other.agentOpeningAudioUrl &&
             lastMessage == other.lastMessage &&
             lastMessageTime == other.lastMessageTime &&
             settings == other.settings &&
@@ -591,8 +707,11 @@ private constructor(
             userId,
             agentAvatar,
             agentBackground,
+            agentIntro,
             agentIsDeleted,
             agentName,
+            agentOpening,
+            agentOpeningAudioUrl,
             lastMessage,
             lastMessageTime,
             settings,
@@ -604,5 +723,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Chat{id=$id, agentId=$agentId, createdAt=$createdAt, userId=$userId, agentAvatar=$agentAvatar, agentBackground=$agentBackground, agentIsDeleted=$agentIsDeleted, agentName=$agentName, lastMessage=$lastMessage, lastMessageTime=$lastMessageTime, settings=$settings, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
+        "Chat{id=$id, agentId=$agentId, createdAt=$createdAt, userId=$userId, agentAvatar=$agentAvatar, agentBackground=$agentBackground, agentIntro=$agentIntro, agentIsDeleted=$agentIsDeleted, agentName=$agentName, agentOpening=$agentOpening, agentOpeningAudioUrl=$agentOpeningAudioUrl, lastMessage=$lastMessage, lastMessageTime=$lastMessageTime, settings=$settings, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
 }

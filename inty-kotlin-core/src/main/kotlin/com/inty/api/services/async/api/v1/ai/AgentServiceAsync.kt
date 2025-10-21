@@ -8,6 +8,7 @@ import com.inty.api.core.RequestOptions
 import com.inty.api.core.http.HttpResponseFor
 import com.inty.api.models.api.v1.ai.agents.Agent
 import com.inty.api.models.api.v1.ai.agents.AgentCreateParams
+import com.inty.api.models.api.v1.ai.agents.AgentCreateResponse
 import com.inty.api.models.api.v1.ai.agents.AgentDeleteParams
 import com.inty.api.models.api.v1.ai.agents.AgentFollowAgentParams
 import com.inty.api.models.api.v1.ai.agents.AgentFollowingParams
@@ -40,7 +41,7 @@ interface AgentServiceAsync {
     suspend fun create(
         params: AgentCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): ApiResponseAgent
+    ): AgentCreateResponse
 
     /** Get public agent by ID, include pre-generated agents and user-created public agents */
     suspend fun retrieve(
@@ -189,7 +190,7 @@ interface AgentServiceAsync {
         suspend fun create(
             params: AgentCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<ApiResponseAgent>
+        ): HttpResponseFor<AgentCreateResponse>
 
         /**
          * Returns a raw HTTP response for `get /api/v1/ai/agents/{agent_id}`, but is otherwise the
