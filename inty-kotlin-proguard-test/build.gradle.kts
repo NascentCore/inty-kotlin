@@ -1,6 +1,6 @@
 plugins {
     id("inty.kotlin")
-    id("com.gradleup.shadow") version "8.3.8"
+    id("com.gradleup.shadow") version "9.2.2"
 }
 
 buildscript {
@@ -9,17 +9,17 @@ buildscript {
     }
 
     dependencies {
-        classpath("com.guardsquare:proguard-gradle:7.4.2")
-        classpath("com.android.tools:r8:8.3.37")
+        classpath("com.guardsquare:proguard-gradle:7.8.0")
+        classpath("com.android.tools:r8:8.11.18")
     }
 }
 
 dependencies {
     testImplementation(project(":inty-kotlin"))
     testImplementation(kotlin("test"))
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.3")
-    testImplementation("org.assertj:assertj-core:3.25.3")
-    testImplementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.4")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:6.0.0")
+    testImplementation("org.assertj:assertj-core:3.27.6")
+    testImplementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.20.0")
 }
 
 tasks.shadowJar {
