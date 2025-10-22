@@ -31,11 +31,11 @@ dependencies {
 
     testImplementation(kotlin("test"))
     testImplementation(project(":inty-kotlin-client-okhttp"))
-    testImplementation("com.github.tomakehurst:wiremock-jre8:3.0.1")
+    testImplementation("com.github.tomakehurst:wiremock-jre8:2.35.2")
     testImplementation("org.assertj:assertj-core:3.27.6")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.3")
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.3")
-    testImplementation("org.junit-pioneer:junit-pioneer:2.3.0")
+    testImplementation("org.junit-pioneer:junit-pioneer:1.9.1")
     testImplementation("org.mockito:mockito-core:5.20.0")
     testImplementation("org.mockito:mockito-junit-jupiter:5.20.0")
     testImplementation("org.mockito.kotlin:mockito-kotlin:6.1.0")
