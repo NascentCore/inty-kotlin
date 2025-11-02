@@ -10,6 +10,8 @@ import com.inty.api.models.api.v1.chats.Chat
 import com.inty.api.models.api.v1.chats.ChatCreateCompletionParams
 import com.inty.api.models.api.v1.chats.ChatCreateParams
 import com.inty.api.models.api.v1.chats.ChatDeleteParams
+import com.inty.api.models.api.v1.chats.ChatGenerateImageParams
+import com.inty.api.models.api.v1.chats.ChatGenerateImageResponse
 import com.inty.api.models.api.v1.chats.ChatListParams
 import com.inty.api.models.api.v1.chats.ChatRetrieveVoiceParams
 import com.inty.api.models.api.v1.chats.ChatRetrieveVoiceResponse
@@ -80,6 +82,23 @@ interface ChatServiceAsync {
         params: ChatCreateCompletionParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): ApiResponseDict
+
+    /**
+     * 根据Agent角色、聊天历史和用户消息生成图片，并保存到聊天历史中。注意：路径参数 `agent_id` 仅作为目前的名称，实际应为
+     * `chat_id`。未来如需扩展可直接重命名。agent id 则代表与该 agent 的*当前*会话的 id
+     */
+    suspend fun generateImage(
+        agentId: String,
+        params: ChatGenerateImageParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): ChatGenerateImageResponse =
+        generateImage(params.toBuilder().agentId(agentId).build(), requestOptions)
+
+    /** @see generateImage */
+    suspend fun generateImage(
+        params: ChatGenerateImageParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): ChatGenerateImageResponse
 
     /** Get voice info by voice_id */
     @Deprecated("deprecated")
@@ -185,6 +204,25 @@ interface ChatServiceAsync {
             params: ChatCreateCompletionParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<ApiResponseDict>
+
+        /**
+         * Returns a raw HTTP response for `post /api/v1/chat/images/{agent_id}`, but is otherwise
+         * the same as [ChatServiceAsync.generateImage].
+         */
+        @MustBeClosed
+        suspend fun generateImage(
+            agentId: String,
+            params: ChatGenerateImageParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<ChatGenerateImageResponse> =
+            generateImage(params.toBuilder().agentId(agentId).build(), requestOptions)
+
+        /** @see generateImage */
+        @MustBeClosed
+        suspend fun generateImage(
+            params: ChatGenerateImageParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<ChatGenerateImageResponse>
 
         /**
          * Returns a raw HTTP response for `get /api/v1/chats/voices/{voice_id}`, but is otherwise

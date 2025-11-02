@@ -32,6 +32,8 @@ import com.inty.api.models.api.v1.ai.agents.AgentUpdateParams
 import com.inty.api.models.api.v1.ai.agents.ApiResponseAgent
 import com.inty.api.models.api.v1.ai.agents.ApiResponsePaginationDataAgent
 import com.inty.api.models.api.v1.report.ApiResponseDict
+import com.inty.api.services.blocking.api.v1.ai.agents.ImageGenerationService
+import com.inty.api.services.blocking.api.v1.ai.agents.ImageGenerationServiceImpl
 
 class AgentServiceImpl internal constructor(private val clientOptions: ClientOptions) :
     AgentService {
@@ -40,10 +42,16 @@ class AgentServiceImpl internal constructor(private val clientOptions: ClientOpt
         WithRawResponseImpl(clientOptions)
     }
 
+    private val imageGeneration: ImageGenerationService by lazy {
+        ImageGenerationServiceImpl(clientOptions)
+    }
+
     override fun withRawResponse(): AgentService.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: (ClientOptions.Builder) -> Unit): AgentService =
         AgentServiceImpl(clientOptions.toBuilder().apply(modifier).build())
+
+    override fun imageGeneration(): ImageGenerationService = imageGeneration
 
     override fun create(
         params: AgentCreateParams,
@@ -112,10 +120,16 @@ class AgentServiceImpl internal constructor(private val clientOptions: ClientOpt
         private val errorHandler: Handler<HttpResponse> =
             errorHandler(errorBodyHandler(clientOptions.jsonMapper))
 
+        private val imageGeneration: ImageGenerationService.WithRawResponse by lazy {
+            ImageGenerationServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: (ClientOptions.Builder) -> Unit
         ): AgentService.WithRawResponse =
             AgentServiceImpl.WithRawResponseImpl(clientOptions.toBuilder().apply(modifier).build())
+
+        override fun imageGeneration(): ImageGenerationService.WithRawResponse = imageGeneration
 
         private val createHandler: Handler<AgentCreateResponse> =
             jsonHandler<AgentCreateResponse>(clientOptions.jsonMapper)

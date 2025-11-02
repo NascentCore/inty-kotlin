@@ -32,6 +32,8 @@ import com.inty.api.models.api.v1.ai.agents.AgentUpdateParams
 import com.inty.api.models.api.v1.ai.agents.ApiResponseAgent
 import com.inty.api.models.api.v1.ai.agents.ApiResponsePaginationDataAgent
 import com.inty.api.models.api.v1.report.ApiResponseDict
+import com.inty.api.services.async.api.v1.ai.agents.ImageGenerationServiceAsync
+import com.inty.api.services.async.api.v1.ai.agents.ImageGenerationServiceAsyncImpl
 
 class AgentServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
     AgentServiceAsync {
@@ -40,10 +42,16 @@ class AgentServiceAsyncImpl internal constructor(private val clientOptions: Clie
         WithRawResponseImpl(clientOptions)
     }
 
+    private val imageGeneration: ImageGenerationServiceAsync by lazy {
+        ImageGenerationServiceAsyncImpl(clientOptions)
+    }
+
     override fun withRawResponse(): AgentServiceAsync.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: (ClientOptions.Builder) -> Unit): AgentServiceAsync =
         AgentServiceAsyncImpl(clientOptions.toBuilder().apply(modifier).build())
+
+    override fun imageGeneration(): ImageGenerationServiceAsync = imageGeneration
 
     override suspend fun create(
         params: AgentCreateParams,
@@ -118,12 +126,19 @@ class AgentServiceAsyncImpl internal constructor(private val clientOptions: Clie
         private val errorHandler: Handler<HttpResponse> =
             errorHandler(errorBodyHandler(clientOptions.jsonMapper))
 
+        private val imageGeneration: ImageGenerationServiceAsync.WithRawResponse by lazy {
+            ImageGenerationServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: (ClientOptions.Builder) -> Unit
         ): AgentServiceAsync.WithRawResponse =
             AgentServiceAsyncImpl.WithRawResponseImpl(
                 clientOptions.toBuilder().apply(modifier).build()
             )
+
+        override fun imageGeneration(): ImageGenerationServiceAsync.WithRawResponse =
+            imageGeneration
 
         private val createHandler: Handler<AgentCreateResponse> =
             jsonHandler<AgentCreateResponse>(clientOptions.jsonMapper)
