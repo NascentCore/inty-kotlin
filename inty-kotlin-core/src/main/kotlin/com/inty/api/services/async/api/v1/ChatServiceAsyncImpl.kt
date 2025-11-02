@@ -20,6 +20,8 @@ import com.inty.api.models.api.v1.chats.Chat
 import com.inty.api.models.api.v1.chats.ChatCreateCompletionParams
 import com.inty.api.models.api.v1.chats.ChatCreateParams
 import com.inty.api.models.api.v1.chats.ChatDeleteParams
+import com.inty.api.models.api.v1.chats.ChatGenerateImageParams
+import com.inty.api.models.api.v1.chats.ChatGenerateImageResponse
 import com.inty.api.models.api.v1.chats.ChatListParams
 import com.inty.api.models.api.v1.chats.ChatRetrieveVoiceParams
 import com.inty.api.models.api.v1.chats.ChatRetrieveVoiceResponse
@@ -62,6 +64,13 @@ class ChatServiceAsyncImpl internal constructor(private val clientOptions: Clien
     ): ApiResponseDict =
         // post /api/v1/chat/completions/{agent_id}
         withRawResponse().createCompletion(params, requestOptions).parse()
+
+    override suspend fun generateImage(
+        params: ChatGenerateImageParams,
+        requestOptions: RequestOptions,
+    ): ChatGenerateImageResponse =
+        // post /api/v1/chat/images/{agent_id}
+        withRawResponse().generateImage(params, requestOptions).parse()
 
     @Deprecated("deprecated")
     override suspend fun retrieveVoice(
@@ -198,6 +207,37 @@ class ChatServiceAsyncImpl internal constructor(private val clientOptions: Clien
             return errorHandler.handle(response).parseable {
                 response
                     .use { createCompletionHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+            }
+        }
+
+        private val generateImageHandler: Handler<ChatGenerateImageResponse> =
+            jsonHandler<ChatGenerateImageResponse>(clientOptions.jsonMapper)
+
+        override suspend fun generateImage(
+            params: ChatGenerateImageParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<ChatGenerateImageResponse> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("agentId", params.agentId())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("api", "v1", "chat", "images", params._pathParam(0))
+                    .body(json(clientOptions.jsonMapper, params._body()))
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.executeAsync(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response
+                    .use { generateImageHandler.handle(it) }
                     .also {
                         if (requestOptions.responseValidation!!) {
                             it.validate()

@@ -22,6 +22,7 @@ import com.inty.api.models.api.v1.ai.agents.AgentUpdateParams
 import com.inty.api.models.api.v1.ai.agents.ApiResponseAgent
 import com.inty.api.models.api.v1.ai.agents.ApiResponsePaginationDataAgent
 import com.inty.api.models.api.v1.report.ApiResponseDict
+import com.inty.api.services.async.api.v1.ai.agents.ImageGenerationServiceAsync
 
 interface AgentServiceAsync {
 
@@ -36,6 +37,8 @@ interface AgentServiceAsync {
      * The original service is not modified.
      */
     fun withOptions(modifier: (ClientOptions.Builder) -> Unit): AgentServiceAsync
+
+    fun imageGeneration(): ImageGenerationServiceAsync
 
     /** Create new AI agent, used by app and inty-eval */
     suspend fun create(
@@ -181,6 +184,8 @@ interface AgentServiceAsync {
         fun withOptions(
             modifier: (ClientOptions.Builder) -> Unit
         ): AgentServiceAsync.WithRawResponse
+
+        fun imageGeneration(): ImageGenerationServiceAsync.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `post /api/v1/ai/agents`, but is otherwise the same as
