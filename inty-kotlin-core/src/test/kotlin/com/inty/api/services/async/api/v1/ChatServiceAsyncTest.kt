@@ -6,6 +6,7 @@ import com.inty.api.TestServerExtension
 import com.inty.api.client.okhttp.IntyOkHttpClientAsync
 import com.inty.api.models.api.v1.chats.ChatCreateCompletionParams
 import com.inty.api.models.api.v1.chats.ChatCreateParams
+import com.inty.api.models.api.v1.chats.ChatGenerateImageParams
 import com.inty.api.models.api.v1.chats.ChatListParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
@@ -90,6 +91,29 @@ internal class ChatServiceAsyncTest {
             )
 
         apiResponseDict.validate()
+    }
+
+    @Disabled("Prism tests are disabled")
+    @Test
+    suspend fun generateImage() {
+        val client =
+            IntyOkHttpClientAsync.builder()
+                .baseUrl(TestServerExtension.BASE_URL)
+                .apiKey("My API Key")
+                .build()
+        val chatServiceAsync = client.api().v1().chats()
+
+        val response =
+            chatServiceAsync.generateImage(
+                ChatGenerateImageParams.builder()
+                    .agentId("agent_id")
+                    .messageId(0L)
+                    .historyCount(0L)
+                    .requestId("request_id")
+                    .build()
+            )
+
+        response.validate()
     }
 
     @Disabled("Prism tests are disabled")
