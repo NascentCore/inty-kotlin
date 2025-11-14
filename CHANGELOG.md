@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.17.1 (2025-11-14)
+
+Full Changelog: [v0.17.0...v0.17.1](https://github.com/NascentCore/inty-kotlin/compare/v0.17.0...v0.17.1)
+
+### Bug Fixes
+
+* **client:** multi-value header serialization ([2baaad5](https://github.com/NascentCore/inty-kotlin/commit/2baaad5dd9dccfb756bab366c199f561d97dd68c))
+
 ## 0.17.0 (2025-11-02)
 
 Full Changelog: [v0.16.1...v0.17.0](https://github.com/NascentCore/inty-kotlin/compare/v0.16.1...v0.17.0)
