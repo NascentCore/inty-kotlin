@@ -15,6 +15,7 @@ internal class AgentUpdateParamsTest {
             .addAlternateGreeting("string")
             .avatar("avatar")
             .background("background")
+            .backgroundAnimated("background_animated")
             .addBackgroundImage("string")
             .category("category")
             .characterBook(
@@ -86,6 +87,7 @@ internal class AgentUpdateParamsTest {
                 .addAlternateGreeting("string")
                 .avatar("avatar")
                 .background("background")
+                .backgroundAnimated("background_animated")
                 .addBackgroundImage("string")
                 .category("category")
                 .characterBook(
@@ -144,6 +146,7 @@ internal class AgentUpdateParamsTest {
         assertThat(body.alternateGreetings()).containsExactly("string")
         assertThat(body.avatar()).isEqualTo("avatar")
         assertThat(body.background()).isEqualTo("background")
+        assertThat(body.backgroundAnimated()).isEqualTo("background_animated")
         assertThat(body.backgroundImages()).containsExactly("string")
         assertThat(body.category()).isEqualTo("category")
         assertThat(body.characterBook())

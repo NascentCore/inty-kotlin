@@ -39,6 +39,7 @@ internal class AgentServiceTest {
                     .addAlternateGreeting("string")
                     .avatar("avatar")
                     .background("background")
+                    .backgroundAnimated("background_animated")
                     .addBackgroundImage("string")
                     .category("category")
                     .characterBook(
@@ -126,6 +127,7 @@ internal class AgentServiceTest {
                     .addAlternateGreeting("string")
                     .avatar("avatar")
                     .background("background")
+                    .backgroundAnimated("background_animated")
                     .addBackgroundImage("string")
                     .category("category")
                     .characterBook(

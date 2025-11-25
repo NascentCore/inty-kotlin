@@ -29,6 +29,7 @@ class DeletionServiceImpl internal constructor(private val clientOptions: Client
     override fun withOptions(modifier: (ClientOptions.Builder) -> Unit): DeletionService =
         DeletionServiceImpl(clientOptions.toBuilder().apply(modifier).build())
 
+    @Deprecated("deprecated")
     override fun checkEligibility(
         params: DeletionCheckEligibilityParams,
         requestOptions: RequestOptions,
@@ -52,6 +53,7 @@ class DeletionServiceImpl internal constructor(private val clientOptions: Client
         private val checkEligibilityHandler: Handler<DeletionCheckEligibilityResponse> =
             jsonHandler<DeletionCheckEligibilityResponse>(clientOptions.jsonMapper)
 
+        @Deprecated("deprecated")
         override fun checkEligibility(
             params: DeletionCheckEligibilityParams,
             requestOptions: RequestOptions,

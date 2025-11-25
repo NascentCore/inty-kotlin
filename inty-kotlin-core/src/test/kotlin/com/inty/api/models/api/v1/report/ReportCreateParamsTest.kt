@@ -15,6 +15,7 @@ internal class ReportCreateParamsTest {
             .targetType(ReportCreateParams.TargetType.USER)
             .description("description")
             .addImageUrl("string")
+            .reportType(ReportCreateParams.ReportType.REPORT)
             .requestId("request_id")
             .build()
     }
@@ -28,6 +29,7 @@ internal class ReportCreateParamsTest {
                 .targetType(ReportCreateParams.TargetType.USER)
                 .description("description")
                 .addImageUrl("string")
+                .reportType(ReportCreateParams.ReportType.REPORT)
                 .requestId("request_id")
                 .build()
 
@@ -38,6 +40,7 @@ internal class ReportCreateParamsTest {
         assertThat(body.targetType()).isEqualTo(ReportCreateParams.TargetType.USER)
         assertThat(body.description()).isEqualTo("description")
         assertThat(body.imageUrls()).containsExactly("string")
+        assertThat(body.reportType()).isEqualTo(ReportCreateParams.ReportType.REPORT)
         assertThat(body.requestId()).isEqualTo("request_id")
     }
 
