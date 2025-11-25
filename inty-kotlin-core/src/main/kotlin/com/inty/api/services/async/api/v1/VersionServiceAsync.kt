@@ -28,7 +28,7 @@ interface VersionServiceAsync {
      *
      * 通过HTTP头传递版本信息：
      * - appVersionCode: 应用版本代码（必填，整数）
-     * - appVersionName: 应用版本名称（可选，字符串）
+     * - appVersionName: 应用版本名称（可选，后端会忽略，保留向后兼容）
      */
     suspend fun check(
         params: VersionCheckParams,

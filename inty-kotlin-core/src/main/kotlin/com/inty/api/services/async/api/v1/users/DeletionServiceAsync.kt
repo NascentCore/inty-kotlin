@@ -23,13 +23,19 @@ interface DeletionServiceAsync {
      */
     fun withOptions(modifier: (ClientOptions.Builder) -> Unit): DeletionServiceAsync
 
-    /** 检查用户是否可以删除账户 */
+    /**
+     * 检查用户是否可以删除账户
+     *
+     * .. deprecated:: 此端点已废弃，请使用 POST /api/v1/users/delete-account 端点。 删除账户时会自动执行相同的检查。
+     */
+    @Deprecated("deprecated")
     suspend fun checkEligibility(
         params: DeletionCheckEligibilityParams = DeletionCheckEligibilityParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): DeletionCheckEligibilityResponse
 
     /** @see checkEligibility */
+    @Deprecated("deprecated")
     suspend fun checkEligibility(requestOptions: RequestOptions): DeletionCheckEligibilityResponse =
         checkEligibility(DeletionCheckEligibilityParams.none(), requestOptions)
 
@@ -51,6 +57,7 @@ interface DeletionServiceAsync {
          * Returns a raw HTTP response for `get /api/v1/users/deletion/check`, but is otherwise the
          * same as [DeletionServiceAsync.checkEligibility].
          */
+        @Deprecated("deprecated")
         @MustBeClosed
         suspend fun checkEligibility(
             params: DeletionCheckEligibilityParams = DeletionCheckEligibilityParams.none(),
@@ -58,6 +65,7 @@ interface DeletionServiceAsync {
         ): HttpResponseFor<DeletionCheckEligibilityResponse>
 
         /** @see checkEligibility */
+        @Deprecated("deprecated")
         @MustBeClosed
         suspend fun checkEligibility(
             requestOptions: RequestOptions

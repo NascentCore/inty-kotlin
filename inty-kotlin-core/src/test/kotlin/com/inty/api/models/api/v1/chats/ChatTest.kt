@@ -3,6 +3,7 @@
 package com.inty.api.models.api.v1.chats
 
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import com.inty.api.core.JsonValue
 import com.inty.api.core.jsonMapper
 import com.inty.api.models.api.v1.chats.agents.ChatSettings
 import java.time.OffsetDateTime
@@ -21,6 +22,12 @@ internal class ChatTest {
                 .userId("user_id")
                 .agentAvatar("agent_avatar")
                 .agentBackground("agent_background")
+                .agentBackgroundAnimated("agent_background_animated")
+                .agentExtensions(
+                    Chat.AgentExtensions.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
                 .agentIntro("agent_intro")
                 .agentIsDeleted(true)
                 .agentName("agent_name")
@@ -51,6 +58,13 @@ internal class ChatTest {
         assertThat(chat.userId()).isEqualTo("user_id")
         assertThat(chat.agentAvatar()).isEqualTo("agent_avatar")
         assertThat(chat.agentBackground()).isEqualTo("agent_background")
+        assertThat(chat.agentBackgroundAnimated()).isEqualTo("agent_background_animated")
+        assertThat(chat.agentExtensions())
+            .isEqualTo(
+                Chat.AgentExtensions.builder()
+                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                    .build()
+            )
         assertThat(chat.agentIntro()).isEqualTo("agent_intro")
         assertThat(chat.agentIsDeleted()).isEqualTo(true)
         assertThat(chat.agentName()).isEqualTo("agent_name")
@@ -88,6 +102,12 @@ internal class ChatTest {
                 .userId("user_id")
                 .agentAvatar("agent_avatar")
                 .agentBackground("agent_background")
+                .agentBackgroundAnimated("agent_background_animated")
+                .agentExtensions(
+                    Chat.AgentExtensions.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
                 .agentIntro("agent_intro")
                 .agentIsDeleted(true)
                 .agentName("agent_name")

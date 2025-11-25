@@ -11,6 +11,7 @@ import com.inty.api.core.JsonField
 import com.inty.api.core.JsonMissing
 import com.inty.api.core.JsonValue
 import com.inty.api.core.checkRequired
+import com.inty.api.core.toImmutable
 import com.inty.api.errors.IntyInvalidDataException
 import com.inty.api.models.api.v1.chats.agents.ChatSettings
 import java.time.OffsetDateTime
@@ -27,6 +28,8 @@ private constructor(
     private val userId: JsonField<String>,
     private val agentAvatar: JsonField<String>,
     private val agentBackground: JsonField<String>,
+    private val agentBackgroundAnimated: JsonField<String>,
+    private val agentExtensions: JsonField<AgentExtensions>,
     private val agentIntro: JsonField<String>,
     private val agentIsDeleted: JsonField<Boolean>,
     private val agentName: JsonField<String>,
@@ -53,6 +56,12 @@ private constructor(
         @JsonProperty("agent_background")
         @ExcludeMissing
         agentBackground: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("agent_background_animated")
+        @ExcludeMissing
+        agentBackgroundAnimated: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("agent_extensions")
+        @ExcludeMissing
+        agentExtensions: JsonField<AgentExtensions> = JsonMissing.of(),
         @JsonProperty("agent_intro")
         @ExcludeMissing
         agentIntro: JsonField<String> = JsonMissing.of(),
@@ -85,6 +94,8 @@ private constructor(
         userId,
         agentAvatar,
         agentBackground,
+        agentBackgroundAnimated,
+        agentExtensions,
         agentIntro,
         agentIsDeleted,
         agentName,
@@ -132,6 +143,19 @@ private constructor(
      *   responded with an unexpected value).
      */
     fun agentBackground(): String? = agentBackground.getNullable("agent_background")
+
+    /**
+     * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
+     *   responded with an unexpected value).
+     */
+    fun agentBackgroundAnimated(): String? =
+        agentBackgroundAnimated.getNullable("agent_background_animated")
+
+    /**
+     * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
+     *   responded with an unexpected value).
+     */
+    fun agentExtensions(): AgentExtensions? = agentExtensions.getNullable("agent_extensions")
 
     /**
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
@@ -237,6 +261,25 @@ private constructor(
     @JsonProperty("agent_background")
     @ExcludeMissing
     fun _agentBackground(): JsonField<String> = agentBackground
+
+    /**
+     * Returns the raw JSON value of [agentBackgroundAnimated].
+     *
+     * Unlike [agentBackgroundAnimated], this method doesn't throw if the JSON field has an
+     * unexpected type.
+     */
+    @JsonProperty("agent_background_animated")
+    @ExcludeMissing
+    fun _agentBackgroundAnimated(): JsonField<String> = agentBackgroundAnimated
+
+    /**
+     * Returns the raw JSON value of [agentExtensions].
+     *
+     * Unlike [agentExtensions], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("agent_extensions")
+    @ExcludeMissing
+    fun _agentExtensions(): JsonField<AgentExtensions> = agentExtensions
 
     /**
      * Returns the raw JSON value of [agentIntro].
@@ -351,6 +394,8 @@ private constructor(
         private var userId: JsonField<String>? = null
         private var agentAvatar: JsonField<String> = JsonMissing.of()
         private var agentBackground: JsonField<String> = JsonMissing.of()
+        private var agentBackgroundAnimated: JsonField<String> = JsonMissing.of()
+        private var agentExtensions: JsonField<AgentExtensions> = JsonMissing.of()
         private var agentIntro: JsonField<String> = JsonMissing.of()
         private var agentIsDeleted: JsonField<Boolean> = JsonMissing.of()
         private var agentName: JsonField<String> = JsonMissing.of()
@@ -369,6 +414,8 @@ private constructor(
             userId = chat.userId
             agentAvatar = chat.agentAvatar
             agentBackground = chat.agentBackground
+            agentBackgroundAnimated = chat.agentBackgroundAnimated
+            agentExtensions = chat.agentExtensions
             agentIntro = chat.agentIntro
             agentIsDeleted = chat.agentIsDeleted
             agentName = chat.agentName
@@ -445,6 +492,34 @@ private constructor(
          */
         fun agentBackground(agentBackground: JsonField<String>) = apply {
             this.agentBackground = agentBackground
+        }
+
+        fun agentBackgroundAnimated(agentBackgroundAnimated: String?) =
+            agentBackgroundAnimated(JsonField.ofNullable(agentBackgroundAnimated))
+
+        /**
+         * Sets [Builder.agentBackgroundAnimated] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.agentBackgroundAnimated] with a well-typed [String]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun agentBackgroundAnimated(agentBackgroundAnimated: JsonField<String>) = apply {
+            this.agentBackgroundAnimated = agentBackgroundAnimated
+        }
+
+        fun agentExtensions(agentExtensions: AgentExtensions?) =
+            agentExtensions(JsonField.ofNullable(agentExtensions))
+
+        /**
+         * Sets [Builder.agentExtensions] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.agentExtensions] with a well-typed [AgentExtensions]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun agentExtensions(agentExtensions: JsonField<AgentExtensions>) = apply {
+            this.agentExtensions = agentExtensions
         }
 
         fun agentIntro(agentIntro: String?) = agentIntro(JsonField.ofNullable(agentIntro))
@@ -607,6 +682,8 @@ private constructor(
                 checkRequired("userId", userId),
                 agentAvatar,
                 agentBackground,
+                agentBackgroundAnimated,
+                agentExtensions,
                 agentIntro,
                 agentIsDeleted,
                 agentName,
@@ -633,6 +710,8 @@ private constructor(
         userId()
         agentAvatar()
         agentBackground()
+        agentBackgroundAnimated()
+        agentExtensions()?.validate()
         agentIntro()
         agentIsDeleted()
         agentName()
@@ -665,6 +744,8 @@ private constructor(
             (if (userId.asKnown() == null) 0 else 1) +
             (if (agentAvatar.asKnown() == null) 0 else 1) +
             (if (agentBackground.asKnown() == null) 0 else 1) +
+            (if (agentBackgroundAnimated.asKnown() == null) 0 else 1) +
+            (agentExtensions.asKnown()?.validity() ?: 0) +
             (if (agentIntro.asKnown() == null) 0 else 1) +
             (if (agentIsDeleted.asKnown() == null) 0 else 1) +
             (if (agentName.asKnown() == null) 0 else 1) +
@@ -674,6 +755,103 @@ private constructor(
             (if (lastMessageTime.asKnown() == null) 0 else 1) +
             (settings.asKnown()?.validity() ?: 0) +
             (if (updatedAt.asKnown() == null) 0 else 1)
+
+    class AgentExtensions
+    @JsonCreator
+    private constructor(
+        @com.fasterxml.jackson.annotation.JsonValue
+        private val additionalProperties: Map<String, JsonValue>
+    ) {
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /** Returns a mutable builder for constructing an instance of [AgentExtensions]. */
+            fun builder() = Builder()
+        }
+
+        /** A builder for [AgentExtensions]. */
+        class Builder internal constructor() {
+
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            internal fun from(agentExtensions: AgentExtensions) = apply {
+                additionalProperties = agentExtensions.additionalProperties.toMutableMap()
+            }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [AgentExtensions].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             */
+            fun build(): AgentExtensions = AgentExtensions(additionalProperties.toImmutable())
+        }
+
+        private var validated: Boolean = false
+
+        fun validate(): AgentExtensions = apply {
+            if (validated) {
+                return@apply
+            }
+
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: IntyInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        internal fun validity(): Int =
+            additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is AgentExtensions && additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() = "AgentExtensions{additionalProperties=$additionalProperties}"
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -687,6 +865,8 @@ private constructor(
             userId == other.userId &&
             agentAvatar == other.agentAvatar &&
             agentBackground == other.agentBackground &&
+            agentBackgroundAnimated == other.agentBackgroundAnimated &&
+            agentExtensions == other.agentExtensions &&
             agentIntro == other.agentIntro &&
             agentIsDeleted == other.agentIsDeleted &&
             agentName == other.agentName &&
@@ -707,6 +887,8 @@ private constructor(
             userId,
             agentAvatar,
             agentBackground,
+            agentBackgroundAnimated,
+            agentExtensions,
             agentIntro,
             agentIsDeleted,
             agentName,
@@ -723,5 +905,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Chat{id=$id, agentId=$agentId, createdAt=$createdAt, userId=$userId, agentAvatar=$agentAvatar, agentBackground=$agentBackground, agentIntro=$agentIntro, agentIsDeleted=$agentIsDeleted, agentName=$agentName, agentOpening=$agentOpening, agentOpeningAudioUrl=$agentOpeningAudioUrl, lastMessage=$lastMessage, lastMessageTime=$lastMessageTime, settings=$settings, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
+        "Chat{id=$id, agentId=$agentId, createdAt=$createdAt, userId=$userId, agentAvatar=$agentAvatar, agentBackground=$agentBackground, agentBackgroundAnimated=$agentBackgroundAnimated, agentExtensions=$agentExtensions, agentIntro=$agentIntro, agentIsDeleted=$agentIsDeleted, agentName=$agentName, agentOpening=$agentOpening, agentOpeningAudioUrl=$agentOpeningAudioUrl, lastMessage=$lastMessage, lastMessageTime=$lastMessageTime, settings=$settings, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
 }

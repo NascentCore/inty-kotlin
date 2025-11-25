@@ -29,10 +29,12 @@ private constructor(
     private val name: JsonField<String>,
     private val readableId: JsonField<String>,
     private val status: JsonField<Status>,
+    private val version: JsonField<Long>,
     private val alternateGreetings: JsonField<List<String>>,
     private val avatar: JsonField<String>,
     private val avatarSize: JsonField<AvatarSize>,
     private val background: JsonField<String>,
+    private val backgroundAnimated: JsonField<String>,
     private val backgroundImages: JsonField<List<String>>,
     private val backgroundSize: JsonField<BackgroundSize>,
     private val category: JsonField<String>,
@@ -79,6 +81,7 @@ private constructor(
         @ExcludeMissing
         readableId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("status") @ExcludeMissing status: JsonField<Status> = JsonMissing.of(),
+        @JsonProperty("version") @ExcludeMissing version: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("alternate_greetings")
         @ExcludeMissing
         alternateGreetings: JsonField<List<String>> = JsonMissing.of(),
@@ -89,6 +92,9 @@ private constructor(
         @JsonProperty("background")
         @ExcludeMissing
         background: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("background_animated")
+        @ExcludeMissing
+        backgroundAnimated: JsonField<String> = JsonMissing.of(),
         @JsonProperty("background_images")
         @ExcludeMissing
         backgroundImages: JsonField<List<String>> = JsonMissing.of(),
@@ -167,10 +173,12 @@ private constructor(
         name,
         readableId,
         status,
+        version,
         alternateGreetings,
         avatar,
         avatarSize,
         background,
+        backgroundAnimated,
         backgroundImages,
         backgroundSize,
         category,
@@ -246,6 +254,12 @@ private constructor(
     fun status(): Status = status.getRequired("status")
 
     /**
+     * @throws IntyInvalidDataException if the JSON field has an unexpected type or is unexpectedly
+     *   missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun version(): Long = version.getRequired("version")
+
+    /**
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
      *   responded with an unexpected value).
      */
@@ -270,6 +284,12 @@ private constructor(
      *   responded with an unexpected value).
      */
     fun background(): String? = background.getNullable("background")
+
+    /**
+     * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
+     *   responded with an unexpected value).
+     */
+    fun backgroundAnimated(): String? = backgroundAnimated.getNullable("background_animated")
 
     /**
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
@@ -376,7 +396,7 @@ private constructor(
     fun llmConfig(): ModelConfig? = llmConfig.getNullable("llm_config")
 
     /**
-     * 主提示词 - 作为第一个system message，覆盖全局默认主提示词
+     * 主提示词 - 作为第一个system message，覆盖全局默认主提示词。可以是预设 ID 或自定义文本
      *
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
      *   responded with an unexpected value).
@@ -400,7 +420,7 @@ private constructor(
     fun metaData(): AgentMetaData? = metaData.getNullable("meta_data")
 
     /**
-     * 模式提示词 - 放在角色卡提示词后面，覆盖全局默认模式提示词
+     * 模式提示词 - 放在角色卡提示词后面，覆盖全局默认模式提示词。可以是预设 ID 或自定义文本
      *
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
      *   responded with an unexpected value).
@@ -537,6 +557,13 @@ private constructor(
     @JsonProperty("status") @ExcludeMissing fun _status(): JsonField<Status> = status
 
     /**
+     * Returns the raw JSON value of [version].
+     *
+     * Unlike [version], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("version") @ExcludeMissing fun _version(): JsonField<Long> = version
+
+    /**
      * Returns the raw JSON value of [alternateGreetings].
      *
      * Unlike [alternateGreetings], this method doesn't throw if the JSON field has an unexpected
@@ -568,6 +595,16 @@ private constructor(
      * Unlike [background], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("background") @ExcludeMissing fun _background(): JsonField<String> = background
+
+    /**
+     * Returns the raw JSON value of [backgroundAnimated].
+     *
+     * Unlike [backgroundAnimated], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("background_animated")
+    @ExcludeMissing
+    fun _backgroundAnimated(): JsonField<String> = backgroundAnimated
 
     /**
      * Returns the raw JSON value of [backgroundImages].
@@ -858,6 +895,7 @@ private constructor(
          * .name()
          * .readableId()
          * .status()
+         * .version()
          * ```
          */
         fun builder() = Builder()
@@ -872,10 +910,12 @@ private constructor(
         private var name: JsonField<String>? = null
         private var readableId: JsonField<String>? = null
         private var status: JsonField<Status>? = null
+        private var version: JsonField<Long>? = null
         private var alternateGreetings: JsonField<MutableList<String>>? = null
         private var avatar: JsonField<String> = JsonMissing.of()
         private var avatarSize: JsonField<AvatarSize> = JsonMissing.of()
         private var background: JsonField<String> = JsonMissing.of()
+        private var backgroundAnimated: JsonField<String> = JsonMissing.of()
         private var backgroundImages: JsonField<MutableList<String>>? = null
         private var backgroundSize: JsonField<BackgroundSize> = JsonMissing.of()
         private var category: JsonField<String> = JsonMissing.of()
@@ -918,10 +958,12 @@ private constructor(
             name = agent.name
             readableId = agent.readableId
             status = agent.status
+            version = agent.version
             alternateGreetings = agent.alternateGreetings.map { it.toMutableList() }
             avatar = agent.avatar
             avatarSize = agent.avatarSize
             background = agent.background
+            backgroundAnimated = agent.backgroundAnimated
             backgroundImages = agent.backgroundImages.map { it.toMutableList() }
             backgroundSize = agent.backgroundSize
             category = agent.category
@@ -1020,6 +1062,16 @@ private constructor(
          */
         fun status(status: JsonField<Status>) = apply { this.status = status }
 
+        fun version(version: Long) = version(JsonField.of(version))
+
+        /**
+         * Sets [Builder.version] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.version] with a well-typed [Long] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun version(version: JsonField<Long>) = apply { this.version = version }
+
         fun alternateGreetings(alternateGreetings: List<String>?) =
             alternateGreetings(JsonField.ofNullable(alternateGreetings))
 
@@ -1078,6 +1130,20 @@ private constructor(
          * value.
          */
         fun background(background: JsonField<String>) = apply { this.background = background }
+
+        fun backgroundAnimated(backgroundAnimated: String?) =
+            backgroundAnimated(JsonField.ofNullable(backgroundAnimated))
+
+        /**
+         * Sets [Builder.backgroundAnimated] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.backgroundAnimated] with a well-typed [String] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun backgroundAnimated(backgroundAnimated: JsonField<String>) = apply {
+            this.backgroundAnimated = backgroundAnimated
+        }
 
         fun backgroundImages(backgroundImages: List<String>?) =
             backgroundImages(JsonField.ofNullable(backgroundImages))
@@ -1295,7 +1361,7 @@ private constructor(
          */
         fun llmConfig(llmConfig: JsonField<ModelConfig>) = apply { this.llmConfig = llmConfig }
 
-        /** 主提示词 - 作为第一个system message，覆盖全局默认主提示词 */
+        /** 主提示词 - 作为第一个system message，覆盖全局默认主提示词。可以是预设 ID 或自定义文本 */
         fun mainPrompt(mainPrompt: String?) = mainPrompt(JsonField.ofNullable(mainPrompt))
 
         /**
@@ -1334,7 +1400,7 @@ private constructor(
          */
         fun metaData(metaData: JsonField<AgentMetaData>) = apply { this.metaData = metaData }
 
-        /** 模式提示词 - 放在角色卡提示词后面，覆盖全局默认模式提示词 */
+        /** 模式提示词 - 放在角色卡提示词后面，覆盖全局默认模式提示词。可以是预设 ID 或自定义文本 */
         fun modePrompt(modePrompt: String?) = modePrompt(JsonField.ofNullable(modePrompt))
 
         /**
@@ -1560,6 +1626,7 @@ private constructor(
          * .name()
          * .readableId()
          * .status()
+         * .version()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
@@ -1572,10 +1639,12 @@ private constructor(
                 checkRequired("name", name),
                 checkRequired("readableId", readableId),
                 checkRequired("status", status),
+                checkRequired("version", version),
                 (alternateGreetings ?: JsonMissing.of()).map { it.toImmutable() },
                 avatar,
                 avatarSize,
                 background,
+                backgroundAnimated,
                 (backgroundImages ?: JsonMissing.of()).map { it.toImmutable() },
                 backgroundSize,
                 category,
@@ -1626,10 +1695,12 @@ private constructor(
         name()
         readableId()
         status().validate()
+        version()
         alternateGreetings()
         avatar()
         avatarSize()?.validate()
         background()
+        backgroundAnimated()
         backgroundImages()
         backgroundSize()?.validate()
         category()
@@ -1686,10 +1757,12 @@ private constructor(
             (if (name.asKnown() == null) 0 else 1) +
             (if (readableId.asKnown() == null) 0 else 1) +
             (status.asKnown()?.validity() ?: 0) +
+            (if (version.asKnown() == null) 0 else 1) +
             (alternateGreetings.asKnown()?.size ?: 0) +
             (if (avatar.asKnown() == null) 0 else 1) +
             (avatarSize.asKnown()?.validity() ?: 0) +
             (if (background.asKnown() == null) 0 else 1) +
+            (if (backgroundAnimated.asKnown() == null) 0 else 1) +
             (backgroundImages.asKnown()?.size ?: 0) +
             (backgroundSize.asKnown()?.validity() ?: 0) +
             (if (category.asKnown() == null) 0 else 1) +
@@ -2538,10 +2611,12 @@ private constructor(
             name == other.name &&
             readableId == other.readableId &&
             status == other.status &&
+            version == other.version &&
             alternateGreetings == other.alternateGreetings &&
             avatar == other.avatar &&
             avatarSize == other.avatarSize &&
             background == other.background &&
+            backgroundAnimated == other.backgroundAnimated &&
             backgroundImages == other.backgroundImages &&
             backgroundSize == other.backgroundSize &&
             category == other.category &&
@@ -2586,10 +2661,12 @@ private constructor(
             name,
             readableId,
             status,
+            version,
             alternateGreetings,
             avatar,
             avatarSize,
             background,
+            backgroundAnimated,
             backgroundImages,
             backgroundSize,
             category,
@@ -2630,5 +2707,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Agent{id=$id, createdAt=$createdAt, gender=$gender, name=$name, readableId=$readableId, status=$status, alternateGreetings=$alternateGreetings, avatar=$avatar, avatarSize=$avatarSize, background=$background, backgroundImages=$backgroundImages, backgroundSize=$backgroundSize, category=$category, characterBook=$characterBook, characterCardSpec=$characterCardSpec, characterVersion=$characterVersion, connectorCount=$connectorCount, creator=$creator, creatorId=$creatorId, creatorNotes=$creatorNotes, deletedAt=$deletedAt, extensions=$extensions, followerCount=$followerCount, intro=$intro, isFollowed=$isFollowed, llmConfig=$llmConfig, mainPrompt=$mainPrompt, messageExample=$messageExample, metaData=$metaData, modePrompt=$modePrompt, opening=$opening, openingAudioUrl=$openingAudioUrl, personality=$personality, photos=$photos, postHistoryInstructions=$postHistoryInstructions, prompt=$prompt, scenario=$scenario, settings=$settings, tags=$tags, updatedAt=$updatedAt, user=$user, visibility=$visibility, voiceId=$voiceId, additionalProperties=$additionalProperties}"
+        "Agent{id=$id, createdAt=$createdAt, gender=$gender, name=$name, readableId=$readableId, status=$status, version=$version, alternateGreetings=$alternateGreetings, avatar=$avatar, avatarSize=$avatarSize, background=$background, backgroundAnimated=$backgroundAnimated, backgroundImages=$backgroundImages, backgroundSize=$backgroundSize, category=$category, characterBook=$characterBook, characterCardSpec=$characterCardSpec, characterVersion=$characterVersion, connectorCount=$connectorCount, creator=$creator, creatorId=$creatorId, creatorNotes=$creatorNotes, deletedAt=$deletedAt, extensions=$extensions, followerCount=$followerCount, intro=$intro, isFollowed=$isFollowed, llmConfig=$llmConfig, mainPrompt=$mainPrompt, messageExample=$messageExample, metaData=$metaData, modePrompt=$modePrompt, opening=$opening, openingAudioUrl=$openingAudioUrl, personality=$personality, photos=$photos, postHistoryInstructions=$postHistoryInstructions, prompt=$prompt, scenario=$scenario, settings=$settings, tags=$tags, updatedAt=$updatedAt, user=$user, visibility=$visibility, voiceId=$voiceId, additionalProperties=$additionalProperties}"
 }

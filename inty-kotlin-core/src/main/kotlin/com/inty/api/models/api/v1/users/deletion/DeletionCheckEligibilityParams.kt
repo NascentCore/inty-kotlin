@@ -7,7 +7,12 @@ import com.inty.api.core.http.Headers
 import com.inty.api.core.http.QueryParams
 import java.util.Objects
 
-/** 检查用户是否可以删除账户 */
+/**
+ * 检查用户是否可以删除账户
+ *
+ * .. deprecated:: 此端点已废弃，请使用 POST /api/v1/users/delete-account 端点。 删除账户时会自动执行相同的检查。
+ */
+@Deprecated("deprecated")
 class DeletionCheckEligibilityParams
 private constructor(
     private val additionalHeaders: Headers,
