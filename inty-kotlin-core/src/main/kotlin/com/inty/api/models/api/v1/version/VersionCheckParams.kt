@@ -15,7 +15,7 @@ import java.util.Objects
  *
  * 通过HTTP头传递版本信息：
  * - appVersionCode: 应用版本代码（必填，整数）
- * - appVersionName: 应用版本名称（可选，字符串）
+ * - appVersionName: 应用版本名称（可选，后端会忽略，保留向后兼容）
  */
 class VersionCheckParams
 private constructor(
@@ -29,7 +29,7 @@ private constructor(
     /** 应用版本代码 */
     fun appVersionCode(): Long = appVersionCode
 
-    /** 应用版本名称（可选） */
+    /** 应用版本名称（向后兼容，忽略） */
     fun appVersionName(): String? = appVersionName
 
     /** Additional body properties to send with the request. */
@@ -76,7 +76,7 @@ private constructor(
         /** 应用版本代码 */
         fun appVersionCode(appVersionCode: Long) = apply { this.appVersionCode = appVersionCode }
 
-        /** 应用版本名称（可选） */
+        /** 应用版本名称（向后兼容，忽略） */
         fun appVersionName(appVersionName: String?) = apply { this.appVersionName = appVersionName }
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {

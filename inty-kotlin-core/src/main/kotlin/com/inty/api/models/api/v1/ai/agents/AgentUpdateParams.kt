@@ -52,6 +52,12 @@ private constructor(
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
      *   responded with an unexpected value).
      */
+    fun backgroundAnimated(): String? = body.backgroundAnimated()
+
+    /**
+     * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
+     *   responded with an unexpected value).
+     */
     fun backgroundImages(): List<String>? = body.backgroundImages()
 
     /**
@@ -239,6 +245,14 @@ private constructor(
      * Unlike [background], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _background(): JsonField<String> = body._background()
+
+    /**
+     * Returns the raw JSON value of [backgroundAnimated].
+     *
+     * Unlike [backgroundAnimated], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    fun _backgroundAnimated(): JsonField<String> = body._backgroundAnimated()
 
     /**
      * Returns the raw JSON value of [backgroundImages].
@@ -476,8 +490,8 @@ private constructor(
          * - [alternateGreetings]
          * - [avatar]
          * - [background]
+         * - [backgroundAnimated]
          * - [backgroundImages]
-         * - [category]
          * - etc.
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
@@ -526,6 +540,21 @@ private constructor(
          * value.
          */
         fun background(background: JsonField<String>) = apply { body.background(background) }
+
+        fun backgroundAnimated(backgroundAnimated: String?) = apply {
+            body.backgroundAnimated(backgroundAnimated)
+        }
+
+        /**
+         * Sets [Builder.backgroundAnimated] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.backgroundAnimated] with a well-typed [String] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun backgroundAnimated(backgroundAnimated: JsonField<String>) = apply {
+            body.backgroundAnimated(backgroundAnimated)
+        }
 
         fun backgroundImages(backgroundImages: List<String>?) = apply {
             body.backgroundImages(backgroundImages)
@@ -1024,6 +1053,7 @@ private constructor(
         private val alternateGreetings: JsonField<List<String>>,
         private val avatar: JsonField<String>,
         private val background: JsonField<String>,
+        private val backgroundAnimated: JsonField<String>,
         private val backgroundImages: JsonField<List<String>>,
         private val category: JsonField<String>,
         private val characterBook: JsonField<CharacterBook>,
@@ -1063,6 +1093,9 @@ private constructor(
             @JsonProperty("background")
             @ExcludeMissing
             background: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("background_animated")
+            @ExcludeMissing
+            backgroundAnimated: JsonField<String> = JsonMissing.of(),
             @JsonProperty("background_images")
             @ExcludeMissing
             backgroundImages: JsonField<List<String>> = JsonMissing.of(),
@@ -1134,6 +1167,7 @@ private constructor(
             alternateGreetings,
             avatar,
             background,
+            backgroundAnimated,
             backgroundImages,
             category,
             characterBook,
@@ -1182,6 +1216,12 @@ private constructor(
          *   server responded with an unexpected value).
          */
         fun background(): String? = background.getNullable("background")
+
+        /**
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun backgroundAnimated(): String? = backgroundAnimated.getNullable("background_animated")
 
         /**
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -1379,6 +1419,16 @@ private constructor(
         @JsonProperty("background")
         @ExcludeMissing
         fun _background(): JsonField<String> = background
+
+        /**
+         * Returns the raw JSON value of [backgroundAnimated].
+         *
+         * Unlike [backgroundAnimated], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("background_animated")
+        @ExcludeMissing
+        fun _backgroundAnimated(): JsonField<String> = backgroundAnimated
 
         /**
          * Returns the raw JSON value of [backgroundImages].
@@ -1634,6 +1684,7 @@ private constructor(
             private var alternateGreetings: JsonField<MutableList<String>>? = null
             private var avatar: JsonField<String> = JsonMissing.of()
             private var background: JsonField<String> = JsonMissing.of()
+            private var backgroundAnimated: JsonField<String> = JsonMissing.of()
             private var backgroundImages: JsonField<MutableList<String>>? = null
             private var category: JsonField<String> = JsonMissing.of()
             private var characterBook: JsonField<CharacterBook> = JsonMissing.of()
@@ -1667,6 +1718,7 @@ private constructor(
                 alternateGreetings = body.alternateGreetings.map { it.toMutableList() }
                 avatar = body.avatar
                 background = body.background
+                backgroundAnimated = body.backgroundAnimated
                 backgroundImages = body.backgroundImages.map { it.toMutableList() }
                 category = body.category
                 characterBook = body.characterBook
@@ -1744,6 +1796,20 @@ private constructor(
              * supported value.
              */
             fun background(background: JsonField<String>) = apply { this.background = background }
+
+            fun backgroundAnimated(backgroundAnimated: String?) =
+                backgroundAnimated(JsonField.ofNullable(backgroundAnimated))
+
+            /**
+             * Sets [Builder.backgroundAnimated] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.backgroundAnimated] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun backgroundAnimated(backgroundAnimated: JsonField<String>) = apply {
+                this.backgroundAnimated = backgroundAnimated
+            }
 
             fun backgroundImages(backgroundImages: List<String>?) =
                 backgroundImages(JsonField.ofNullable(backgroundImages))
@@ -2146,6 +2212,7 @@ private constructor(
                     (alternateGreetings ?: JsonMissing.of()).map { it.toImmutable() },
                     avatar,
                     background,
+                    backgroundAnimated,
                     (backgroundImages ?: JsonMissing.of()).map { it.toImmutable() },
                     category,
                     characterBook,
@@ -2187,6 +2254,7 @@ private constructor(
             alternateGreetings()
             avatar()
             background()
+            backgroundAnimated()
             backgroundImages()
             category()
             characterBook()?.validate()
@@ -2235,6 +2303,7 @@ private constructor(
             (alternateGreetings.asKnown()?.size ?: 0) +
                 (if (avatar.asKnown() == null) 0 else 1) +
                 (if (background.asKnown() == null) 0 else 1) +
+                (if (backgroundAnimated.asKnown() == null) 0 else 1) +
                 (backgroundImages.asKnown()?.size ?: 0) +
                 (if (category.asKnown() == null) 0 else 1) +
                 (characterBook.asKnown()?.validity() ?: 0) +
@@ -2272,6 +2341,7 @@ private constructor(
                 alternateGreetings == other.alternateGreetings &&
                 avatar == other.avatar &&
                 background == other.background &&
+                backgroundAnimated == other.backgroundAnimated &&
                 backgroundImages == other.backgroundImages &&
                 category == other.category &&
                 characterBook == other.characterBook &&
@@ -2307,6 +2377,7 @@ private constructor(
                 alternateGreetings,
                 avatar,
                 background,
+                backgroundAnimated,
                 backgroundImages,
                 category,
                 characterBook,
@@ -2341,7 +2412,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{alternateGreetings=$alternateGreetings, avatar=$avatar, background=$background, backgroundImages=$backgroundImages, category=$category, characterBook=$characterBook, characterCardSpec=$characterCardSpec, characterVersion=$characterVersion, creatorNotes=$creatorNotes, extensions=$extensions, gender=$gender, intro=$intro, llmConfig=$llmConfig, mainPrompt=$mainPrompt, messageExample=$messageExample, metaData=$metaData, modePrompt=$modePrompt, name=$name, opening=$opening, openingAudioUrl=$openingAudioUrl, personality=$personality, photos=$photos, postHistoryInstructions=$postHistoryInstructions, prompt=$prompt, requestId=$requestId, scenario=$scenario, settings=$settings, tags=$tags, visibility=$visibility, voiceId=$voiceId, additionalProperties=$additionalProperties}"
+            "Body{alternateGreetings=$alternateGreetings, avatar=$avatar, background=$background, backgroundAnimated=$backgroundAnimated, backgroundImages=$backgroundImages, category=$category, characterBook=$characterBook, characterCardSpec=$characterCardSpec, characterVersion=$characterVersion, creatorNotes=$creatorNotes, extensions=$extensions, gender=$gender, intro=$intro, llmConfig=$llmConfig, mainPrompt=$mainPrompt, messageExample=$messageExample, metaData=$metaData, modePrompt=$modePrompt, name=$name, opening=$opening, openingAudioUrl=$openingAudioUrl, personality=$personality, photos=$photos, postHistoryInstructions=$postHistoryInstructions, prompt=$prompt, requestId=$requestId, scenario=$scenario, settings=$settings, tags=$tags, visibility=$visibility, voiceId=$voiceId, additionalProperties=$additionalProperties}"
     }
 
     class CharacterBook

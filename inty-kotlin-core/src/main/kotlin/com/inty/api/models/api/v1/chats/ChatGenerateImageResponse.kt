@@ -151,6 +151,9 @@ private constructor(
         fun data(usageLimitExceeded: Data.UsageLimitExceeded) =
             data(Data.ofUsageLimitExceeded(usageLimitExceeded))
 
+        /** Alias for calling [data] with `Data.ofBizError(bizError)`. */
+        fun data(bizError: Data.BizError) = data(Data.ofBizError(bizError))
+
         fun message(message: String) = message(JsonField.of(message))
 
         /**
@@ -227,6 +230,7 @@ private constructor(
     private constructor(
         private val chatImageGenerationResponse: ChatImageGenerationResponse? = null,
         private val usageLimitExceeded: UsageLimitExceeded? = null,
+        private val bizError: BizError? = null,
         private val _json: JsonValue? = null,
     ) {
 
@@ -236,9 +240,14 @@ private constructor(
 
         fun usageLimitExceeded(): UsageLimitExceeded? = usageLimitExceeded
 
+        /** 业务错误信息模型 */
+        fun bizError(): BizError? = bizError
+
         fun isChatImageGenerationResponse(): Boolean = chatImageGenerationResponse != null
 
         fun isUsageLimitExceeded(): Boolean = usageLimitExceeded != null
+
+        fun isBizError(): Boolean = bizError != null
 
         /** 聊天生图响应 */
         fun asChatImageGenerationResponse(): ChatImageGenerationResponse =
@@ -247,6 +256,9 @@ private constructor(
         fun asUsageLimitExceeded(): UsageLimitExceeded =
             usageLimitExceeded.getOrThrow("usageLimitExceeded")
 
+        /** 业务错误信息模型 */
+        fun asBizError(): BizError = bizError.getOrThrow("bizError")
+
         fun _json(): JsonValue? = _json
 
         fun <T> accept(visitor: Visitor<T>): T =
@@ -254,6 +266,7 @@ private constructor(
                 chatImageGenerationResponse != null ->
                     visitor.visitChatImageGenerationResponse(chatImageGenerationResponse)
                 usageLimitExceeded != null -> visitor.visitUsageLimitExceeded(usageLimitExceeded)
+                bizError != null -> visitor.visitBizError(bizError)
                 else -> visitor.unknown(_json)
             }
 
@@ -274,6 +287,10 @@ private constructor(
 
                     override fun visitUsageLimitExceeded(usageLimitExceeded: UsageLimitExceeded) {
                         usageLimitExceeded.validate()
+                    }
+
+                    override fun visitBizError(bizError: BizError) {
+                        bizError.validate()
                     }
                 }
             )
@@ -304,6 +321,8 @@ private constructor(
                     override fun visitUsageLimitExceeded(usageLimitExceeded: UsageLimitExceeded) =
                         usageLimitExceeded.validity()
 
+                    override fun visitBizError(bizError: BizError) = bizError.validity()
+
                     override fun unknown(json: JsonValue?) = 0
                 }
             )
@@ -315,16 +334,19 @@ private constructor(
 
             return other is Data &&
                 chatImageGenerationResponse == other.chatImageGenerationResponse &&
-                usageLimitExceeded == other.usageLimitExceeded
+                usageLimitExceeded == other.usageLimitExceeded &&
+                bizError == other.bizError
         }
 
-        override fun hashCode(): Int = Objects.hash(chatImageGenerationResponse, usageLimitExceeded)
+        override fun hashCode(): Int =
+            Objects.hash(chatImageGenerationResponse, usageLimitExceeded, bizError)
 
         override fun toString(): String =
             when {
                 chatImageGenerationResponse != null ->
                     "Data{chatImageGenerationResponse=$chatImageGenerationResponse}"
                 usageLimitExceeded != null -> "Data{usageLimitExceeded=$usageLimitExceeded}"
+                bizError != null -> "Data{bizError=$bizError}"
                 _json != null -> "Data{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Data")
             }
@@ -338,6 +360,9 @@ private constructor(
 
             fun ofUsageLimitExceeded(usageLimitExceeded: UsageLimitExceeded) =
                 Data(usageLimitExceeded = usageLimitExceeded)
+
+            /** 业务错误信息模型 */
+            fun ofBizError(bizError: BizError) = Data(bizError = bizError)
         }
 
         /** An interface that defines how to map each variant of [Data] to a value of type [T]. */
@@ -349,6 +374,9 @@ private constructor(
             ): T
 
             fun visitUsageLimitExceeded(usageLimitExceeded: UsageLimitExceeded): T
+
+            /** 业务错误信息模型 */
+            fun visitBizError(bizError: BizError): T
 
             /**
              * Maps an unknown variant of [Data] to a value of type [T].
@@ -375,6 +403,9 @@ private constructor(
                                 ?.let { Data(chatImageGenerationResponse = it, _json = json) },
                             tryDeserialize(node, jacksonTypeRef<UsageLimitExceeded>())?.let {
                                 Data(usageLimitExceeded = it, _json = json)
+                            },
+                            tryDeserialize(node, jacksonTypeRef<BizError>())?.let {
+                                Data(bizError = it, _json = json)
                             },
                         )
                         .filterNotNull()
@@ -405,6 +436,7 @@ private constructor(
                         generator.writeObject(value.chatImageGenerationResponse)
                     value.usageLimitExceeded != null ->
                         generator.writeObject(value.usageLimitExceeded)
+                    value.bizError != null -> generator.writeObject(value.bizError)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Data")
                 }
@@ -1121,6 +1153,246 @@ private constructor(
 
             override fun toString() =
                 "UsageLimitExceeded{code=$code, dailyLimit=$dailyLimit, errorCode=$errorCode, message=$message, usedCount=$usedCount, additionalProperties=$additionalProperties}"
+        }
+
+        /** 业务错误信息模型 */
+        class BizError
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+        private constructor(
+            private val code: JsonField<Long>,
+            private val errorCode: JsonField<String>,
+            private val message: JsonField<String>,
+            private val additionalProperties: MutableMap<String, JsonValue>,
+        ) {
+
+            @JsonCreator
+            private constructor(
+                @JsonProperty("code") @ExcludeMissing code: JsonField<Long> = JsonMissing.of(),
+                @JsonProperty("error_code")
+                @ExcludeMissing
+                errorCode: JsonField<String> = JsonMissing.of(),
+                @JsonProperty("message")
+                @ExcludeMissing
+                message: JsonField<String> = JsonMissing.of(),
+            ) : this(code, errorCode, message, mutableMapOf())
+
+            /**
+             * @throws IntyInvalidDataException if the JSON field has an unexpected type or is
+             *   unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun code(): Long = code.getRequired("code")
+
+            /**
+             * @throws IntyInvalidDataException if the JSON field has an unexpected type or is
+             *   unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun errorCode(): String = errorCode.getRequired("error_code")
+
+            /**
+             * @throws IntyInvalidDataException if the JSON field has an unexpected type or is
+             *   unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun message(): String = message.getRequired("message")
+
+            /**
+             * Returns the raw JSON value of [code].
+             *
+             * Unlike [code], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("code") @ExcludeMissing fun _code(): JsonField<Long> = code
+
+            /**
+             * Returns the raw JSON value of [errorCode].
+             *
+             * Unlike [errorCode], this method doesn't throw if the JSON field has an unexpected
+             * type.
+             */
+            @JsonProperty("error_code")
+            @ExcludeMissing
+            fun _errorCode(): JsonField<String> = errorCode
+
+            /**
+             * Returns the raw JSON value of [message].
+             *
+             * Unlike [message], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("message") @ExcludeMissing fun _message(): JsonField<String> = message
+
+            @JsonAnySetter
+            private fun putAdditionalProperty(key: String, value: JsonValue) {
+                additionalProperties.put(key, value)
+            }
+
+            @JsonAnyGetter
+            @ExcludeMissing
+            fun _additionalProperties(): Map<String, JsonValue> =
+                Collections.unmodifiableMap(additionalProperties)
+
+            fun toBuilder() = Builder().from(this)
+
+            companion object {
+
+                /**
+                 * Returns a mutable builder for constructing an instance of [BizError].
+                 *
+                 * The following fields are required:
+                 * ```kotlin
+                 * .code()
+                 * .errorCode()
+                 * .message()
+                 * ```
+                 */
+                fun builder() = Builder()
+            }
+
+            /** A builder for [BizError]. */
+            class Builder internal constructor() {
+
+                private var code: JsonField<Long>? = null
+                private var errorCode: JsonField<String>? = null
+                private var message: JsonField<String>? = null
+                private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+                internal fun from(bizError: BizError) = apply {
+                    code = bizError.code
+                    errorCode = bizError.errorCode
+                    message = bizError.message
+                    additionalProperties = bizError.additionalProperties.toMutableMap()
+                }
+
+                fun code(code: Long) = code(JsonField.of(code))
+
+                /**
+                 * Sets [Builder.code] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.code] with a well-typed [Long] value instead.
+                 * This method is primarily for setting the field to an undocumented or not yet
+                 * supported value.
+                 */
+                fun code(code: JsonField<Long>) = apply { this.code = code }
+
+                fun errorCode(errorCode: String) = errorCode(JsonField.of(errorCode))
+
+                /**
+                 * Sets [Builder.errorCode] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.errorCode] with a well-typed [String] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun errorCode(errorCode: JsonField<String>) = apply { this.errorCode = errorCode }
+
+                fun message(message: String) = message(JsonField.of(message))
+
+                /**
+                 * Sets [Builder.message] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.message] with a well-typed [String] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun message(message: JsonField<String>) = apply { this.message = message }
+
+                fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
+
+                fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                    additionalProperties.put(key, value)
+                }
+
+                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                    apply {
+                        this.additionalProperties.putAll(additionalProperties)
+                    }
+
+                fun removeAdditionalProperty(key: String) = apply {
+                    additionalProperties.remove(key)
+                }
+
+                fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
+
+                /**
+                 * Returns an immutable instance of [BizError].
+                 *
+                 * Further updates to this [Builder] will not mutate the returned instance.
+                 *
+                 * The following fields are required:
+                 * ```kotlin
+                 * .code()
+                 * .errorCode()
+                 * .message()
+                 * ```
+                 *
+                 * @throws IllegalStateException if any required field is unset.
+                 */
+                fun build(): BizError =
+                    BizError(
+                        checkRequired("code", code),
+                        checkRequired("errorCode", errorCode),
+                        checkRequired("message", message),
+                        additionalProperties.toMutableMap(),
+                    )
+            }
+
+            private var validated: Boolean = false
+
+            fun validate(): BizError = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                code()
+                errorCode()
+                message()
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: IntyInvalidDataException) {
+                    false
+                }
+
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            internal fun validity(): Int =
+                (if (code.asKnown() == null) 0 else 1) +
+                    (if (errorCode.asKnown() == null) 0 else 1) +
+                    (if (message.asKnown() == null) 0 else 1)
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is BizError &&
+                    code == other.code &&
+                    errorCode == other.errorCode &&
+                    message == other.message &&
+                    additionalProperties == other.additionalProperties
+            }
+
+            private val hashCode: Int by lazy {
+                Objects.hash(code, errorCode, message, additionalProperties)
+            }
+
+            override fun hashCode(): Int = hashCode
+
+            override fun toString() =
+                "BizError{code=$code, errorCode=$errorCode, message=$message, additionalProperties=$additionalProperties}"
         }
     }
 

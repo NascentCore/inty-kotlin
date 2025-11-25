@@ -63,6 +63,12 @@ private constructor(
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
      *   responded with an unexpected value).
      */
+    fun reportType(): ReportType? = body.reportType()
+
+    /**
+     * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
+     *   responded with an unexpected value).
+     */
     fun requestId(): String? = body.requestId()
 
     /**
@@ -99,6 +105,13 @@ private constructor(
      * Unlike [imageUrls], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _imageUrls(): JsonField<List<String>> = body._imageUrls()
+
+    /**
+     * Returns the raw JSON value of [reportType].
+     *
+     * Unlike [reportType], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _reportType(): JsonField<ReportType> = body._reportType()
 
     /**
      * Returns the raw JSON value of [requestId].
@@ -226,6 +239,17 @@ private constructor(
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
         fun addImageUrl(imageUrl: String) = apply { body.addImageUrl(imageUrl) }
+
+        fun reportType(reportType: ReportType?) = apply { body.reportType(reportType) }
+
+        /**
+         * Sets [Builder.reportType] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.reportType] with a well-typed [ReportType] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun reportType(reportType: JsonField<ReportType>) = apply { body.reportType(reportType) }
 
         fun requestId(requestId: String?) = apply { body.requestId(requestId) }
 
@@ -391,6 +415,7 @@ private constructor(
         private val targetType: JsonField<TargetType>,
         private val description: JsonField<String>,
         private val imageUrls: JsonField<List<String>>,
+        private val reportType: JsonField<ReportType>,
         private val requestId: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
@@ -412,10 +437,22 @@ private constructor(
             @JsonProperty("image_urls")
             @ExcludeMissing
             imageUrls: JsonField<List<String>> = JsonMissing.of(),
+            @JsonProperty("report_type")
+            @ExcludeMissing
+            reportType: JsonField<ReportType> = JsonMissing.of(),
             @JsonProperty("request_id")
             @ExcludeMissing
             requestId: JsonField<String> = JsonMissing.of(),
-        ) : this(reasonIds, targetId, targetType, description, imageUrls, requestId, mutableMapOf())
+        ) : this(
+            reasonIds,
+            targetId,
+            targetType,
+            description,
+            imageUrls,
+            reportType,
+            requestId,
+            mutableMapOf(),
+        )
 
         /**
          * @throws IntyInvalidDataException if the JSON field has an unexpected type or is
@@ -446,6 +483,12 @@ private constructor(
          *   server responded with an unexpected value).
          */
         fun imageUrls(): List<String>? = imageUrls.getNullable("image_urls")
+
+        /**
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun reportType(): ReportType? = reportType.getNullable("report_type")
 
         /**
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -497,6 +540,15 @@ private constructor(
         fun _imageUrls(): JsonField<List<String>> = imageUrls
 
         /**
+         * Returns the raw JSON value of [reportType].
+         *
+         * Unlike [reportType], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("report_type")
+        @ExcludeMissing
+        fun _reportType(): JsonField<ReportType> = reportType
+
+        /**
          * Returns the raw JSON value of [requestId].
          *
          * Unlike [requestId], this method doesn't throw if the JSON field has an unexpected type.
@@ -538,6 +590,7 @@ private constructor(
             private var targetType: JsonField<TargetType>? = null
             private var description: JsonField<String> = JsonMissing.of()
             private var imageUrls: JsonField<MutableList<String>>? = null
+            private var reportType: JsonField<ReportType> = JsonMissing.of()
             private var requestId: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -547,6 +600,7 @@ private constructor(
                 targetType = body.targetType
                 description = body.description
                 imageUrls = body.imageUrls.map { it.toMutableList() }
+                reportType = body.reportType
                 requestId = body.requestId
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
@@ -638,6 +692,19 @@ private constructor(
                     }
             }
 
+            fun reportType(reportType: ReportType?) = reportType(JsonField.ofNullable(reportType))
+
+            /**
+             * Sets [Builder.reportType] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.reportType] with a well-typed [ReportType] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun reportType(reportType: JsonField<ReportType>) = apply {
+                this.reportType = reportType
+            }
+
             fun requestId(requestId: String?) = requestId(JsonField.ofNullable(requestId))
 
             /**
@@ -689,6 +756,7 @@ private constructor(
                     checkRequired("targetType", targetType),
                     description,
                     (imageUrls ?: JsonMissing.of()).map { it.toImmutable() },
+                    reportType,
                     requestId,
                     additionalProperties.toMutableMap(),
                 )
@@ -706,6 +774,7 @@ private constructor(
             targetType().validate()
             description()
             imageUrls()
+            reportType()?.validate()
             requestId()
             validated = true
         }
@@ -730,6 +799,7 @@ private constructor(
                 (targetType.asKnown()?.validity() ?: 0) +
                 (if (description.asKnown() == null) 0 else 1) +
                 (imageUrls.asKnown()?.size ?: 0) +
+                (reportType.asKnown()?.validity() ?: 0) +
                 (if (requestId.asKnown() == null) 0 else 1)
 
         override fun equals(other: Any?): Boolean {
@@ -743,6 +813,7 @@ private constructor(
                 targetType == other.targetType &&
                 description == other.description &&
                 imageUrls == other.imageUrls &&
+                reportType == other.reportType &&
                 requestId == other.requestId &&
                 additionalProperties == other.additionalProperties
         }
@@ -754,6 +825,7 @@ private constructor(
                 targetType,
                 description,
                 imageUrls,
+                reportType,
                 requestId,
                 additionalProperties,
             )
@@ -762,7 +834,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{reasonIds=$reasonIds, targetId=$targetId, targetType=$targetType, description=$description, imageUrls=$imageUrls, requestId=$requestId, additionalProperties=$additionalProperties}"
+            "Body{reasonIds=$reasonIds, targetId=$targetId, targetType=$targetType, description=$description, imageUrls=$imageUrls, reportType=$reportType, requestId=$requestId, additionalProperties=$additionalProperties}"
     }
 
     class TargetType @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
@@ -884,6 +956,132 @@ private constructor(
             }
 
             return other is TargetType && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
+    }
+
+    class ReportType @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            val REPORT = of("REPORT")
+
+            val FEEDBACK = of("FEEDBACK")
+
+            fun of(value: String) = ReportType(JsonField.of(value))
+        }
+
+        /** An enum containing [ReportType]'s known values. */
+        enum class Known {
+            REPORT,
+            FEEDBACK,
+        }
+
+        /**
+         * An enum containing [ReportType]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [ReportType] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            REPORT,
+            FEEDBACK,
+            /**
+             * An enum member indicating that [ReportType] was instantiated with an unknown value.
+             */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                REPORT -> Value.REPORT
+                FEEDBACK -> Value.FEEDBACK
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws IntyInvalidDataException if this class instance's value is a not a known member.
+         */
+        fun known(): Known =
+            when (this) {
+                REPORT -> Known.REPORT
+                FEEDBACK -> Known.FEEDBACK
+                else -> throw IntyInvalidDataException("Unknown ReportType: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws IntyInvalidDataException if this class instance's value does not have the
+         *   expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString() ?: throw IntyInvalidDataException("Value is not a String")
+
+        private var validated: Boolean = false
+
+        fun validate(): ReportType = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: IntyInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is ReportType && value == other.value
         }
 
         override fun hashCode() = value.hashCode()
