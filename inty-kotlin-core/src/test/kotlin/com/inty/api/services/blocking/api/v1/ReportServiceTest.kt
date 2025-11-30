@@ -25,11 +25,12 @@ internal class ReportServiceTest {
         val report =
             reportService.create(
                 ReportCreateParams.builder()
-                    .addReasonId(0L)
                     .targetId("target_id")
                     .targetType(ReportCreateParams.TargetType.USER)
                     .description("description")
                     .addImageUrl("string")
+                    .addReasonCode(ReportCreateParams.ReasonCode.SENSITIVE_CONTENT)
+                    .addReasonId(0L)
                     .reportType(ReportCreateParams.ReportType.REPORT)
                     .requestId("request_id")
                     .build()

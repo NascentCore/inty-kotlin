@@ -30,53 +30,66 @@ private constructor(
 ) : Params {
 
     /**
-     * @throws IntyInvalidDataException if the JSON field has an unexpected type or is unexpectedly
-     *   missing or null (e.g. if the server responded with an unexpected value).
-     */
-    fun reasonIds(): List<Long> = body.reasonIds()
-
-    /**
+     * 举报或者反馈的目标对象的 ID，角色或者用户的 ID。
+     *
      * @throws IntyInvalidDataException if the JSON field has an unexpected type or is unexpectedly
      *   missing or null (e.g. if the server responded with an unexpected value).
      */
     fun targetId(): String = body.targetId()
 
     /**
+     * 举报或者反馈的目标对象的类型，角色或者用户。
+     *
      * @throws IntyInvalidDataException if the JSON field has an unexpected type or is unexpectedly
      *   missing or null (e.g. if the server responded with an unexpected value).
      */
     fun targetType(): TargetType = body.targetType()
 
     /**
+     * The description of the report.
+     *
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
      *   responded with an unexpected value).
      */
     fun description(): String? = body.description()
 
     /**
+     * 举报或者反馈附图的链接，该链接来自 /api/v1/images 端点上传图片返回的 gcs URL（可能是 cdn 链接）
+     *
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
      *   responded with an unexpected value).
      */
     fun imageUrls(): List<String>? = body.imageUrls()
 
     /**
+     * 举报或者反馈的原因代码列表。如果未提供且提供了 reason_ids，将从 reason_ids 自动转换
+     *
+     * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
+     *   responded with an unexpected value).
+     */
+    fun reasonCodes(): List<ReasonCode>? = body.reasonCodes()
+
+    /**
+     * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
+     *   responded with an unexpected value).
+     */
+    fun reasonIds(): List<Long>? = body.reasonIds()
+
+    /**
+     * 举报或者反馈的类型，为空时默认为 REPORT
+     *
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
      *   responded with an unexpected value).
      */
     fun reportType(): ReportType? = body.reportType()
 
     /**
+     * The ID of the request.
+     *
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
      *   responded with an unexpected value).
      */
     fun requestId(): String? = body.requestId()
-
-    /**
-     * Returns the raw JSON value of [reasonIds].
-     *
-     * Unlike [reasonIds], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    fun _reasonIds(): JsonField<List<Long>> = body._reasonIds()
 
     /**
      * Returns the raw JSON value of [targetId].
@@ -105,6 +118,20 @@ private constructor(
      * Unlike [imageUrls], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _imageUrls(): JsonField<List<String>> = body._imageUrls()
+
+    /**
+     * Returns the raw JSON value of [reasonCodes].
+     *
+     * Unlike [reasonCodes], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _reasonCodes(): JsonField<List<ReasonCode>> = body._reasonCodes()
+
+    /**
+     * Returns the raw JSON value of [reasonIds].
+     *
+     * Unlike [reasonIds], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _reasonIds(): JsonField<List<Long>> = body._reasonIds()
 
     /**
      * Returns the raw JSON value of [reportType].
@@ -137,7 +164,6 @@ private constructor(
          *
          * The following fields are required:
          * ```kotlin
-         * .reasonIds()
          * .targetId()
          * .targetType()
          * ```
@@ -163,33 +189,16 @@ private constructor(
          *
          * This is generally only useful if you are already constructing the body separately.
          * Otherwise, it's more convenient to use the top-level setters instead:
-         * - [reasonIds]
          * - [targetId]
          * - [targetType]
          * - [description]
          * - [imageUrls]
+         * - [reasonCodes]
          * - etc.
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
-        fun reasonIds(reasonIds: List<Long>) = apply { body.reasonIds(reasonIds) }
-
-        /**
-         * Sets [Builder.reasonIds] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.reasonIds] with a well-typed `List<Long>` value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
-        fun reasonIds(reasonIds: JsonField<List<Long>>) = apply { body.reasonIds(reasonIds) }
-
-        /**
-         * Adds a single [Long] to [reasonIds].
-         *
-         * @throws IllegalStateException if the field was previously set to a non-list.
-         */
-        fun addReasonId(reasonId: Long) = apply { body.addReasonId(reasonId) }
-
+        /** 举报或者反馈的目标对象的 ID，角色或者用户的 ID。 */
         fun targetId(targetId: String) = apply { body.targetId(targetId) }
 
         /**
@@ -200,6 +209,7 @@ private constructor(
          */
         fun targetId(targetId: JsonField<String>) = apply { body.targetId(targetId) }
 
+        /** 举报或者反馈的目标对象的类型，角色或者用户。 */
         fun targetType(targetType: TargetType) = apply { body.targetType(targetType) }
 
         /**
@@ -211,6 +221,7 @@ private constructor(
          */
         fun targetType(targetType: JsonField<TargetType>) = apply { body.targetType(targetType) }
 
+        /** The description of the report. */
         fun description(description: String?) = apply { body.description(description) }
 
         /**
@@ -222,6 +233,7 @@ private constructor(
          */
         fun description(description: JsonField<String>) = apply { body.description(description) }
 
+        /** 举报或者反馈附图的链接，该链接来自 /api/v1/images 端点上传图片返回的 gcs URL（可能是 cdn 链接） */
         fun imageUrls(imageUrls: List<String>?) = apply { body.imageUrls(imageUrls) }
 
         /**
@@ -240,6 +252,46 @@ private constructor(
          */
         fun addImageUrl(imageUrl: String) = apply { body.addImageUrl(imageUrl) }
 
+        /** 举报或者反馈的原因代码列表。如果未提供且提供了 reason_ids，将从 reason_ids 自动转换 */
+        fun reasonCodes(reasonCodes: List<ReasonCode>?) = apply { body.reasonCodes(reasonCodes) }
+
+        /**
+         * Sets [Builder.reasonCodes] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.reasonCodes] with a well-typed `List<ReasonCode>` value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun reasonCodes(reasonCodes: JsonField<List<ReasonCode>>) = apply {
+            body.reasonCodes(reasonCodes)
+        }
+
+        /**
+         * Adds a single [ReasonCode] to [reasonCodes].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addReasonCode(reasonCode: ReasonCode) = apply { body.addReasonCode(reasonCode) }
+
+        fun reasonIds(reasonIds: List<Long>?) = apply { body.reasonIds(reasonIds) }
+
+        /**
+         * Sets [Builder.reasonIds] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.reasonIds] with a well-typed `List<Long>` value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun reasonIds(reasonIds: JsonField<List<Long>>) = apply { body.reasonIds(reasonIds) }
+
+        /**
+         * Adds a single [Long] to [reasonIds].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addReasonId(reasonId: Long) = apply { body.addReasonId(reasonId) }
+
+        /** 举报或者反馈的类型，为空时默认为 REPORT */
         fun reportType(reportType: ReportType?) = apply { body.reportType(reportType) }
 
         /**
@@ -251,6 +303,7 @@ private constructor(
          */
         fun reportType(reportType: JsonField<ReportType>) = apply { body.reportType(reportType) }
 
+        /** The ID of the request. */
         fun requestId(requestId: String?) = apply { body.requestId(requestId) }
 
         /**
@@ -386,7 +439,6 @@ private constructor(
          *
          * The following fields are required:
          * ```kotlin
-         * .reasonIds()
          * .targetId()
          * .targetType()
          * ```
@@ -407,14 +459,16 @@ private constructor(
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
+    /** Report API 端点的请求数据结构。 */
     class Body
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
-        private val reasonIds: JsonField<List<Long>>,
         private val targetId: JsonField<String>,
         private val targetType: JsonField<TargetType>,
         private val description: JsonField<String>,
         private val imageUrls: JsonField<List<String>>,
+        private val reasonCodes: JsonField<List<ReasonCode>>,
+        private val reasonIds: JsonField<List<Long>>,
         private val reportType: JsonField<ReportType>,
         private val requestId: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
@@ -422,9 +476,6 @@ private constructor(
 
         @JsonCreator
         private constructor(
-            @JsonProperty("reason_ids")
-            @ExcludeMissing
-            reasonIds: JsonField<List<Long>> = JsonMissing.of(),
             @JsonProperty("target_id")
             @ExcludeMissing
             targetId: JsonField<String> = JsonMissing.of(),
@@ -437,6 +488,12 @@ private constructor(
             @JsonProperty("image_urls")
             @ExcludeMissing
             imageUrls: JsonField<List<String>> = JsonMissing.of(),
+            @JsonProperty("reason_codes")
+            @ExcludeMissing
+            reasonCodes: JsonField<List<ReasonCode>> = JsonMissing.of(),
+            @JsonProperty("reason_ids")
+            @ExcludeMissing
+            reasonIds: JsonField<List<Long>> = JsonMissing.of(),
             @JsonProperty("report_type")
             @ExcludeMissing
             reportType: JsonField<ReportType> = JsonMissing.of(),
@@ -444,66 +501,78 @@ private constructor(
             @ExcludeMissing
             requestId: JsonField<String> = JsonMissing.of(),
         ) : this(
-            reasonIds,
             targetId,
             targetType,
             description,
             imageUrls,
+            reasonCodes,
+            reasonIds,
             reportType,
             requestId,
             mutableMapOf(),
         )
 
         /**
-         * @throws IntyInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun reasonIds(): List<Long> = reasonIds.getRequired("reason_ids")
-
-        /**
+         * 举报或者反馈的目标对象的 ID，角色或者用户的 ID。
+         *
          * @throws IntyInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun targetId(): String = targetId.getRequired("target_id")
 
         /**
+         * 举报或者反馈的目标对象的类型，角色或者用户。
+         *
          * @throws IntyInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun targetType(): TargetType = targetType.getRequired("target_type")
 
         /**
+         * The description of the report.
+         *
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
          */
         fun description(): String? = description.getNullable("description")
 
         /**
+         * 举报或者反馈附图的链接，该链接来自 /api/v1/images 端点上传图片返回的 gcs URL（可能是 cdn 链接）
+         *
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
          */
         fun imageUrls(): List<String>? = imageUrls.getNullable("image_urls")
 
         /**
+         * 举报或者反馈的原因代码列表。如果未提供且提供了 reason_ids，将从 reason_ids 自动转换
+         *
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun reasonCodes(): List<ReasonCode>? = reasonCodes.getNullable("reason_codes")
+
+        /**
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun reasonIds(): List<Long>? = reasonIds.getNullable("reason_ids")
+
+        /**
+         * 举报或者反馈的类型，为空时默认为 REPORT
+         *
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
          */
         fun reportType(): ReportType? = reportType.getNullable("report_type")
 
         /**
+         * The ID of the request.
+         *
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
          */
         fun requestId(): String? = requestId.getNullable("request_id")
-
-        /**
-         * Returns the raw JSON value of [reasonIds].
-         *
-         * Unlike [reasonIds], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("reason_ids")
-        @ExcludeMissing
-        fun _reasonIds(): JsonField<List<Long>> = reasonIds
 
         /**
          * Returns the raw JSON value of [targetId].
@@ -540,6 +609,24 @@ private constructor(
         fun _imageUrls(): JsonField<List<String>> = imageUrls
 
         /**
+         * Returns the raw JSON value of [reasonCodes].
+         *
+         * Unlike [reasonCodes], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("reason_codes")
+        @ExcludeMissing
+        fun _reasonCodes(): JsonField<List<ReasonCode>> = reasonCodes
+
+        /**
+         * Returns the raw JSON value of [reasonIds].
+         *
+         * Unlike [reasonIds], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("reason_ids")
+        @ExcludeMissing
+        fun _reasonIds(): JsonField<List<Long>> = reasonIds
+
+        /**
          * Returns the raw JSON value of [reportType].
          *
          * Unlike [reportType], this method doesn't throw if the JSON field has an unexpected type.
@@ -574,7 +661,6 @@ private constructor(
              *
              * The following fields are required:
              * ```kotlin
-             * .reasonIds()
              * .targetId()
              * .targetType()
              * ```
@@ -585,51 +671,29 @@ private constructor(
         /** A builder for [Body]. */
         class Builder internal constructor() {
 
-            private var reasonIds: JsonField<MutableList<Long>>? = null
             private var targetId: JsonField<String>? = null
             private var targetType: JsonField<TargetType>? = null
             private var description: JsonField<String> = JsonMissing.of()
             private var imageUrls: JsonField<MutableList<String>>? = null
+            private var reasonCodes: JsonField<MutableList<ReasonCode>>? = null
+            private var reasonIds: JsonField<MutableList<Long>>? = null
             private var reportType: JsonField<ReportType> = JsonMissing.of()
             private var requestId: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             internal fun from(body: Body) = apply {
-                reasonIds = body.reasonIds.map { it.toMutableList() }
                 targetId = body.targetId
                 targetType = body.targetType
                 description = body.description
                 imageUrls = body.imageUrls.map { it.toMutableList() }
+                reasonCodes = body.reasonCodes.map { it.toMutableList() }
+                reasonIds = body.reasonIds.map { it.toMutableList() }
                 reportType = body.reportType
                 requestId = body.requestId
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
-            fun reasonIds(reasonIds: List<Long>) = reasonIds(JsonField.of(reasonIds))
-
-            /**
-             * Sets [Builder.reasonIds] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.reasonIds] with a well-typed `List<Long>` value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun reasonIds(reasonIds: JsonField<List<Long>>) = apply {
-                this.reasonIds = reasonIds.map { it.toMutableList() }
-            }
-
-            /**
-             * Adds a single [Long] to [reasonIds].
-             *
-             * @throws IllegalStateException if the field was previously set to a non-list.
-             */
-            fun addReasonId(reasonId: Long) = apply {
-                reasonIds =
-                    (reasonIds ?: JsonField.of(mutableListOf())).also {
-                        checkKnown("reasonIds", it).add(reasonId)
-                    }
-            }
-
+            /** 举报或者反馈的目标对象的 ID，角色或者用户的 ID。 */
             fun targetId(targetId: String) = targetId(JsonField.of(targetId))
 
             /**
@@ -641,6 +705,7 @@ private constructor(
              */
             fun targetId(targetId: JsonField<String>) = apply { this.targetId = targetId }
 
+            /** 举报或者反馈的目标对象的类型，角色或者用户。 */
             fun targetType(targetType: TargetType) = targetType(JsonField.of(targetType))
 
             /**
@@ -654,6 +719,7 @@ private constructor(
                 this.targetType = targetType
             }
 
+            /** The description of the report. */
             fun description(description: String?) = description(JsonField.ofNullable(description))
 
             /**
@@ -667,6 +733,7 @@ private constructor(
                 this.description = description
             }
 
+            /** 举报或者反馈附图的链接，该链接来自 /api/v1/images 端点上传图片返回的 gcs URL（可能是 cdn 链接） */
             fun imageUrls(imageUrls: List<String>?) = imageUrls(JsonField.ofNullable(imageUrls))
 
             /**
@@ -692,6 +759,59 @@ private constructor(
                     }
             }
 
+            /** 举报或者反馈的原因代码列表。如果未提供且提供了 reason_ids，将从 reason_ids 自动转换 */
+            fun reasonCodes(reasonCodes: List<ReasonCode>?) =
+                reasonCodes(JsonField.ofNullable(reasonCodes))
+
+            /**
+             * Sets [Builder.reasonCodes] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.reasonCodes] with a well-typed `List<ReasonCode>`
+             * value instead. This method is primarily for setting the field to an undocumented or
+             * not yet supported value.
+             */
+            fun reasonCodes(reasonCodes: JsonField<List<ReasonCode>>) = apply {
+                this.reasonCodes = reasonCodes.map { it.toMutableList() }
+            }
+
+            /**
+             * Adds a single [ReasonCode] to [reasonCodes].
+             *
+             * @throws IllegalStateException if the field was previously set to a non-list.
+             */
+            fun addReasonCode(reasonCode: ReasonCode) = apply {
+                reasonCodes =
+                    (reasonCodes ?: JsonField.of(mutableListOf())).also {
+                        checkKnown("reasonCodes", it).add(reasonCode)
+                    }
+            }
+
+            fun reasonIds(reasonIds: List<Long>?) = reasonIds(JsonField.ofNullable(reasonIds))
+
+            /**
+             * Sets [Builder.reasonIds] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.reasonIds] with a well-typed `List<Long>` value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun reasonIds(reasonIds: JsonField<List<Long>>) = apply {
+                this.reasonIds = reasonIds.map { it.toMutableList() }
+            }
+
+            /**
+             * Adds a single [Long] to [reasonIds].
+             *
+             * @throws IllegalStateException if the field was previously set to a non-list.
+             */
+            fun addReasonId(reasonId: Long) = apply {
+                reasonIds =
+                    (reasonIds ?: JsonField.of(mutableListOf())).also {
+                        checkKnown("reasonIds", it).add(reasonId)
+                    }
+            }
+
+            /** 举报或者反馈的类型，为空时默认为 REPORT */
             fun reportType(reportType: ReportType?) = reportType(JsonField.ofNullable(reportType))
 
             /**
@@ -705,6 +825,7 @@ private constructor(
                 this.reportType = reportType
             }
 
+            /** The ID of the request. */
             fun requestId(requestId: String?) = requestId(JsonField.ofNullable(requestId))
 
             /**
@@ -742,7 +863,6 @@ private constructor(
              *
              * The following fields are required:
              * ```kotlin
-             * .reasonIds()
              * .targetId()
              * .targetType()
              * ```
@@ -751,11 +871,12 @@ private constructor(
              */
             fun build(): Body =
                 Body(
-                    checkRequired("reasonIds", reasonIds).map { it.toImmutable() },
                     checkRequired("targetId", targetId),
                     checkRequired("targetType", targetType),
                     description,
                     (imageUrls ?: JsonMissing.of()).map { it.toImmutable() },
+                    (reasonCodes ?: JsonMissing.of()).map { it.toImmutable() },
+                    (reasonIds ?: JsonMissing.of()).map { it.toImmutable() },
                     reportType,
                     requestId,
                     additionalProperties.toMutableMap(),
@@ -769,11 +890,12 @@ private constructor(
                 return@apply
             }
 
-            reasonIds()
             targetId()
             targetType().validate()
             description()
             imageUrls()
+            reasonCodes()?.forEach { it.validate() }
+            reasonIds()
             reportType()?.validate()
             requestId()
             validated = true
@@ -794,11 +916,12 @@ private constructor(
          * Used for best match union deserialization.
          */
         internal fun validity(): Int =
-            (reasonIds.asKnown()?.size ?: 0) +
-                (if (targetId.asKnown() == null) 0 else 1) +
+            (if (targetId.asKnown() == null) 0 else 1) +
                 (targetType.asKnown()?.validity() ?: 0) +
                 (if (description.asKnown() == null) 0 else 1) +
                 (imageUrls.asKnown()?.size ?: 0) +
+                (reasonCodes.asKnown()?.sumOf { it.validity().toInt() } ?: 0) +
+                (reasonIds.asKnown()?.size ?: 0) +
                 (reportType.asKnown()?.validity() ?: 0) +
                 (if (requestId.asKnown() == null) 0 else 1)
 
@@ -808,11 +931,12 @@ private constructor(
             }
 
             return other is Body &&
-                reasonIds == other.reasonIds &&
                 targetId == other.targetId &&
                 targetType == other.targetType &&
                 description == other.description &&
                 imageUrls == other.imageUrls &&
+                reasonCodes == other.reasonCodes &&
+                reasonIds == other.reasonIds &&
                 reportType == other.reportType &&
                 requestId == other.requestId &&
                 additionalProperties == other.additionalProperties
@@ -820,11 +944,12 @@ private constructor(
 
         private val hashCode: Int by lazy {
             Objects.hash(
-                reasonIds,
                 targetId,
                 targetType,
                 description,
                 imageUrls,
+                reasonCodes,
+                reasonIds,
                 reportType,
                 requestId,
                 additionalProperties,
@@ -834,9 +959,10 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{reasonIds=$reasonIds, targetId=$targetId, targetType=$targetType, description=$description, imageUrls=$imageUrls, reportType=$reportType, requestId=$requestId, additionalProperties=$additionalProperties}"
+            "Body{targetId=$targetId, targetType=$targetType, description=$description, imageUrls=$imageUrls, reasonCodes=$reasonCodes, reasonIds=$reasonIds, reportType=$reportType, requestId=$requestId, additionalProperties=$additionalProperties}"
     }
 
+    /** 举报或者反馈的目标对象的类型，角色或者用户。 */
     class TargetType @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**
@@ -963,6 +1089,200 @@ private constructor(
         override fun toString() = value.toString()
     }
 
+    /** 原因代码枚举，包含 Report 和 Feedback 的所有可能值 */
+    class ReasonCode @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            val SENSITIVE_CONTENT = of("SENSITIVE_CONTENT")
+
+            val MISINFORMATION = of("MISINFORMATION")
+
+            val FRAUD_SCAMS = of("FRAUD_SCAMS")
+
+            val PRIVACY_VIOLATION = of("PRIVACY_VIOLATION")
+
+            val HARMFUL_MINORS = of("HARMFUL_MINORS")
+
+            val IP_VIOLATION = of("IP_VIOLATION")
+
+            val OTHER = of("OTHER")
+
+            val CHAT_NOT_NATURAL = of("CHAT_NOT_NATURAL")
+
+            val CHARACTER_MISMATCH = of("CHARACTER_MISMATCH")
+
+            val APP_SLOW = of("APP_SLOW")
+
+            val FEATURE_HARD_TO_FIND = of("FEATURE_HARD_TO_FIND")
+
+            val UI_INCONVENIENT = of("UI_INCONVENIENT")
+
+            val NEW_FEATURE = of("NEW_FEATURE")
+
+            fun of(value: String) = ReasonCode(JsonField.of(value))
+        }
+
+        /** An enum containing [ReasonCode]'s known values. */
+        enum class Known {
+            SENSITIVE_CONTENT,
+            MISINFORMATION,
+            FRAUD_SCAMS,
+            PRIVACY_VIOLATION,
+            HARMFUL_MINORS,
+            IP_VIOLATION,
+            OTHER,
+            CHAT_NOT_NATURAL,
+            CHARACTER_MISMATCH,
+            APP_SLOW,
+            FEATURE_HARD_TO_FIND,
+            UI_INCONVENIENT,
+            NEW_FEATURE,
+        }
+
+        /**
+         * An enum containing [ReasonCode]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [ReasonCode] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            SENSITIVE_CONTENT,
+            MISINFORMATION,
+            FRAUD_SCAMS,
+            PRIVACY_VIOLATION,
+            HARMFUL_MINORS,
+            IP_VIOLATION,
+            OTHER,
+            CHAT_NOT_NATURAL,
+            CHARACTER_MISMATCH,
+            APP_SLOW,
+            FEATURE_HARD_TO_FIND,
+            UI_INCONVENIENT,
+            NEW_FEATURE,
+            /**
+             * An enum member indicating that [ReasonCode] was instantiated with an unknown value.
+             */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                SENSITIVE_CONTENT -> Value.SENSITIVE_CONTENT
+                MISINFORMATION -> Value.MISINFORMATION
+                FRAUD_SCAMS -> Value.FRAUD_SCAMS
+                PRIVACY_VIOLATION -> Value.PRIVACY_VIOLATION
+                HARMFUL_MINORS -> Value.HARMFUL_MINORS
+                IP_VIOLATION -> Value.IP_VIOLATION
+                OTHER -> Value.OTHER
+                CHAT_NOT_NATURAL -> Value.CHAT_NOT_NATURAL
+                CHARACTER_MISMATCH -> Value.CHARACTER_MISMATCH
+                APP_SLOW -> Value.APP_SLOW
+                FEATURE_HARD_TO_FIND -> Value.FEATURE_HARD_TO_FIND
+                UI_INCONVENIENT -> Value.UI_INCONVENIENT
+                NEW_FEATURE -> Value.NEW_FEATURE
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws IntyInvalidDataException if this class instance's value is a not a known member.
+         */
+        fun known(): Known =
+            when (this) {
+                SENSITIVE_CONTENT -> Known.SENSITIVE_CONTENT
+                MISINFORMATION -> Known.MISINFORMATION
+                FRAUD_SCAMS -> Known.FRAUD_SCAMS
+                PRIVACY_VIOLATION -> Known.PRIVACY_VIOLATION
+                HARMFUL_MINORS -> Known.HARMFUL_MINORS
+                IP_VIOLATION -> Known.IP_VIOLATION
+                OTHER -> Known.OTHER
+                CHAT_NOT_NATURAL -> Known.CHAT_NOT_NATURAL
+                CHARACTER_MISMATCH -> Known.CHARACTER_MISMATCH
+                APP_SLOW -> Known.APP_SLOW
+                FEATURE_HARD_TO_FIND -> Known.FEATURE_HARD_TO_FIND
+                UI_INCONVENIENT -> Known.UI_INCONVENIENT
+                NEW_FEATURE -> Known.NEW_FEATURE
+                else -> throw IntyInvalidDataException("Unknown ReasonCode: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws IntyInvalidDataException if this class instance's value does not have the
+         *   expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString() ?: throw IntyInvalidDataException("Value is not a String")
+
+        private var validated: Boolean = false
+
+        fun validate(): ReasonCode = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: IntyInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is ReasonCode && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
+    }
+
+    /** 举报或者反馈的类型，为空时默认为 REPORT */
     class ReportType @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**

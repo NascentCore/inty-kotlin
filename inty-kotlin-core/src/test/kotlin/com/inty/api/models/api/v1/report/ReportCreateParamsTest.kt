@@ -10,11 +10,12 @@ internal class ReportCreateParamsTest {
     @Test
     fun create() {
         ReportCreateParams.builder()
-            .addReasonId(0L)
             .targetId("target_id")
             .targetType(ReportCreateParams.TargetType.USER)
             .description("description")
             .addImageUrl("string")
+            .addReasonCode(ReportCreateParams.ReasonCode.SENSITIVE_CONTENT)
+            .addReasonId(0L)
             .reportType(ReportCreateParams.ReportType.REPORT)
             .requestId("request_id")
             .build()
@@ -24,22 +25,25 @@ internal class ReportCreateParamsTest {
     fun body() {
         val params =
             ReportCreateParams.builder()
-                .addReasonId(0L)
                 .targetId("target_id")
                 .targetType(ReportCreateParams.TargetType.USER)
                 .description("description")
                 .addImageUrl("string")
+                .addReasonCode(ReportCreateParams.ReasonCode.SENSITIVE_CONTENT)
+                .addReasonId(0L)
                 .reportType(ReportCreateParams.ReportType.REPORT)
                 .requestId("request_id")
                 .build()
 
         val body = params._body()
 
-        assertThat(body.reasonIds()).containsExactly(0L)
         assertThat(body.targetId()).isEqualTo("target_id")
         assertThat(body.targetType()).isEqualTo(ReportCreateParams.TargetType.USER)
         assertThat(body.description()).isEqualTo("description")
         assertThat(body.imageUrls()).containsExactly("string")
+        assertThat(body.reasonCodes())
+            .containsExactly(ReportCreateParams.ReasonCode.SENSITIVE_CONTENT)
+        assertThat(body.reasonIds()).containsExactly(0L)
         assertThat(body.reportType()).isEqualTo(ReportCreateParams.ReportType.REPORT)
         assertThat(body.requestId()).isEqualTo("request_id")
     }
@@ -48,14 +52,12 @@ internal class ReportCreateParamsTest {
     fun bodyWithoutOptionalFields() {
         val params =
             ReportCreateParams.builder()
-                .addReasonId(0L)
                 .targetId("target_id")
                 .targetType(ReportCreateParams.TargetType.USER)
                 .build()
 
         val body = params._body()
 
-        assertThat(body.reasonIds()).containsExactly(0L)
         assertThat(body.targetId()).isEqualTo("target_id")
         assertThat(body.targetType()).isEqualTo(ReportCreateParams.TargetType.USER)
     }

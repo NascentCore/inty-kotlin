@@ -377,11 +377,11 @@ private constructor(
         private constructor(
             private val id: JsonField<String>,
             private val authType: JsonField<AuthType>,
-            private val avatar: JsonField<String>,
             private val email: JsonField<String>,
             private val isNewUser: JsonField<Boolean>,
             private val nickname: JsonField<String>,
             private val ageGroup: JsonField<String>,
+            private val avatar: JsonField<String>,
             private val description: JsonField<String>,
             private val gender: JsonField<Gender>,
             private val phone: JsonField<String>,
@@ -395,9 +395,6 @@ private constructor(
                 @JsonProperty("auth_type")
                 @ExcludeMissing
                 authType: JsonField<AuthType> = JsonMissing.of(),
-                @JsonProperty("avatar")
-                @ExcludeMissing
-                avatar: JsonField<String> = JsonMissing.of(),
                 @JsonProperty("email") @ExcludeMissing email: JsonField<String> = JsonMissing.of(),
                 @JsonProperty("is_new_user")
                 @ExcludeMissing
@@ -408,6 +405,9 @@ private constructor(
                 @JsonProperty("age_group")
                 @ExcludeMissing
                 ageGroup: JsonField<String> = JsonMissing.of(),
+                @JsonProperty("avatar")
+                @ExcludeMissing
+                avatar: JsonField<String> = JsonMissing.of(),
                 @JsonProperty("description")
                 @ExcludeMissing
                 description: JsonField<String> = JsonMissing.of(),
@@ -421,11 +421,11 @@ private constructor(
             ) : this(
                 id,
                 authType,
-                avatar,
                 email,
                 isNewUser,
                 nickname,
                 ageGroup,
+                avatar,
                 description,
                 gender,
                 phone,
@@ -454,13 +454,6 @@ private constructor(
              *   unexpectedly missing or null (e.g. if the server responded with an unexpected
              *   value).
              */
-            fun avatar(): String = avatar.getRequired("avatar")
-
-            /**
-             * @throws IntyInvalidDataException if the JSON field has an unexpected type or is
-             *   unexpectedly missing or null (e.g. if the server responded with an unexpected
-             *   value).
-             */
             fun email(): String = email.getRequired("email")
 
             /**
@@ -482,6 +475,12 @@ private constructor(
              *   the server responded with an unexpected value).
              */
             fun ageGroup(): String? = ageGroup.getNullable("age_group")
+
+            /**
+             * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if
+             *   the server responded with an unexpected value).
+             */
+            fun avatar(): String? = avatar.getNullable("avatar")
 
             /**
              * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -527,13 +526,6 @@ private constructor(
             fun _authType(): JsonField<AuthType> = authType
 
             /**
-             * Returns the raw JSON value of [avatar].
-             *
-             * Unlike [avatar], this method doesn't throw if the JSON field has an unexpected type.
-             */
-            @JsonProperty("avatar") @ExcludeMissing fun _avatar(): JsonField<String> = avatar
-
-            /**
              * Returns the raw JSON value of [email].
              *
              * Unlike [email], this method doesn't throw if the JSON field has an unexpected type.
@@ -565,6 +557,13 @@ private constructor(
              * type.
              */
             @JsonProperty("age_group") @ExcludeMissing fun _ageGroup(): JsonField<String> = ageGroup
+
+            /**
+             * Returns the raw JSON value of [avatar].
+             *
+             * Unlike [avatar], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("avatar") @ExcludeMissing fun _avatar(): JsonField<String> = avatar
 
             /**
              * Returns the raw JSON value of [description].
@@ -621,7 +620,6 @@ private constructor(
                  * ```kotlin
                  * .id()
                  * .authType()
-                 * .avatar()
                  * .email()
                  * .isNewUser()
                  * .nickname()
@@ -635,11 +633,11 @@ private constructor(
 
                 private var id: JsonField<String>? = null
                 private var authType: JsonField<AuthType>? = null
-                private var avatar: JsonField<String>? = null
                 private var email: JsonField<String>? = null
                 private var isNewUser: JsonField<Boolean>? = null
                 private var nickname: JsonField<String>? = null
                 private var ageGroup: JsonField<String> = JsonMissing.of()
+                private var avatar: JsonField<String> = JsonMissing.of()
                 private var description: JsonField<String> = JsonMissing.of()
                 private var gender: JsonField<Gender> = JsonMissing.of()
                 private var phone: JsonField<String> = JsonMissing.of()
@@ -649,11 +647,11 @@ private constructor(
                 internal fun from(user: User) = apply {
                     id = user.id
                     authType = user.authType
-                    avatar = user.avatar
                     email = user.email
                     isNewUser = user.isNewUser
                     nickname = user.nickname
                     ageGroup = user.ageGroup
+                    avatar = user.avatar
                     description = user.description
                     gender = user.gender
                     phone = user.phone
@@ -683,17 +681,6 @@ private constructor(
                  * yet supported value.
                  */
                 fun authType(authType: JsonField<AuthType>) = apply { this.authType = authType }
-
-                fun avatar(avatar: String) = avatar(JsonField.of(avatar))
-
-                /**
-                 * Sets [Builder.avatar] to an arbitrary JSON value.
-                 *
-                 * You should usually call [Builder.avatar] with a well-typed [String] value
-                 * instead. This method is primarily for setting the field to an undocumented or not
-                 * yet supported value.
-                 */
-                fun avatar(avatar: JsonField<String>) = apply { this.avatar = avatar }
 
                 fun email(email: String) = email(JsonField.of(email))
 
@@ -738,6 +725,17 @@ private constructor(
                  * yet supported value.
                  */
                 fun ageGroup(ageGroup: JsonField<String>) = apply { this.ageGroup = ageGroup }
+
+                fun avatar(avatar: String?) = avatar(JsonField.ofNullable(avatar))
+
+                /**
+                 * Sets [Builder.avatar] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.avatar] with a well-typed [String] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun avatar(avatar: JsonField<String>) = apply { this.avatar = avatar }
 
                 fun description(description: String?) =
                     description(JsonField.ofNullable(description))
@@ -821,7 +819,6 @@ private constructor(
                  * ```kotlin
                  * .id()
                  * .authType()
-                 * .avatar()
                  * .email()
                  * .isNewUser()
                  * .nickname()
@@ -833,11 +830,11 @@ private constructor(
                     User(
                         checkRequired("id", id),
                         checkRequired("authType", authType),
-                        checkRequired("avatar", avatar),
                         checkRequired("email", email),
                         checkRequired("isNewUser", isNewUser),
                         checkRequired("nickname", nickname),
                         ageGroup,
+                        avatar,
                         description,
                         gender,
                         phone,
@@ -855,11 +852,11 @@ private constructor(
 
                 id()
                 authType().validate()
-                avatar()
                 email()
                 isNewUser()
                 nickname()
                 ageGroup()
+                avatar()
                 description()
                 gender()?.validate()
                 phone()
@@ -884,11 +881,11 @@ private constructor(
             internal fun validity(): Int =
                 (if (id.asKnown() == null) 0 else 1) +
                     (authType.asKnown()?.validity() ?: 0) +
-                    (if (avatar.asKnown() == null) 0 else 1) +
                     (if (email.asKnown() == null) 0 else 1) +
                     (if (isNewUser.asKnown() == null) 0 else 1) +
                     (if (nickname.asKnown() == null) 0 else 1) +
                     (if (ageGroup.asKnown() == null) 0 else 1) +
+                    (if (avatar.asKnown() == null) 0 else 1) +
                     (if (description.asKnown() == null) 0 else 1) +
                     (gender.asKnown()?.validity() ?: 0) +
                     (if (phone.asKnown() == null) 0 else 1) +
@@ -916,6 +913,8 @@ private constructor(
 
                     val GUEST = of("GUEST")
 
+                    val EMAIL = of("EMAIL")
+
                     fun of(value: String) = AuthType(JsonField.of(value))
                 }
 
@@ -924,6 +923,7 @@ private constructor(
                     PHONE,
                     GOOGLE,
                     GUEST,
+                    EMAIL,
                 }
 
                 /**
@@ -939,6 +939,7 @@ private constructor(
                     PHONE,
                     GOOGLE,
                     GUEST,
+                    EMAIL,
                     /**
                      * An enum member indicating that [AuthType] was instantiated with an unknown
                      * value.
@@ -958,6 +959,7 @@ private constructor(
                         PHONE -> Value.PHONE
                         GOOGLE -> Value.GOOGLE
                         GUEST -> Value.GUEST
+                        EMAIL -> Value.EMAIL
                         else -> Value._UNKNOWN
                     }
 
@@ -975,6 +977,7 @@ private constructor(
                         PHONE -> Known.PHONE
                         GOOGLE -> Known.GOOGLE
                         GUEST -> Known.GUEST
+                        EMAIL -> Known.EMAIL
                         else -> throw IntyInvalidDataException("Unknown AuthType: $value")
                     }
 
@@ -1038,11 +1041,11 @@ private constructor(
                 return other is User &&
                     id == other.id &&
                     authType == other.authType &&
-                    avatar == other.avatar &&
                     email == other.email &&
                     isNewUser == other.isNewUser &&
                     nickname == other.nickname &&
                     ageGroup == other.ageGroup &&
+                    avatar == other.avatar &&
                     description == other.description &&
                     gender == other.gender &&
                     phone == other.phone &&
@@ -1054,11 +1057,11 @@ private constructor(
                 Objects.hash(
                     id,
                     authType,
-                    avatar,
                     email,
                     isNewUser,
                     nickname,
                     ageGroup,
+                    avatar,
                     description,
                     gender,
                     phone,
@@ -1070,7 +1073,7 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "User{id=$id, authType=$authType, avatar=$avatar, email=$email, isNewUser=$isNewUser, nickname=$nickname, ageGroup=$ageGroup, description=$description, gender=$gender, phone=$phone, systemLanguage=$systemLanguage, additionalProperties=$additionalProperties}"
+                "User{id=$id, authType=$authType, email=$email, isNewUser=$isNewUser, nickname=$nickname, ageGroup=$ageGroup, avatar=$avatar, description=$description, gender=$gender, phone=$phone, systemLanguage=$systemLanguage, additionalProperties=$additionalProperties}"
         }
 
         override fun equals(other: Any?): Boolean {

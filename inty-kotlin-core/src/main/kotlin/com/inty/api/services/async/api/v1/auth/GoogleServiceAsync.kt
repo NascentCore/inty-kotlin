@@ -23,11 +23,15 @@ interface GoogleServiceAsync {
      */
     fun withOptions(modifier: (ClientOptions.Builder) -> Unit): GoogleServiceAsync
 
-    /** Google登录 */
+    /** Google登录或Email密码登录 */
     suspend fun login(
-        params: GoogleLoginParams,
+        params: GoogleLoginParams = GoogleLoginParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): GoogleLoginResponse
+
+    /** @see login */
+    suspend fun login(requestOptions: RequestOptions): GoogleLoginResponse =
+        login(GoogleLoginParams.none(), requestOptions)
 
     /**
      * A view of [GoogleServiceAsync] that provides access to raw HTTP responses for each method.
@@ -49,8 +53,13 @@ interface GoogleServiceAsync {
          */
         @MustBeClosed
         suspend fun login(
-            params: GoogleLoginParams,
+            params: GoogleLoginParams = GoogleLoginParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<GoogleLoginResponse>
+
+        /** @see login */
+        @MustBeClosed
+        suspend fun login(requestOptions: RequestOptions): HttpResponseFor<GoogleLoginResponse> =
+            login(GoogleLoginParams.none(), requestOptions)
     }
 }
