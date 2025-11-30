@@ -26,7 +26,9 @@ internal class GoogleServiceAsyncTest {
         val response =
             googleServiceAsync.login(
                 GoogleLoginParams.builder()
+                    .email("email")
                     .idToken("id_token")
+                    .password("password")
                     .requestId("request_id")
                     .userInfo(
                         GoogleLoginParams.UserInfo.builder()

@@ -23,11 +23,15 @@ interface GoogleService {
      */
     fun withOptions(modifier: (ClientOptions.Builder) -> Unit): GoogleService
 
-    /** Google登录 */
+    /** Google登录或Email密码登录 */
     fun login(
-        params: GoogleLoginParams,
+        params: GoogleLoginParams = GoogleLoginParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): GoogleLoginResponse
+
+    /** @see login */
+    fun login(requestOptions: RequestOptions): GoogleLoginResponse =
+        login(GoogleLoginParams.none(), requestOptions)
 
     /** A view of [GoogleService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -45,8 +49,13 @@ interface GoogleService {
          */
         @MustBeClosed
         fun login(
-            params: GoogleLoginParams,
+            params: GoogleLoginParams = GoogleLoginParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<GoogleLoginResponse>
+
+        /** @see login */
+        @MustBeClosed
+        fun login(requestOptions: RequestOptions): HttpResponseFor<GoogleLoginResponse> =
+            login(GoogleLoginParams.none(), requestOptions)
     }
 }
