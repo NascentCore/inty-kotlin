@@ -11,7 +11,9 @@ internal class GoogleLoginParamsTest {
     @Test
     fun create() {
         GoogleLoginParams.builder()
+            .email("email")
             .idToken("id_token")
+            .password("password")
             .requestId("request_id")
             .userInfo(
                 GoogleLoginParams.UserInfo.builder()
@@ -27,7 +29,9 @@ internal class GoogleLoginParamsTest {
     fun body() {
         val params =
             GoogleLoginParams.builder()
+                .email("email")
                 .idToken("id_token")
+                .password("password")
                 .requestId("request_id")
                 .userInfo(
                     GoogleLoginParams.UserInfo.builder()
@@ -40,7 +44,9 @@ internal class GoogleLoginParamsTest {
 
         val body = params._body()
 
+        assertThat(body.email()).isEqualTo("email")
         assertThat(body.idToken()).isEqualTo("id_token")
+        assertThat(body.password()).isEqualTo("password")
         assertThat(body.requestId()).isEqualTo("request_id")
         assertThat(body.userInfo())
             .isEqualTo(
@@ -54,10 +60,8 @@ internal class GoogleLoginParamsTest {
 
     @Test
     fun bodyWithoutOptionalFields() {
-        val params = GoogleLoginParams.builder().idToken("id_token").build()
+        val params = GoogleLoginParams.builder().build()
 
         val body = params._body()
-
-        assertThat(body.idToken()).isEqualTo("id_token")
     }
 }

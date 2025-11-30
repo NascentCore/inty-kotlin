@@ -19,7 +19,7 @@ import com.inty.api.models.api.v1.users.profile.Gender
 import java.util.Collections
 import java.util.Objects
 
-/** Google登录 */
+/** Google登录或Email密码登录 */
 class GoogleLoginParams
 private constructor(
     private val body: Body,
@@ -28,10 +28,22 @@ private constructor(
 ) : Params {
 
     /**
-     * @throws IntyInvalidDataException if the JSON field has an unexpected type or is unexpectedly
-     *   missing or null (e.g. if the server responded with an unexpected value).
+     * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
+     *   responded with an unexpected value).
      */
-    fun idToken(): String = body.idToken()
+    fun email(): String? = body.email()
+
+    /**
+     * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
+     *   responded with an unexpected value).
+     */
+    fun idToken(): String? = body.idToken()
+
+    /**
+     * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
+     *   responded with an unexpected value).
+     */
+    fun password(): String? = body.password()
 
     /**
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
@@ -48,11 +60,25 @@ private constructor(
     fun userInfo(): UserInfo? = body.userInfo()
 
     /**
+     * Returns the raw JSON value of [email].
+     *
+     * Unlike [email], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _email(): JsonField<String> = body._email()
+
+    /**
      * Returns the raw JSON value of [idToken].
      *
      * Unlike [idToken], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _idToken(): JsonField<String> = body._idToken()
+
+    /**
+     * Returns the raw JSON value of [password].
+     *
+     * Unlike [password], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _password(): JsonField<String> = body._password()
 
     /**
      * Returns the raw JSON value of [requestId].
@@ -80,14 +106,9 @@ private constructor(
 
     companion object {
 
-        /**
-         * Returns a mutable builder for constructing an instance of [GoogleLoginParams].
-         *
-         * The following fields are required:
-         * ```kotlin
-         * .idToken()
-         * ```
-         */
+        fun none(): GoogleLoginParams = builder().build()
+
+        /** Returns a mutable builder for constructing an instance of [GoogleLoginParams]. */
         fun builder() = Builder()
     }
 
@@ -109,13 +130,26 @@ private constructor(
          *
          * This is generally only useful if you are already constructing the body separately.
          * Otherwise, it's more convenient to use the top-level setters instead:
+         * - [email]
          * - [idToken]
+         * - [password]
          * - [requestId]
          * - [userInfo]
+         * - etc.
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
-        fun idToken(idToken: String) = apply { body.idToken(idToken) }
+        fun email(email: String?) = apply { body.email(email) }
+
+        /**
+         * Sets [Builder.email] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.email] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun email(email: JsonField<String>) = apply { body.email(email) }
+
+        fun idToken(idToken: String?) = apply { body.idToken(idToken) }
 
         /**
          * Sets [Builder.idToken] to an arbitrary JSON value.
@@ -124,6 +158,16 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun idToken(idToken: JsonField<String>) = apply { body.idToken(idToken) }
+
+        fun password(password: String?) = apply { body.password(password) }
+
+        /**
+         * Sets [Builder.password] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.password] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun password(password: JsonField<String>) = apply { body.password(password) }
 
         fun requestId(requestId: String?) = apply { body.requestId(requestId) }
 
@@ -269,13 +313,6 @@ private constructor(
          * Returns an immutable instance of [GoogleLoginParams].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
-         *
-         * The following fields are required:
-         * ```kotlin
-         * .idToken()
-         * ```
-         *
-         * @throws IllegalStateException if any required field is unset.
          */
         fun build(): GoogleLoginParams =
             GoogleLoginParams(
@@ -295,7 +332,9 @@ private constructor(
     class Body
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
+        private val email: JsonField<String>,
         private val idToken: JsonField<String>,
+        private val password: JsonField<String>,
         private val requestId: JsonField<String>,
         private val userInfo: JsonField<UserInfo>,
         private val additionalProperties: MutableMap<String, JsonValue>,
@@ -303,20 +342,36 @@ private constructor(
 
         @JsonCreator
         private constructor(
+            @JsonProperty("email") @ExcludeMissing email: JsonField<String> = JsonMissing.of(),
             @JsonProperty("id_token") @ExcludeMissing idToken: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("password")
+            @ExcludeMissing
+            password: JsonField<String> = JsonMissing.of(),
             @JsonProperty("request_id")
             @ExcludeMissing
             requestId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("user_info")
             @ExcludeMissing
             userInfo: JsonField<UserInfo> = JsonMissing.of(),
-        ) : this(idToken, requestId, userInfo, mutableMapOf())
+        ) : this(email, idToken, password, requestId, userInfo, mutableMapOf())
 
         /**
-         * @throws IntyInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
          */
-        fun idToken(): String = idToken.getRequired("id_token")
+        fun email(): String? = email.getNullable("email")
+
+        /**
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun idToken(): String? = idToken.getNullable("id_token")
+
+        /**
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun password(): String? = password.getNullable("password")
 
         /**
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -333,11 +388,25 @@ private constructor(
         fun userInfo(): UserInfo? = userInfo.getNullable("user_info")
 
         /**
+         * Returns the raw JSON value of [email].
+         *
+         * Unlike [email], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("email") @ExcludeMissing fun _email(): JsonField<String> = email
+
+        /**
          * Returns the raw JSON value of [idToken].
          *
          * Unlike [idToken], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("id_token") @ExcludeMissing fun _idToken(): JsonField<String> = idToken
+
+        /**
+         * Returns the raw JSON value of [password].
+         *
+         * Unlike [password], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("password") @ExcludeMissing fun _password(): JsonField<String> = password
 
         /**
          * Returns the raw JSON value of [requestId].
@@ -367,33 +436,41 @@ private constructor(
 
         companion object {
 
-            /**
-             * Returns a mutable builder for constructing an instance of [Body].
-             *
-             * The following fields are required:
-             * ```kotlin
-             * .idToken()
-             * ```
-             */
+            /** Returns a mutable builder for constructing an instance of [Body]. */
             fun builder() = Builder()
         }
 
         /** A builder for [Body]. */
         class Builder internal constructor() {
 
-            private var idToken: JsonField<String>? = null
+            private var email: JsonField<String> = JsonMissing.of()
+            private var idToken: JsonField<String> = JsonMissing.of()
+            private var password: JsonField<String> = JsonMissing.of()
             private var requestId: JsonField<String> = JsonMissing.of()
             private var userInfo: JsonField<UserInfo> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             internal fun from(body: Body) = apply {
+                email = body.email
                 idToken = body.idToken
+                password = body.password
                 requestId = body.requestId
                 userInfo = body.userInfo
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
-            fun idToken(idToken: String) = idToken(JsonField.of(idToken))
+            fun email(email: String?) = email(JsonField.ofNullable(email))
+
+            /**
+             * Sets [Builder.email] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.email] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun email(email: JsonField<String>) = apply { this.email = email }
+
+            fun idToken(idToken: String?) = idToken(JsonField.ofNullable(idToken))
 
             /**
              * Sets [Builder.idToken] to an arbitrary JSON value.
@@ -403,6 +480,17 @@ private constructor(
              * supported value.
              */
             fun idToken(idToken: JsonField<String>) = apply { this.idToken = idToken }
+
+            fun password(password: String?) = password(JsonField.ofNullable(password))
+
+            /**
+             * Sets [Builder.password] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.password] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun password(password: JsonField<String>) = apply { this.password = password }
 
             fun requestId(requestId: String?) = requestId(JsonField.ofNullable(requestId))
 
@@ -450,17 +538,12 @@ private constructor(
              * Returns an immutable instance of [Body].
              *
              * Further updates to this [Builder] will not mutate the returned instance.
-             *
-             * The following fields are required:
-             * ```kotlin
-             * .idToken()
-             * ```
-             *
-             * @throws IllegalStateException if any required field is unset.
              */
             fun build(): Body =
                 Body(
-                    checkRequired("idToken", idToken),
+                    email,
+                    idToken,
+                    password,
                     requestId,
                     userInfo,
                     additionalProperties.toMutableMap(),
@@ -474,7 +557,9 @@ private constructor(
                 return@apply
             }
 
+            email()
             idToken()
+            password()
             requestId()
             userInfo()?.validate()
             validated = true
@@ -495,7 +580,9 @@ private constructor(
          * Used for best match union deserialization.
          */
         internal fun validity(): Int =
-            (if (idToken.asKnown() == null) 0 else 1) +
+            (if (email.asKnown() == null) 0 else 1) +
+                (if (idToken.asKnown() == null) 0 else 1) +
+                (if (password.asKnown() == null) 0 else 1) +
                 (if (requestId.asKnown() == null) 0 else 1) +
                 (userInfo.asKnown()?.validity() ?: 0)
 
@@ -505,20 +592,22 @@ private constructor(
             }
 
             return other is Body &&
+                email == other.email &&
                 idToken == other.idToken &&
+                password == other.password &&
                 requestId == other.requestId &&
                 userInfo == other.userInfo &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(idToken, requestId, userInfo, additionalProperties)
+            Objects.hash(email, idToken, password, requestId, userInfo, additionalProperties)
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{idToken=$idToken, requestId=$requestId, userInfo=$userInfo, additionalProperties=$additionalProperties}"
+            "Body{email=$email, idToken=$idToken, password=$password, requestId=$requestId, userInfo=$userInfo, additionalProperties=$additionalProperties}"
     }
 
     /** 用户信息 */
