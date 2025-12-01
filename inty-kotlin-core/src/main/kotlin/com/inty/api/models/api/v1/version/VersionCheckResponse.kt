@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.inty.api.core.Enum
 import com.inty.api.core.ExcludeMissing
 import com.inty.api.core.JsonField
 import com.inty.api.core.JsonMissing
@@ -212,6 +213,7 @@ private constructor(
         private val error: JsonField<String>,
         private val forceUpdateReasons: JsonField<List<String>>,
         private val latestVersionCode: JsonField<Long>,
+        private val reminderAction: JsonField<ReminderAction>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -246,6 +248,9 @@ private constructor(
             @JsonProperty("latest_version_code")
             @ExcludeMissing
             latestVersionCode: JsonField<Long> = JsonMissing.of(),
+            @JsonProperty("reminder_action")
+            @ExcludeMissing
+            reminderAction: JsonField<ReminderAction> = JsonMissing.of(),
         ) : this(
             currentVersion,
             downloadUrl,
@@ -258,6 +263,7 @@ private constructor(
             error,
             forceUpdateReasons,
             latestVersionCode,
+            reminderAction,
             mutableMapOf(),
         )
 
@@ -349,6 +355,14 @@ private constructor(
          *   server responded with an unexpected value).
          */
         fun latestVersionCode(): Long? = latestVersionCode.getNullable("latest_version_code")
+
+        /**
+         * 客户端需要展示的提醒类型
+         *
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun reminderAction(): ReminderAction? = reminderAction.getNullable("reminder_action")
 
         /**
          * Returns the raw JSON value of [currentVersion].
@@ -449,6 +463,16 @@ private constructor(
         @ExcludeMissing
         fun _latestVersionCode(): JsonField<Long> = latestVersionCode
 
+        /**
+         * Returns the raw JSON value of [reminderAction].
+         *
+         * Unlike [reminderAction], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("reminder_action")
+        @ExcludeMissing
+        fun _reminderAction(): JsonField<ReminderAction> = reminderAction
+
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
             additionalProperties.put(key, value)
@@ -494,6 +518,7 @@ private constructor(
             private var error: JsonField<String> = JsonMissing.of()
             private var forceUpdateReasons: JsonField<MutableList<String>>? = null
             private var latestVersionCode: JsonField<Long> = JsonMissing.of()
+            private var reminderAction: JsonField<ReminderAction> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             internal fun from(data: Data) = apply {
@@ -508,6 +533,7 @@ private constructor(
                 error = data.error
                 forceUpdateReasons = data.forceUpdateReasons.map { it.toMutableList() }
                 latestVersionCode = data.latestVersionCode
+                reminderAction = data.reminderAction
                 additionalProperties = data.additionalProperties.toMutableMap()
             }
 
@@ -684,6 +710,21 @@ private constructor(
                 this.latestVersionCode = latestVersionCode
             }
 
+            /** 客户端需要展示的提醒类型 */
+            fun reminderAction(reminderAction: ReminderAction?) =
+                reminderAction(JsonField.ofNullable(reminderAction))
+
+            /**
+             * Sets [Builder.reminderAction] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.reminderAction] with a well-typed [ReminderAction]
+             * value instead. This method is primarily for setting the field to an undocumented or
+             * not yet supported value.
+             */
+            fun reminderAction(reminderAction: JsonField<ReminderAction>) = apply {
+                this.reminderAction = reminderAction
+            }
+
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -734,6 +775,7 @@ private constructor(
                     error,
                     (forceUpdateReasons ?: JsonMissing.of()).map { it.toImmutable() },
                     latestVersionCode,
+                    reminderAction,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -756,6 +798,7 @@ private constructor(
             error()
             forceUpdateReasons()
             latestVersionCode()
+            reminderAction()?.validate()
             validated = true
         }
 
@@ -784,7 +827,145 @@ private constructor(
                 (if (changelog.asKnown() == null) 0 else 1) +
                 (if (error.asKnown() == null) 0 else 1) +
                 (forceUpdateReasons.asKnown()?.size ?: 0) +
-                (if (latestVersionCode.asKnown() == null) 0 else 1)
+                (if (latestVersionCode.asKnown() == null) 0 else 1) +
+                (reminderAction.asKnown()?.validity() ?: 0)
+
+        /** 客户端需要展示的提醒类型 */
+        class ReminderAction
+        @JsonCreator
+        private constructor(private val value: JsonField<String>) : Enum {
+
+            /**
+             * Returns this class instance's raw value.
+             *
+             * This is usually only useful if this instance was deserialized from data that doesn't
+             * match any known member, and you want to know that value. For example, if the SDK is
+             * on an older version than the API, then the API may respond with new members that the
+             * SDK is unaware of.
+             */
+            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+            companion object {
+
+                val POP_UP_REMINDER = of("POP_UP_REMINDER")
+
+                val SETTINGS_REMINDER = of("SETTINGS_REMINDER")
+
+                val BLOCK_ACCESS = of("BLOCK_ACCESS")
+
+                fun of(value: String) = ReminderAction(JsonField.of(value))
+            }
+
+            /** An enum containing [ReminderAction]'s known values. */
+            enum class Known {
+                POP_UP_REMINDER,
+                SETTINGS_REMINDER,
+                BLOCK_ACCESS,
+            }
+
+            /**
+             * An enum containing [ReminderAction]'s known values, as well as an [_UNKNOWN] member.
+             *
+             * An instance of [ReminderAction] can contain an unknown value in a couple of cases:
+             * - It was deserialized from data that doesn't match any known member. For example, if
+             *   the SDK is on an older version than the API, then the API may respond with new
+             *   members that the SDK is unaware of.
+             * - It was constructed with an arbitrary value using the [of] method.
+             */
+            enum class Value {
+                POP_UP_REMINDER,
+                SETTINGS_REMINDER,
+                BLOCK_ACCESS,
+                /**
+                 * An enum member indicating that [ReminderAction] was instantiated with an unknown
+                 * value.
+                 */
+                _UNKNOWN,
+            }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value, or
+             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+             *
+             * Use the [known] method instead if you're certain the value is always known or if you
+             * want to throw for the unknown case.
+             */
+            fun value(): Value =
+                when (this) {
+                    POP_UP_REMINDER -> Value.POP_UP_REMINDER
+                    SETTINGS_REMINDER -> Value.SETTINGS_REMINDER
+                    BLOCK_ACCESS -> Value.BLOCK_ACCESS
+                    else -> Value._UNKNOWN
+                }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value.
+             *
+             * Use the [value] method instead if you're uncertain the value is always known and
+             * don't want to throw for the unknown case.
+             *
+             * @throws IntyInvalidDataException if this class instance's value is a not a known
+             *   member.
+             */
+            fun known(): Known =
+                when (this) {
+                    POP_UP_REMINDER -> Known.POP_UP_REMINDER
+                    SETTINGS_REMINDER -> Known.SETTINGS_REMINDER
+                    BLOCK_ACCESS -> Known.BLOCK_ACCESS
+                    else -> throw IntyInvalidDataException("Unknown ReminderAction: $value")
+                }
+
+            /**
+             * Returns this class instance's primitive wire representation.
+             *
+             * This differs from the [toString] method because that method is primarily for
+             * debugging and generally doesn't throw.
+             *
+             * @throws IntyInvalidDataException if this class instance's value does not have the
+             *   expected primitive type.
+             */
+            fun asString(): String =
+                _value().asString() ?: throw IntyInvalidDataException("Value is not a String")
+
+            private var validated: Boolean = false
+
+            fun validate(): ReminderAction = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                known()
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: IntyInvalidDataException) {
+                    false
+                }
+
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is ReminderAction && value == other.value
+            }
+
+            override fun hashCode() = value.hashCode()
+
+            override fun toString() = value.toString()
+        }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -803,6 +984,7 @@ private constructor(
                 error == other.error &&
                 forceUpdateReasons == other.forceUpdateReasons &&
                 latestVersionCode == other.latestVersionCode &&
+                reminderAction == other.reminderAction &&
                 additionalProperties == other.additionalProperties
         }
 
@@ -819,6 +1001,7 @@ private constructor(
                 error,
                 forceUpdateReasons,
                 latestVersionCode,
+                reminderAction,
                 additionalProperties,
             )
         }
@@ -826,7 +1009,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Data{currentVersion=$currentVersion, downloadUrl=$downloadUrl, forceUpdate=$forceUpdate, latestVersion=$latestVersion, message=$message, minimumVersion=$minimumVersion, updateRequired=$updateRequired, changelog=$changelog, error=$error, forceUpdateReasons=$forceUpdateReasons, latestVersionCode=$latestVersionCode, additionalProperties=$additionalProperties}"
+            "Data{currentVersion=$currentVersion, downloadUrl=$downloadUrl, forceUpdate=$forceUpdate, latestVersion=$latestVersion, message=$message, minimumVersion=$minimumVersion, updateRequired=$updateRequired, changelog=$changelog, error=$error, forceUpdateReasons=$forceUpdateReasons, latestVersionCode=$latestVersionCode, reminderAction=$reminderAction, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

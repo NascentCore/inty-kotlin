@@ -48,6 +48,12 @@ private constructor(
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
      *   responded with an unexpected value).
      */
+    fun messageId(): String? = body.messageId()
+
+    /**
+     * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
+     *   responded with an unexpected value).
+     */
     fun model(): String? = body.model()
 
     /**
@@ -75,6 +81,13 @@ private constructor(
      * Unlike [language], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _language(): JsonField<String> = body._language()
+
+    /**
+     * Returns the raw JSON value of [messageId].
+     *
+     * Unlike [messageId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _messageId(): JsonField<String> = body._messageId()
 
     /**
      * Returns the raw JSON value of [model].
@@ -144,9 +157,9 @@ private constructor(
          * Otherwise, it's more convenient to use the top-level setters instead:
          * - [messages]
          * - [language]
+         * - [messageId]
          * - [model]
          * - [requestId]
-         * - [stream]
          * - etc.
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
@@ -178,6 +191,17 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun language(language: JsonField<String>) = apply { body.language(language) }
+
+        fun messageId(messageId: String?) = apply { body.messageId(messageId) }
+
+        /**
+         * Sets [Builder.messageId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.messageId] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun messageId(messageId: JsonField<String>) = apply { body.messageId(messageId) }
 
         fun model(model: String) = apply { body.model(model) }
 
@@ -365,6 +389,7 @@ private constructor(
     private constructor(
         private val messages: JsonField<List<Message>>,
         private val language: JsonField<String>,
+        private val messageId: JsonField<String>,
         private val model: JsonField<String>,
         private val requestId: JsonField<String>,
         private val stream: JsonField<Boolean>,
@@ -379,12 +404,15 @@ private constructor(
             @JsonProperty("language")
             @ExcludeMissing
             language: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("message_id")
+            @ExcludeMissing
+            messageId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("model") @ExcludeMissing model: JsonField<String> = JsonMissing.of(),
             @JsonProperty("request_id")
             @ExcludeMissing
             requestId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("stream") @ExcludeMissing stream: JsonField<Boolean> = JsonMissing.of(),
-        ) : this(messages, language, model, requestId, stream, mutableMapOf())
+        ) : this(messages, language, messageId, model, requestId, stream, mutableMapOf())
 
         /**
          * @throws IntyInvalidDataException if the JSON field has an unexpected type or is
@@ -397,6 +425,12 @@ private constructor(
          *   server responded with an unexpected value).
          */
         fun language(): String? = language.getNullable("language")
+
+        /**
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun messageId(): String? = messageId.getNullable("message_id")
 
         /**
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -431,6 +465,13 @@ private constructor(
          * Unlike [language], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("language") @ExcludeMissing fun _language(): JsonField<String> = language
+
+        /**
+         * Returns the raw JSON value of [messageId].
+         *
+         * Unlike [messageId], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("message_id") @ExcludeMissing fun _messageId(): JsonField<String> = messageId
 
         /**
          * Returns the raw JSON value of [model].
@@ -483,6 +524,7 @@ private constructor(
 
             private var messages: JsonField<MutableList<Message>>? = null
             private var language: JsonField<String> = JsonMissing.of()
+            private var messageId: JsonField<String> = JsonMissing.of()
             private var model: JsonField<String> = JsonMissing.of()
             private var requestId: JsonField<String> = JsonMissing.of()
             private var stream: JsonField<Boolean> = JsonMissing.of()
@@ -491,6 +533,7 @@ private constructor(
             internal fun from(body: Body) = apply {
                 messages = body.messages.map { it.toMutableList() }
                 language = body.language
+                messageId = body.messageId
                 model = body.model
                 requestId = body.requestId
                 stream = body.stream
@@ -532,6 +575,17 @@ private constructor(
              * supported value.
              */
             fun language(language: JsonField<String>) = apply { this.language = language }
+
+            fun messageId(messageId: String?) = messageId(JsonField.ofNullable(messageId))
+
+            /**
+             * Sets [Builder.messageId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.messageId] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun messageId(messageId: JsonField<String>) = apply { this.messageId = messageId }
 
             fun model(model: String) = model(JsonField.of(model))
 
@@ -601,6 +655,7 @@ private constructor(
                 Body(
                     checkRequired("messages", messages).map { it.toImmutable() },
                     language,
+                    messageId,
                     model,
                     requestId,
                     stream,
@@ -617,6 +672,7 @@ private constructor(
 
             messages().forEach { it.validate() }
             language()
+            messageId()
             model()
             requestId()
             stream()
@@ -640,6 +696,7 @@ private constructor(
         internal fun validity(): Int =
             (messages.asKnown()?.sumOf { it.validity().toInt() } ?: 0) +
                 (if (language.asKnown() == null) 0 else 1) +
+                (if (messageId.asKnown() == null) 0 else 1) +
                 (if (model.asKnown() == null) 0 else 1) +
                 (if (requestId.asKnown() == null) 0 else 1) +
                 (if (stream.asKnown() == null) 0 else 1)
@@ -652,6 +709,7 @@ private constructor(
             return other is Body &&
                 messages == other.messages &&
                 language == other.language &&
+                messageId == other.messageId &&
                 model == other.model &&
                 requestId == other.requestId &&
                 stream == other.stream &&
@@ -659,13 +717,21 @@ private constructor(
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(messages, language, model, requestId, stream, additionalProperties)
+            Objects.hash(
+                messages,
+                language,
+                messageId,
+                model,
+                requestId,
+                stream,
+                additionalProperties,
+            )
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{messages=$messages, language=$language, model=$model, requestId=$requestId, stream=$stream, additionalProperties=$additionalProperties}"
+            "Body{messages=$messages, language=$language, messageId=$messageId, model=$model, requestId=$requestId, stream=$stream, additionalProperties=$additionalProperties}"
     }
 
     class Message

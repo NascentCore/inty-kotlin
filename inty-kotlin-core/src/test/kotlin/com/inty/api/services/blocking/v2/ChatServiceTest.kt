@@ -33,6 +33,7 @@ internal class ChatServiceTest {
                             .build()
                     )
                     .language("language")
+                    .messageId("message_id")
                     .model("model")
                     .requestId("request_id")
                     .stream(true)
