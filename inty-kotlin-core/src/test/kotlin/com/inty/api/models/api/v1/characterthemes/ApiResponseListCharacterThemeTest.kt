@@ -29,7 +29,7 @@ internal class ApiResponseListCharacterThemeTest {
                         .name("name")
                         .visibility(CharacterThemeVisibility.PRIMARY)
                         .addAgent(
-                            CharacterTheme.Agent.builder()
+                            CharacterThemeAgent.builder()
                                 .agentId("agent_id")
                                 .orderIndex(0L)
                                 .agent(
@@ -162,7 +162,7 @@ internal class ApiResponseListCharacterThemeTest {
                     .name("name")
                     .visibility(CharacterThemeVisibility.PRIMARY)
                     .addAgent(
-                        CharacterTheme.Agent.builder()
+                        CharacterThemeAgent.builder()
                             .agentId("agent_id")
                             .orderIndex(0L)
                             .agent(
@@ -293,7 +293,7 @@ internal class ApiResponseListCharacterThemeTest {
                         .name("name")
                         .visibility(CharacterThemeVisibility.PRIMARY)
                         .addAgent(
-                            CharacterTheme.Agent.builder()
+                            CharacterThemeAgent.builder()
                                 .agentId("agent_id")
                                 .orderIndex(0L)
                                 .agent(

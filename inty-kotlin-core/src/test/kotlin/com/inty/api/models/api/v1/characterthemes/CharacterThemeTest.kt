@@ -26,7 +26,7 @@ internal class CharacterThemeTest {
                 .name("name")
                 .visibility(CharacterThemeVisibility.PRIMARY)
                 .addAgent(
-                    CharacterTheme.Agent.builder()
+                    CharacterThemeAgent.builder()
                         .agentId("agent_id")
                         .orderIndex(0L)
                         .agent(
@@ -142,7 +142,7 @@ internal class CharacterThemeTest {
         assertThat(characterTheme.visibility()).isEqualTo(CharacterThemeVisibility.PRIMARY)
         assertThat(characterTheme.agents())
             .containsExactly(
-                CharacterTheme.Agent.builder()
+                CharacterThemeAgent.builder()
                     .agentId("agent_id")
                     .orderIndex(0L)
                     .agent(
@@ -260,7 +260,7 @@ internal class CharacterThemeTest {
                 .name("name")
                 .visibility(CharacterThemeVisibility.PRIMARY)
                 .addAgent(
-                    CharacterTheme.Agent.builder()
+                    CharacterThemeAgent.builder()
                         .agentId("agent_id")
                         .orderIndex(0L)
                         .agent(
