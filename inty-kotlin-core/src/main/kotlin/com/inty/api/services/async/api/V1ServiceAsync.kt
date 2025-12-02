@@ -12,6 +12,7 @@ import com.inty.api.models.api.v1.V1UploadImageParams
 import com.inty.api.models.api.v1.report.ApiResponseDict
 import com.inty.api.services.async.api.v1.AiServiceAsync
 import com.inty.api.services.async.api.v1.AuthServiceAsync
+import com.inty.api.services.async.api.v1.CharacterThemeServiceAsync
 import com.inty.api.services.async.api.v1.ChatServiceAsync
 import com.inty.api.services.async.api.v1.ReportServiceAsync
 import com.inty.api.services.async.api.v1.SettingServiceAsync
@@ -51,6 +52,8 @@ interface V1ServiceAsync {
     fun chats(): ChatServiceAsync
 
     fun textToSpeech(): TextToSpeechServiceAsync
+
+    fun characterThemes(): CharacterThemeServiceAsync
 
     /** 分页查询用户的消息列表；返回用户收到的通知。 */
     suspend fun listNotifications(
@@ -95,6 +98,8 @@ interface V1ServiceAsync {
         fun chats(): ChatServiceAsync.WithRawResponse
 
         fun textToSpeech(): TextToSpeechServiceAsync.WithRawResponse
+
+        fun characterThemes(): CharacterThemeServiceAsync.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `get /api/v1/notifications/`, but is otherwise the same
