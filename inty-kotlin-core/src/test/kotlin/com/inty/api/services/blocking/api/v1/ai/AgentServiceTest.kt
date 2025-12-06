@@ -6,7 +6,6 @@ import com.inty.api.TestServerExtension
 import com.inty.api.client.okhttp.IntyOkHttpClient
 import com.inty.api.core.JsonValue
 import com.inty.api.models.api.v1.ai.agents.AgentCreateParams
-import com.inty.api.models.api.v1.ai.agents.AgentFollowingParams
 import com.inty.api.models.api.v1.ai.agents.AgentListParams
 import com.inty.api.models.api.v1.ai.agents.AgentMetaData
 import com.inty.api.models.api.v1.ai.agents.AgentRecommendParams
@@ -217,37 +216,6 @@ internal class AgentServiceTest {
 
     @Disabled("Prism tests are disabled")
     @Test
-    fun followAgent() {
-        val client =
-            IntyOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
-        val agentService = client.api().v1().ai().agents()
-
-        val apiResponseDict = agentService.followAgent("agent_id")
-
-        apiResponseDict.validate()
-    }
-
-    @Disabled("Prism tests are disabled")
-    @Test
-    fun following() {
-        val client =
-            IntyOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
-        val agentService = client.api().v1().ai().agents()
-
-        val apiResponsePaginationDataAgent =
-            agentService.following(AgentFollowingParams.builder().page(1L).pageSize(1L).build())
-
-        apiResponsePaginationDataAgent.validate()
-    }
-
-    @Disabled("Prism tests are disabled")
-    @Test
     fun recommend() {
         val client =
             IntyOkHttpClient.builder()
@@ -283,20 +251,5 @@ internal class AgentServiceTest {
             agentService.search(AgentSearchParams.builder().q("q").page(1L).pageSize(1L).build())
 
         apiResponsePaginationDataAgent.validate()
-    }
-
-    @Disabled("Prism tests are disabled")
-    @Test
-    fun unfollowAgent() {
-        val client =
-            IntyOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
-        val agentService = client.api().v1().ai().agents()
-
-        val apiResponseDict = agentService.unfollowAgent("agent_id")
-
-        apiResponseDict.validate()
     }
 }
