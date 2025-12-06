@@ -6,7 +6,6 @@ import com.inty.api.TestServerExtension
 import com.inty.api.client.okhttp.IntyOkHttpClientAsync
 import com.inty.api.core.JsonValue
 import com.inty.api.models.api.v1.ai.agents.AgentCreateParams
-import com.inty.api.models.api.v1.ai.agents.AgentFollowingParams
 import com.inty.api.models.api.v1.ai.agents.AgentListParams
 import com.inty.api.models.api.v1.ai.agents.AgentMetaData
 import com.inty.api.models.api.v1.ai.agents.AgentRecommendParams
@@ -217,39 +216,6 @@ internal class AgentServiceAsyncTest {
 
     @Disabled("Prism tests are disabled")
     @Test
-    suspend fun followAgent() {
-        val client =
-            IntyOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
-        val agentServiceAsync = client.api().v1().ai().agents()
-
-        val apiResponseDict = agentServiceAsync.followAgent("agent_id")
-
-        apiResponseDict.validate()
-    }
-
-    @Disabled("Prism tests are disabled")
-    @Test
-    suspend fun following() {
-        val client =
-            IntyOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
-        val agentServiceAsync = client.api().v1().ai().agents()
-
-        val apiResponsePaginationDataAgent =
-            agentServiceAsync.following(
-                AgentFollowingParams.builder().page(1L).pageSize(1L).build()
-            )
-
-        apiResponsePaginationDataAgent.validate()
-    }
-
-    @Disabled("Prism tests are disabled")
-    @Test
     suspend fun recommend() {
         val client =
             IntyOkHttpClientAsync.builder()
@@ -287,20 +253,5 @@ internal class AgentServiceAsyncTest {
             )
 
         apiResponsePaginationDataAgent.validate()
-    }
-
-    @Disabled("Prism tests are disabled")
-    @Test
-    suspend fun unfollowAgent() {
-        val client =
-            IntyOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
-        val agentServiceAsync = client.api().v1().ai().agents()
-
-        val apiResponseDict = agentServiceAsync.unfollowAgent("agent_id")
-
-        apiResponseDict.validate()
     }
 }
