@@ -20,18 +20,14 @@ import com.inty.api.models.api.v1.ai.agents.Agent
 import com.inty.api.models.api.v1.ai.agents.AgentCreateParams
 import com.inty.api.models.api.v1.ai.agents.AgentCreateResponse
 import com.inty.api.models.api.v1.ai.agents.AgentDeleteParams
-import com.inty.api.models.api.v1.ai.agents.AgentFollowAgentParams
-import com.inty.api.models.api.v1.ai.agents.AgentFollowingParams
 import com.inty.api.models.api.v1.ai.agents.AgentListParams
 import com.inty.api.models.api.v1.ai.agents.AgentListResponse
 import com.inty.api.models.api.v1.ai.agents.AgentRecommendParams
 import com.inty.api.models.api.v1.ai.agents.AgentRetrieveParams
 import com.inty.api.models.api.v1.ai.agents.AgentSearchParams
-import com.inty.api.models.api.v1.ai.agents.AgentUnfollowAgentParams
 import com.inty.api.models.api.v1.ai.agents.AgentUpdateParams
 import com.inty.api.models.api.v1.ai.agents.ApiResponseAgent
 import com.inty.api.models.api.v1.ai.agents.ApiResponsePaginationDataAgent
-import com.inty.api.models.api.v1.report.ApiResponseDict
 import com.inty.api.services.blocking.api.v1.ai.agents.ImageGenerationService
 import com.inty.api.services.blocking.api.v1.ai.agents.ImageGenerationServiceImpl
 
@@ -79,20 +75,6 @@ class AgentServiceImpl internal constructor(private val clientOptions: ClientOpt
         // delete /api/v1/ai/agents/{agent_id}
         withRawResponse().delete(params, requestOptions).parse()
 
-    override fun followAgent(
-        params: AgentFollowAgentParams,
-        requestOptions: RequestOptions,
-    ): ApiResponseDict =
-        // post /api/v1/ai/agents/{agent_id}/follow
-        withRawResponse().followAgent(params, requestOptions).parse()
-
-    override fun following(
-        params: AgentFollowingParams,
-        requestOptions: RequestOptions,
-    ): ApiResponsePaginationDataAgent =
-        // get /api/v1/ai/agents/following
-        withRawResponse().following(params, requestOptions).parse()
-
     override fun recommend(
         params: AgentRecommendParams,
         requestOptions: RequestOptions,
@@ -106,13 +88,6 @@ class AgentServiceImpl internal constructor(private val clientOptions: ClientOpt
     ): ApiResponsePaginationDataAgent =
         // get /api/v1/ai/agents/search
         withRawResponse().search(params, requestOptions).parse()
-
-    override fun unfollowAgent(
-        params: AgentUnfollowAgentParams,
-        requestOptions: RequestOptions,
-    ): ApiResponseDict =
-        // delete /api/v1/ai/agents/{agent_id}/follow
-        withRawResponse().unfollowAgent(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         AgentService.WithRawResponse {
@@ -276,64 +251,6 @@ class AgentServiceImpl internal constructor(private val clientOptions: ClientOpt
             }
         }
 
-        private val followAgentHandler: Handler<ApiResponseDict> =
-            jsonHandler<ApiResponseDict>(clientOptions.jsonMapper)
-
-        override fun followAgent(
-            params: AgentFollowAgentParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<ApiResponseDict> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("agentId", params.agentId())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.POST)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("api", "v1", "ai", "agents", params._pathParam(0), "follow")
-                    .apply { params._body()?.let { body(json(clientOptions.jsonMapper, it)) } }
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { followAgentHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
-        }
-
-        private val followingHandler: Handler<ApiResponsePaginationDataAgent> =
-            jsonHandler<ApiResponsePaginationDataAgent>(clientOptions.jsonMapper)
-
-        override fun following(
-            params: AgentFollowingParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<ApiResponsePaginationDataAgent> {
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("api", "v1", "ai", "agents", "following")
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { followingHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
-        }
-
         private val recommendHandler: Handler<ApiResponsePaginationDataAgent> =
             jsonHandler<ApiResponsePaginationDataAgent>(clientOptions.jsonMapper)
 
@@ -380,37 +297,6 @@ class AgentServiceImpl internal constructor(private val clientOptions: ClientOpt
             return errorHandler.handle(response).parseable {
                 response
                     .use { searchHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
-        }
-
-        private val unfollowAgentHandler: Handler<ApiResponseDict> =
-            jsonHandler<ApiResponseDict>(clientOptions.jsonMapper)
-
-        override fun unfollowAgent(
-            params: AgentUnfollowAgentParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<ApiResponseDict> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("agentId", params.agentId())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.DELETE)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("api", "v1", "ai", "agents", params._pathParam(0), "follow")
-                    .apply { params._body()?.let { body(json(clientOptions.jsonMapper, it)) } }
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { unfollowAgentHandler.handle(it) }
                     .also {
                         if (requestOptions.responseValidation!!) {
                             it.validate()

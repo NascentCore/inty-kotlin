@@ -31,7 +31,7 @@ private constructor(
     /** Items per page, maximum 100 */
     fun pageSize(): Long? = pageSize
 
-    /** Sort order: created_asc, created_desc, random, score_based_random */
+    /** Sort order: created_asc, created_desc, random, score_based_random, energy_points */
     fun sort(): Sort? = sort
 
     /** Sort seed for deterministic random ordering */
@@ -92,7 +92,7 @@ private constructor(
          */
         fun pageSize(pageSize: Long) = pageSize(pageSize as Long?)
 
-        /** Sort order: created_asc, created_desc, random, score_based_random */
+        /** Sort order: created_asc, created_desc, random, score_based_random, energy_points */
         fun sort(sort: Sort?) = apply { this.sort = sort }
 
         /** Sort seed for deterministic random ordering */
@@ -225,7 +225,7 @@ private constructor(
             }
             .build()
 
-    /** Sort order: created_asc, created_desc, random, score_based_random */
+    /** Sort order: created_asc, created_desc, random, score_based_random, energy_points */
     class Sort @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**
@@ -248,6 +248,8 @@ private constructor(
 
             val SCORE_BASED_RANDOM = of("score_based_random")
 
+            val ENERGY_POINTS = of("energy_points")
+
             fun of(value: String) = Sort(JsonField.of(value))
         }
 
@@ -257,6 +259,7 @@ private constructor(
             CREATED_DESC,
             RANDOM,
             SCORE_BASED_RANDOM,
+            ENERGY_POINTS,
         }
 
         /**
@@ -273,6 +276,7 @@ private constructor(
             CREATED_DESC,
             RANDOM,
             SCORE_BASED_RANDOM,
+            ENERGY_POINTS,
             /** An enum member indicating that [Sort] was instantiated with an unknown value. */
             _UNKNOWN,
         }
@@ -290,6 +294,7 @@ private constructor(
                 CREATED_DESC -> Value.CREATED_DESC
                 RANDOM -> Value.RANDOM
                 SCORE_BASED_RANDOM -> Value.SCORE_BASED_RANDOM
+                ENERGY_POINTS -> Value.ENERGY_POINTS
                 else -> Value._UNKNOWN
             }
 
@@ -307,6 +312,7 @@ private constructor(
                 CREATED_DESC -> Known.CREATED_DESC
                 RANDOM -> Known.RANDOM
                 SCORE_BASED_RANDOM -> Known.SCORE_BASED_RANDOM
+                ENERGY_POINTS -> Known.ENERGY_POINTS
                 else -> throw IntyInvalidDataException("Unknown Sort: $value")
             }
 

@@ -2,8 +2,8 @@
 
 <!-- x-release-please-start-version -->
 
-[![Maven Central](https://img.shields.io/maven-central/v/com.inty.api/inty-kotlin)](https://central.sonatype.com/artifact/com.inty.api/inty-kotlin/0.21.0)
-[![javadoc](https://javadoc.io/badge2/com.inty.api/inty-kotlin/0.21.0/javadoc.svg)](https://javadoc.io/doc/com.inty.api/inty-kotlin/0.21.0)
+[![Maven Central](https://img.shields.io/maven-central/v/com.inty.api/inty-kotlin)](https://central.sonatype.com/artifact/com.inty.api/inty-kotlin/0.22.0)
+[![javadoc](https://javadoc.io/badge2/com.inty.api/inty-kotlin/0.22.0/javadoc.svg)](https://javadoc.io/doc/com.inty.api/inty-kotlin/0.22.0)
 
 <!-- x-release-please-end -->
 
@@ -13,7 +13,7 @@ It is generated with [Stainless](https://www.stainless.com/).
 
 <!-- x-release-please-start-version -->
 
-KDocs are available on [javadoc.io](https://javadoc.io/doc/com.inty.api/inty-kotlin/0.21.0).
+KDocs are available on [javadoc.io](https://javadoc.io/doc/com.inty.api/inty-kotlin/0.22.0).
 
 <!-- x-release-please-end -->
 
@@ -24,7 +24,7 @@ KDocs are available on [javadoc.io](https://javadoc.io/doc/com.inty.api/inty-kot
 ### Gradle
 
 ```kotlin
-implementation("com.inty.api:inty-kotlin:0.21.0")
+implementation("com.inty.api:inty-kotlin:0.22.0")
 ```
 
 ### Maven
@@ -33,7 +33,7 @@ implementation("com.inty.api:inty-kotlin:0.21.0")
 <dependency>
   <groupId>com.inty.api</groupId>
   <artifactId>inty-kotlin</artifactId>
-  <version>0.21.0</version>
+  <version>0.22.0</version>
 </dependency>
 ```
 
@@ -290,13 +290,13 @@ The SDK uses the standard [OkHttp logging interceptor](https://github.com/square
 Enable logging by setting the `INTY_LOG` environment variable to `info`:
 
 ```sh
-$ export INTY_LOG=info
+export INTY_LOG=info
 ```
 
 Or to `debug` for more verbose logging:
 
 ```sh
-$ export INTY_LOG=debug
+export INTY_LOG=debug
 ```
 
 ## ProGuard and R8

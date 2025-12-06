@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.22.0 (2025-12-06)
+
+Full Changelog: [v0.21.0...v0.22.0](https://github.com/NascentCore/inty-kotlin/compare/v0.21.0...v0.22.0)
+
+### Features
+
+* **api:** manual updates ([bb4b307](https://github.com/NascentCore/inty-kotlin/commit/bb4b30779c968d853e2769aa5714e257a4a94686))
+* 清理无效 api 端点 ([624c34f](https://github.com/NascentCore/inty-kotlin/commit/624c34fd3c5096530594d48a8ba8db93c7decb92))
+
+
+### Documentation
+
+* remove `$` for better copy-pasteabality ([7448eda](https://github.com/NascentCore/inty-kotlin/commit/7448eda3f0fddea4fbdc651c349ef6240b0f25c8))
+
 ## 0.21.0 (2025-12-02)
 
 Full Changelog: [v0.20.0...v0.21.0](https://github.com/NascentCore/inty-kotlin/compare/v0.20.0...v0.21.0)

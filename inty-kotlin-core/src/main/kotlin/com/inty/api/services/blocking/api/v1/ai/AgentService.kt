@@ -10,18 +10,14 @@ import com.inty.api.models.api.v1.ai.agents.Agent
 import com.inty.api.models.api.v1.ai.agents.AgentCreateParams
 import com.inty.api.models.api.v1.ai.agents.AgentCreateResponse
 import com.inty.api.models.api.v1.ai.agents.AgentDeleteParams
-import com.inty.api.models.api.v1.ai.agents.AgentFollowAgentParams
-import com.inty.api.models.api.v1.ai.agents.AgentFollowingParams
 import com.inty.api.models.api.v1.ai.agents.AgentListParams
 import com.inty.api.models.api.v1.ai.agents.AgentListResponse
 import com.inty.api.models.api.v1.ai.agents.AgentRecommendParams
 import com.inty.api.models.api.v1.ai.agents.AgentRetrieveParams
 import com.inty.api.models.api.v1.ai.agents.AgentSearchParams
-import com.inty.api.models.api.v1.ai.agents.AgentUnfollowAgentParams
 import com.inty.api.models.api.v1.ai.agents.AgentUpdateParams
 import com.inty.api.models.api.v1.ai.agents.ApiResponseAgent
 import com.inty.api.models.api.v1.ai.agents.ApiResponsePaginationDataAgent
-import com.inty.api.models.api.v1.report.ApiResponseDict
 import com.inty.api.services.blocking.api.v1.ai.agents.ImageGenerationService
 
 interface AgentService {
@@ -110,33 +106,6 @@ interface AgentService {
     fun delete(agentId: String, requestOptions: RequestOptions): ApiResponseAgent =
         delete(agentId, AgentDeleteParams.none(), requestOptions)
 
-    /** Follow AI agent */
-    fun followAgent(
-        agentId: String,
-        params: AgentFollowAgentParams = AgentFollowAgentParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): ApiResponseDict = followAgent(params.toBuilder().agentId(agentId).build(), requestOptions)
-
-    /** @see followAgent */
-    fun followAgent(
-        params: AgentFollowAgentParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): ApiResponseDict
-
-    /** @see followAgent */
-    fun followAgent(agentId: String, requestOptions: RequestOptions): ApiResponseDict =
-        followAgent(agentId, AgentFollowAgentParams.none(), requestOptions)
-
-    /** Get current user's followed AI agents list */
-    fun following(
-        params: AgentFollowingParams = AgentFollowingParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): ApiResponsePaginationDataAgent
-
-    /** @see following */
-    fun following(requestOptions: RequestOptions): ApiResponsePaginationDataAgent =
-        following(AgentFollowingParams.none(), requestOptions)
-
     /**
      * Get recommended AI agents list (public and approved agents), sort_seed is required when sort
      * is random, which is used to ensure deterministic order for the random sort option
@@ -155,23 +124,6 @@ interface AgentService {
         params: AgentSearchParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): ApiResponsePaginationDataAgent
-
-    /** Unfollow AI agent */
-    fun unfollowAgent(
-        agentId: String,
-        params: AgentUnfollowAgentParams = AgentUnfollowAgentParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): ApiResponseDict = unfollowAgent(params.toBuilder().agentId(agentId).build(), requestOptions)
-
-    /** @see unfollowAgent */
-    fun unfollowAgent(
-        params: AgentUnfollowAgentParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): ApiResponseDict
-
-    /** @see unfollowAgent */
-    fun unfollowAgent(agentId: String, requestOptions: RequestOptions): ApiResponseDict =
-        unfollowAgent(agentId, AgentUnfollowAgentParams.none(), requestOptions)
 
     /** A view of [AgentService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -286,50 +238,6 @@ interface AgentService {
             delete(agentId, AgentDeleteParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /api/v1/ai/agents/{agent_id}/follow`, but is
-         * otherwise the same as [AgentService.followAgent].
-         */
-        @MustBeClosed
-        fun followAgent(
-            agentId: String,
-            params: AgentFollowAgentParams = AgentFollowAgentParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<ApiResponseDict> =
-            followAgent(params.toBuilder().agentId(agentId).build(), requestOptions)
-
-        /** @see followAgent */
-        @MustBeClosed
-        fun followAgent(
-            params: AgentFollowAgentParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<ApiResponseDict>
-
-        /** @see followAgent */
-        @MustBeClosed
-        fun followAgent(
-            agentId: String,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<ApiResponseDict> =
-            followAgent(agentId, AgentFollowAgentParams.none(), requestOptions)
-
-        /**
-         * Returns a raw HTTP response for `get /api/v1/ai/agents/following`, but is otherwise the
-         * same as [AgentService.following].
-         */
-        @MustBeClosed
-        fun following(
-            params: AgentFollowingParams = AgentFollowingParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<ApiResponsePaginationDataAgent>
-
-        /** @see following */
-        @MustBeClosed
-        fun following(
-            requestOptions: RequestOptions
-        ): HttpResponseFor<ApiResponsePaginationDataAgent> =
-            following(AgentFollowingParams.none(), requestOptions)
-
-        /**
          * Returns a raw HTTP response for `get /api/v1/ai/agents/recommend`, but is otherwise the
          * same as [AgentService.recommend].
          */
@@ -355,32 +263,5 @@ interface AgentService {
             params: AgentSearchParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<ApiResponsePaginationDataAgent>
-
-        /**
-         * Returns a raw HTTP response for `delete /api/v1/ai/agents/{agent_id}/follow`, but is
-         * otherwise the same as [AgentService.unfollowAgent].
-         */
-        @MustBeClosed
-        fun unfollowAgent(
-            agentId: String,
-            params: AgentUnfollowAgentParams = AgentUnfollowAgentParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<ApiResponseDict> =
-            unfollowAgent(params.toBuilder().agentId(agentId).build(), requestOptions)
-
-        /** @see unfollowAgent */
-        @MustBeClosed
-        fun unfollowAgent(
-            params: AgentUnfollowAgentParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<ApiResponseDict>
-
-        /** @see unfollowAgent */
-        @MustBeClosed
-        fun unfollowAgent(
-            agentId: String,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<ApiResponseDict> =
-            unfollowAgent(agentId, AgentUnfollowAgentParams.none(), requestOptions)
     }
 }
