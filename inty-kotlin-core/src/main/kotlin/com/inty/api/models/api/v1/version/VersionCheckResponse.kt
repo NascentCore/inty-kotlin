@@ -12,7 +12,6 @@ import com.inty.api.core.JsonField
 import com.inty.api.core.JsonMissing
 import com.inty.api.core.JsonValue
 import com.inty.api.core.checkKnown
-import com.inty.api.core.checkRequired
 import com.inty.api.core.toImmutable
 import com.inty.api.errors.IntyInvalidDataException
 import java.util.Collections
@@ -202,126 +201,70 @@ private constructor(
     class Data
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
+        private val changelog: JsonField<String>,
         private val currentVersion: JsonField<String>,
         private val downloadUrl: JsonField<String>,
+        private val error: JsonField<String>,
         private val forceUpdate: JsonField<Boolean>,
+        private val forceUpdateReasons: JsonField<List<String>>,
         private val latestVersion: JsonField<String>,
+        private val latestVersionCode: JsonField<Long>,
         private val message: JsonField<String>,
         private val minimumVersion: JsonField<String>,
-        private val updateRequired: JsonField<Boolean>,
-        private val changelog: JsonField<String>,
-        private val error: JsonField<String>,
-        private val forceUpdateReasons: JsonField<List<String>>,
-        private val latestVersionCode: JsonField<Long>,
         private val reminderAction: JsonField<ReminderAction>,
+        private val updateRequired: JsonField<Boolean>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
         @JsonCreator
         private constructor(
+            @JsonProperty("changelog")
+            @ExcludeMissing
+            changelog: JsonField<String> = JsonMissing.of(),
             @JsonProperty("current_version")
             @ExcludeMissing
             currentVersion: JsonField<String> = JsonMissing.of(),
             @JsonProperty("download_url")
             @ExcludeMissing
             downloadUrl: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("error") @ExcludeMissing error: JsonField<String> = JsonMissing.of(),
             @JsonProperty("force_update")
             @ExcludeMissing
             forceUpdate: JsonField<Boolean> = JsonMissing.of(),
+            @JsonProperty("force_update_reasons")
+            @ExcludeMissing
+            forceUpdateReasons: JsonField<List<String>> = JsonMissing.of(),
             @JsonProperty("latest_version")
             @ExcludeMissing
             latestVersion: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("latest_version_code")
+            @ExcludeMissing
+            latestVersionCode: JsonField<Long> = JsonMissing.of(),
             @JsonProperty("message") @ExcludeMissing message: JsonField<String> = JsonMissing.of(),
             @JsonProperty("minimum_version")
             @ExcludeMissing
             minimumVersion: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("update_required")
-            @ExcludeMissing
-            updateRequired: JsonField<Boolean> = JsonMissing.of(),
-            @JsonProperty("changelog")
-            @ExcludeMissing
-            changelog: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("error") @ExcludeMissing error: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("force_update_reasons")
-            @ExcludeMissing
-            forceUpdateReasons: JsonField<List<String>> = JsonMissing.of(),
-            @JsonProperty("latest_version_code")
-            @ExcludeMissing
-            latestVersionCode: JsonField<Long> = JsonMissing.of(),
             @JsonProperty("reminder_action")
             @ExcludeMissing
             reminderAction: JsonField<ReminderAction> = JsonMissing.of(),
+            @JsonProperty("update_required")
+            @ExcludeMissing
+            updateRequired: JsonField<Boolean> = JsonMissing.of(),
         ) : this(
+            changelog,
             currentVersion,
             downloadUrl,
+            error,
             forceUpdate,
+            forceUpdateReasons,
             latestVersion,
+            latestVersionCode,
             message,
             minimumVersion,
-            updateRequired,
-            changelog,
-            error,
-            forceUpdateReasons,
-            latestVersionCode,
             reminderAction,
+            updateRequired,
             mutableMapOf(),
         )
-
-        /**
-         * 当前客户端版本
-         *
-         * @throws IntyInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun currentVersion(): String = currentVersion.getRequired("current_version")
-
-        /**
-         * 下载链接
-         *
-         * @throws IntyInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun downloadUrl(): String = downloadUrl.getRequired("download_url")
-
-        /**
-         * 是否强制更新
-         *
-         * @throws IntyInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun forceUpdate(): Boolean = forceUpdate.getRequired("force_update")
-
-        /**
-         * 最新可用版本
-         *
-         * @throws IntyInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun latestVersion(): String = latestVersion.getRequired("latest_version")
-
-        /**
-         * 状态消息
-         *
-         * @throws IntyInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun message(): String = message.getRequired("message")
-
-        /**
-         * 最低支持版本
-         *
-         * @throws IntyInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun minimumVersion(): String = minimumVersion.getRequired("minimum_version")
-
-        /**
-         * 是否需要更新
-         *
-         * @throws IntyInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun updateRequired(): Boolean = updateRequired.getRequired("update_required")
 
         /**
          * 更新日志
@@ -332,12 +275,36 @@ private constructor(
         fun changelog(): String? = changelog.getNullable("changelog")
 
         /**
+         * 当前客户端版本
+         *
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun currentVersion(): String? = currentVersion.getNullable("current_version")
+
+        /**
+         * 下载链接
+         *
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun downloadUrl(): String? = downloadUrl.getNullable("download_url")
+
+        /**
          * 错误信息
          *
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
          */
         fun error(): String? = error.getNullable("error")
+
+        /**
+         * 是否强制更新
+         *
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun forceUpdate(): Boolean? = forceUpdate.getNullable("force_update")
 
         /**
          * 强制更新的具体原因列表
@@ -349,6 +316,14 @@ private constructor(
             forceUpdateReasons.getNullable("force_update_reasons")
 
         /**
+         * 最新可用版本
+         *
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun latestVersion(): String? = latestVersion.getNullable("latest_version")
+
+        /**
          * 最新版本代码
          *
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -357,12 +332,43 @@ private constructor(
         fun latestVersionCode(): Long? = latestVersionCode.getNullable("latest_version_code")
 
         /**
-         * 客户端需要展示的提醒类型
+         * 状态消息
+         *
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun message(): String? = message.getNullable("message")
+
+        /**
+         * 最低支持版本
+         *
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun minimumVersion(): String? = minimumVersion.getNullable("minimum_version")
+
+        /**
+         * 客户端需要展示的提醒动作，None 表示无需额外提醒
          *
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
          */
         fun reminderAction(): ReminderAction? = reminderAction.getNullable("reminder_action")
+
+        /**
+         * 是否需要更新
+         *
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun updateRequired(): Boolean? = updateRequired.getNullable("update_required")
+
+        /**
+         * Returns the raw JSON value of [changelog].
+         *
+         * Unlike [changelog], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("changelog") @ExcludeMissing fun _changelog(): JsonField<String> = changelog
 
         /**
          * Returns the raw JSON value of [currentVersion].
@@ -384,6 +390,13 @@ private constructor(
         fun _downloadUrl(): JsonField<String> = downloadUrl
 
         /**
+         * Returns the raw JSON value of [error].
+         *
+         * Unlike [error], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("error") @ExcludeMissing fun _error(): JsonField<String> = error
+
+        /**
          * Returns the raw JSON value of [forceUpdate].
          *
          * Unlike [forceUpdate], this method doesn't throw if the JSON field has an unexpected type.
@@ -391,6 +404,16 @@ private constructor(
         @JsonProperty("force_update")
         @ExcludeMissing
         fun _forceUpdate(): JsonField<Boolean> = forceUpdate
+
+        /**
+         * Returns the raw JSON value of [forceUpdateReasons].
+         *
+         * Unlike [forceUpdateReasons], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("force_update_reasons")
+        @ExcludeMissing
+        fun _forceUpdateReasons(): JsonField<List<String>> = forceUpdateReasons
 
         /**
          * Returns the raw JSON value of [latestVersion].
@@ -401,6 +424,16 @@ private constructor(
         @JsonProperty("latest_version")
         @ExcludeMissing
         fun _latestVersion(): JsonField<String> = latestVersion
+
+        /**
+         * Returns the raw JSON value of [latestVersionCode].
+         *
+         * Unlike [latestVersionCode], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("latest_version_code")
+        @ExcludeMissing
+        fun _latestVersionCode(): JsonField<Long> = latestVersionCode
 
         /**
          * Returns the raw JSON value of [message].
@@ -420,50 +453,6 @@ private constructor(
         fun _minimumVersion(): JsonField<String> = minimumVersion
 
         /**
-         * Returns the raw JSON value of [updateRequired].
-         *
-         * Unlike [updateRequired], this method doesn't throw if the JSON field has an unexpected
-         * type.
-         */
-        @JsonProperty("update_required")
-        @ExcludeMissing
-        fun _updateRequired(): JsonField<Boolean> = updateRequired
-
-        /**
-         * Returns the raw JSON value of [changelog].
-         *
-         * Unlike [changelog], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("changelog") @ExcludeMissing fun _changelog(): JsonField<String> = changelog
-
-        /**
-         * Returns the raw JSON value of [error].
-         *
-         * Unlike [error], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("error") @ExcludeMissing fun _error(): JsonField<String> = error
-
-        /**
-         * Returns the raw JSON value of [forceUpdateReasons].
-         *
-         * Unlike [forceUpdateReasons], this method doesn't throw if the JSON field has an
-         * unexpected type.
-         */
-        @JsonProperty("force_update_reasons")
-        @ExcludeMissing
-        fun _forceUpdateReasons(): JsonField<List<String>> = forceUpdateReasons
-
-        /**
-         * Returns the raw JSON value of [latestVersionCode].
-         *
-         * Unlike [latestVersionCode], this method doesn't throw if the JSON field has an unexpected
-         * type.
-         */
-        @JsonProperty("latest_version_code")
-        @ExcludeMissing
-        fun _latestVersionCode(): JsonField<Long> = latestVersionCode
-
-        /**
          * Returns the raw JSON value of [reminderAction].
          *
          * Unlike [reminderAction], this method doesn't throw if the JSON field has an unexpected
@@ -472,6 +461,16 @@ private constructor(
         @JsonProperty("reminder_action")
         @ExcludeMissing
         fun _reminderAction(): JsonField<ReminderAction> = reminderAction
+
+        /**
+         * Returns the raw JSON value of [updateRequired].
+         *
+         * Unlike [updateRequired], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("update_required")
+        @ExcludeMissing
+        fun _updateRequired(): JsonField<Boolean> = updateRequired
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -487,153 +486,41 @@ private constructor(
 
         companion object {
 
-            /**
-             * Returns a mutable builder for constructing an instance of [Data].
-             *
-             * The following fields are required:
-             * ```kotlin
-             * .currentVersion()
-             * .downloadUrl()
-             * .forceUpdate()
-             * .latestVersion()
-             * .message()
-             * .minimumVersion()
-             * .updateRequired()
-             * ```
-             */
+            /** Returns a mutable builder for constructing an instance of [Data]. */
             fun builder() = Builder()
         }
 
         /** A builder for [Data]. */
         class Builder internal constructor() {
 
-            private var currentVersion: JsonField<String>? = null
-            private var downloadUrl: JsonField<String>? = null
-            private var forceUpdate: JsonField<Boolean>? = null
-            private var latestVersion: JsonField<String>? = null
-            private var message: JsonField<String>? = null
-            private var minimumVersion: JsonField<String>? = null
-            private var updateRequired: JsonField<Boolean>? = null
             private var changelog: JsonField<String> = JsonMissing.of()
+            private var currentVersion: JsonField<String> = JsonMissing.of()
+            private var downloadUrl: JsonField<String> = JsonMissing.of()
             private var error: JsonField<String> = JsonMissing.of()
+            private var forceUpdate: JsonField<Boolean> = JsonMissing.of()
             private var forceUpdateReasons: JsonField<MutableList<String>>? = null
+            private var latestVersion: JsonField<String> = JsonMissing.of()
             private var latestVersionCode: JsonField<Long> = JsonMissing.of()
+            private var message: JsonField<String> = JsonMissing.of()
+            private var minimumVersion: JsonField<String> = JsonMissing.of()
             private var reminderAction: JsonField<ReminderAction> = JsonMissing.of()
+            private var updateRequired: JsonField<Boolean> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             internal fun from(data: Data) = apply {
+                changelog = data.changelog
                 currentVersion = data.currentVersion
                 downloadUrl = data.downloadUrl
+                error = data.error
                 forceUpdate = data.forceUpdate
+                forceUpdateReasons = data.forceUpdateReasons.map { it.toMutableList() }
                 latestVersion = data.latestVersion
+                latestVersionCode = data.latestVersionCode
                 message = data.message
                 minimumVersion = data.minimumVersion
-                updateRequired = data.updateRequired
-                changelog = data.changelog
-                error = data.error
-                forceUpdateReasons = data.forceUpdateReasons.map { it.toMutableList() }
-                latestVersionCode = data.latestVersionCode
                 reminderAction = data.reminderAction
+                updateRequired = data.updateRequired
                 additionalProperties = data.additionalProperties.toMutableMap()
-            }
-
-            /** 当前客户端版本 */
-            fun currentVersion(currentVersion: String) =
-                currentVersion(JsonField.of(currentVersion))
-
-            /**
-             * Sets [Builder.currentVersion] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.currentVersion] with a well-typed [String] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun currentVersion(currentVersion: JsonField<String>) = apply {
-                this.currentVersion = currentVersion
-            }
-
-            /** 下载链接 */
-            fun downloadUrl(downloadUrl: String) = downloadUrl(JsonField.of(downloadUrl))
-
-            /**
-             * Sets [Builder.downloadUrl] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.downloadUrl] with a well-typed [String] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun downloadUrl(downloadUrl: JsonField<String>) = apply {
-                this.downloadUrl = downloadUrl
-            }
-
-            /** 是否强制更新 */
-            fun forceUpdate(forceUpdate: Boolean) = forceUpdate(JsonField.of(forceUpdate))
-
-            /**
-             * Sets [Builder.forceUpdate] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.forceUpdate] with a well-typed [Boolean] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun forceUpdate(forceUpdate: JsonField<Boolean>) = apply {
-                this.forceUpdate = forceUpdate
-            }
-
-            /** 最新可用版本 */
-            fun latestVersion(latestVersion: String) = latestVersion(JsonField.of(latestVersion))
-
-            /**
-             * Sets [Builder.latestVersion] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.latestVersion] with a well-typed [String] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun latestVersion(latestVersion: JsonField<String>) = apply {
-                this.latestVersion = latestVersion
-            }
-
-            /** 状态消息 */
-            fun message(message: String) = message(JsonField.of(message))
-
-            /**
-             * Sets [Builder.message] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.message] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun message(message: JsonField<String>) = apply { this.message = message }
-
-            /** 最低支持版本 */
-            fun minimumVersion(minimumVersion: String) =
-                minimumVersion(JsonField.of(minimumVersion))
-
-            /**
-             * Sets [Builder.minimumVersion] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.minimumVersion] with a well-typed [String] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun minimumVersion(minimumVersion: JsonField<String>) = apply {
-                this.minimumVersion = minimumVersion
-            }
-
-            /** 是否需要更新 */
-            fun updateRequired(updateRequired: Boolean) =
-                updateRequired(JsonField.of(updateRequired))
-
-            /**
-             * Sets [Builder.updateRequired] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.updateRequired] with a well-typed [Boolean] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun updateRequired(updateRequired: JsonField<Boolean>) = apply {
-                this.updateRequired = updateRequired
             }
 
             /** 更新日志 */
@@ -648,6 +535,35 @@ private constructor(
              */
             fun changelog(changelog: JsonField<String>) = apply { this.changelog = changelog }
 
+            /** 当前客户端版本 */
+            fun currentVersion(currentVersion: String?) =
+                currentVersion(JsonField.ofNullable(currentVersion))
+
+            /**
+             * Sets [Builder.currentVersion] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.currentVersion] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun currentVersion(currentVersion: JsonField<String>) = apply {
+                this.currentVersion = currentVersion
+            }
+
+            /** 下载链接 */
+            fun downloadUrl(downloadUrl: String?) = downloadUrl(JsonField.ofNullable(downloadUrl))
+
+            /**
+             * Sets [Builder.downloadUrl] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.downloadUrl] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun downloadUrl(downloadUrl: JsonField<String>) = apply {
+                this.downloadUrl = downloadUrl
+            }
+
             /** 错误信息 */
             fun error(error: String?) = error(JsonField.ofNullable(error))
 
@@ -659,6 +575,27 @@ private constructor(
              * supported value.
              */
             fun error(error: JsonField<String>) = apply { this.error = error }
+
+            /** 是否强制更新 */
+            fun forceUpdate(forceUpdate: Boolean?) = forceUpdate(JsonField.ofNullable(forceUpdate))
+
+            /**
+             * Alias for [Builder.forceUpdate].
+             *
+             * This unboxed primitive overload exists for backwards compatibility.
+             */
+            fun forceUpdate(forceUpdate: Boolean) = forceUpdate(forceUpdate as Boolean?)
+
+            /**
+             * Sets [Builder.forceUpdate] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.forceUpdate] with a well-typed [Boolean] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun forceUpdate(forceUpdate: JsonField<Boolean>) = apply {
+                this.forceUpdate = forceUpdate
+            }
 
             /** 强制更新的具体原因列表 */
             fun forceUpdateReasons(forceUpdateReasons: List<String>?) =
@@ -687,6 +624,21 @@ private constructor(
                     }
             }
 
+            /** 最新可用版本 */
+            fun latestVersion(latestVersion: String?) =
+                latestVersion(JsonField.ofNullable(latestVersion))
+
+            /**
+             * Sets [Builder.latestVersion] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.latestVersion] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun latestVersion(latestVersion: JsonField<String>) = apply {
+                this.latestVersion = latestVersion
+            }
+
             /** 最新版本代码 */
             fun latestVersionCode(latestVersionCode: Long?) =
                 latestVersionCode(JsonField.ofNullable(latestVersionCode))
@@ -710,9 +662,36 @@ private constructor(
                 this.latestVersionCode = latestVersionCode
             }
 
-            /** 客户端需要展示的提醒类型 */
-            fun reminderAction(reminderAction: ReminderAction?) =
-                reminderAction(JsonField.ofNullable(reminderAction))
+            /** 状态消息 */
+            fun message(message: String?) = message(JsonField.ofNullable(message))
+
+            /**
+             * Sets [Builder.message] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.message] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun message(message: JsonField<String>) = apply { this.message = message }
+
+            /** 最低支持版本 */
+            fun minimumVersion(minimumVersion: String?) =
+                minimumVersion(JsonField.ofNullable(minimumVersion))
+
+            /**
+             * Sets [Builder.minimumVersion] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.minimumVersion] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun minimumVersion(minimumVersion: JsonField<String>) = apply {
+                this.minimumVersion = minimumVersion
+            }
+
+            /** 客户端需要展示的提醒动作，None 表示无需额外提醒 */
+            fun reminderAction(reminderAction: ReminderAction) =
+                reminderAction(JsonField.of(reminderAction))
 
             /**
              * Sets [Builder.reminderAction] to an arbitrary JSON value.
@@ -723,6 +702,28 @@ private constructor(
              */
             fun reminderAction(reminderAction: JsonField<ReminderAction>) = apply {
                 this.reminderAction = reminderAction
+            }
+
+            /** 是否需要更新 */
+            fun updateRequired(updateRequired: Boolean?) =
+                updateRequired(JsonField.ofNullable(updateRequired))
+
+            /**
+             * Alias for [Builder.updateRequired].
+             *
+             * This unboxed primitive overload exists for backwards compatibility.
+             */
+            fun updateRequired(updateRequired: Boolean) = updateRequired(updateRequired as Boolean?)
+
+            /**
+             * Sets [Builder.updateRequired] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.updateRequired] with a well-typed [Boolean] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun updateRequired(updateRequired: JsonField<Boolean>) = apply {
+                this.updateRequired = updateRequired
             }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -748,34 +749,21 @@ private constructor(
              * Returns an immutable instance of [Data].
              *
              * Further updates to this [Builder] will not mutate the returned instance.
-             *
-             * The following fields are required:
-             * ```kotlin
-             * .currentVersion()
-             * .downloadUrl()
-             * .forceUpdate()
-             * .latestVersion()
-             * .message()
-             * .minimumVersion()
-             * .updateRequired()
-             * ```
-             *
-             * @throws IllegalStateException if any required field is unset.
              */
             fun build(): Data =
                 Data(
-                    checkRequired("currentVersion", currentVersion),
-                    checkRequired("downloadUrl", downloadUrl),
-                    checkRequired("forceUpdate", forceUpdate),
-                    checkRequired("latestVersion", latestVersion),
-                    checkRequired("message", message),
-                    checkRequired("minimumVersion", minimumVersion),
-                    checkRequired("updateRequired", updateRequired),
                     changelog,
+                    currentVersion,
+                    downloadUrl,
                     error,
+                    forceUpdate,
                     (forceUpdateReasons ?: JsonMissing.of()).map { it.toImmutable() },
+                    latestVersion,
                     latestVersionCode,
+                    message,
+                    minimumVersion,
                     reminderAction,
+                    updateRequired,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -787,18 +775,18 @@ private constructor(
                 return@apply
             }
 
+            changelog()
             currentVersion()
             downloadUrl()
+            error()
             forceUpdate()
+            forceUpdateReasons()
             latestVersion()
+            latestVersionCode()
             message()
             minimumVersion()
-            updateRequired()
-            changelog()
-            error()
-            forceUpdateReasons()
-            latestVersionCode()
             reminderAction()?.validate()
+            updateRequired()
             validated = true
         }
 
@@ -817,20 +805,20 @@ private constructor(
          * Used for best match union deserialization.
          */
         internal fun validity(): Int =
-            (if (currentVersion.asKnown() == null) 0 else 1) +
+            (if (changelog.asKnown() == null) 0 else 1) +
+                (if (currentVersion.asKnown() == null) 0 else 1) +
                 (if (downloadUrl.asKnown() == null) 0 else 1) +
+                (if (error.asKnown() == null) 0 else 1) +
                 (if (forceUpdate.asKnown() == null) 0 else 1) +
+                (forceUpdateReasons.asKnown()?.size ?: 0) +
                 (if (latestVersion.asKnown() == null) 0 else 1) +
+                (if (latestVersionCode.asKnown() == null) 0 else 1) +
                 (if (message.asKnown() == null) 0 else 1) +
                 (if (minimumVersion.asKnown() == null) 0 else 1) +
-                (if (updateRequired.asKnown() == null) 0 else 1) +
-                (if (changelog.asKnown() == null) 0 else 1) +
-                (if (error.asKnown() == null) 0 else 1) +
-                (forceUpdateReasons.asKnown()?.size ?: 0) +
-                (if (latestVersionCode.asKnown() == null) 0 else 1) +
-                (reminderAction.asKnown()?.validity() ?: 0)
+                (reminderAction.asKnown()?.validity() ?: 0) +
+                (if (updateRequired.asKnown() == null) 0 else 1)
 
-        /** 客户端需要展示的提醒类型 */
+        /** 客户端需要展示的提醒动作，None 表示无需额外提醒 */
         class ReminderAction
         @JsonCreator
         private constructor(private val value: JsonField<String>) : Enum {
@@ -847,9 +835,11 @@ private constructor(
 
             companion object {
 
-                val POP_UP_REMINDER = of("POP_UP_REMINDER")
+                val NONE = of("NONE")
 
                 val SETTINGS_REMINDER = of("SETTINGS_REMINDER")
+
+                val POP_UP_REMINDER = of("POP_UP_REMINDER")
 
                 val BLOCK_ACCESS = of("BLOCK_ACCESS")
 
@@ -858,8 +848,9 @@ private constructor(
 
             /** An enum containing [ReminderAction]'s known values. */
             enum class Known {
-                POP_UP_REMINDER,
+                NONE,
                 SETTINGS_REMINDER,
+                POP_UP_REMINDER,
                 BLOCK_ACCESS,
             }
 
@@ -873,8 +864,9 @@ private constructor(
              * - It was constructed with an arbitrary value using the [of] method.
              */
             enum class Value {
-                POP_UP_REMINDER,
+                NONE,
                 SETTINGS_REMINDER,
+                POP_UP_REMINDER,
                 BLOCK_ACCESS,
                 /**
                  * An enum member indicating that [ReminderAction] was instantiated with an unknown
@@ -892,8 +884,9 @@ private constructor(
              */
             fun value(): Value =
                 when (this) {
-                    POP_UP_REMINDER -> Value.POP_UP_REMINDER
+                    NONE -> Value.NONE
                     SETTINGS_REMINDER -> Value.SETTINGS_REMINDER
+                    POP_UP_REMINDER -> Value.POP_UP_REMINDER
                     BLOCK_ACCESS -> Value.BLOCK_ACCESS
                     else -> Value._UNKNOWN
                 }
@@ -909,8 +902,9 @@ private constructor(
              */
             fun known(): Known =
                 when (this) {
-                    POP_UP_REMINDER -> Known.POP_UP_REMINDER
+                    NONE -> Known.NONE
                     SETTINGS_REMINDER -> Known.SETTINGS_REMINDER
+                    POP_UP_REMINDER -> Known.POP_UP_REMINDER
                     BLOCK_ACCESS -> Known.BLOCK_ACCESS
                     else -> throw IntyInvalidDataException("Unknown ReminderAction: $value")
                 }
@@ -973,35 +967,35 @@ private constructor(
             }
 
             return other is Data &&
+                changelog == other.changelog &&
                 currentVersion == other.currentVersion &&
                 downloadUrl == other.downloadUrl &&
+                error == other.error &&
                 forceUpdate == other.forceUpdate &&
+                forceUpdateReasons == other.forceUpdateReasons &&
                 latestVersion == other.latestVersion &&
+                latestVersionCode == other.latestVersionCode &&
                 message == other.message &&
                 minimumVersion == other.minimumVersion &&
-                updateRequired == other.updateRequired &&
-                changelog == other.changelog &&
-                error == other.error &&
-                forceUpdateReasons == other.forceUpdateReasons &&
-                latestVersionCode == other.latestVersionCode &&
                 reminderAction == other.reminderAction &&
+                updateRequired == other.updateRequired &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
             Objects.hash(
+                changelog,
                 currentVersion,
                 downloadUrl,
+                error,
                 forceUpdate,
+                forceUpdateReasons,
                 latestVersion,
+                latestVersionCode,
                 message,
                 minimumVersion,
-                updateRequired,
-                changelog,
-                error,
-                forceUpdateReasons,
-                latestVersionCode,
                 reminderAction,
+                updateRequired,
                 additionalProperties,
             )
         }
@@ -1009,7 +1003,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Data{currentVersion=$currentVersion, downloadUrl=$downloadUrl, forceUpdate=$forceUpdate, latestVersion=$latestVersion, message=$message, minimumVersion=$minimumVersion, updateRequired=$updateRequired, changelog=$changelog, error=$error, forceUpdateReasons=$forceUpdateReasons, latestVersionCode=$latestVersionCode, reminderAction=$reminderAction, additionalProperties=$additionalProperties}"
+            "Data{changelog=$changelog, currentVersion=$currentVersion, downloadUrl=$downloadUrl, error=$error, forceUpdate=$forceUpdate, forceUpdateReasons=$forceUpdateReasons, latestVersion=$latestVersion, latestVersionCode=$latestVersionCode, message=$message, minimumVersion=$minimumVersion, reminderAction=$reminderAction, updateRequired=$updateRequired, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
