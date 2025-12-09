@@ -23,8 +23,6 @@ import com.inty.api.models.api.v1.subscription.SubscriptionListPlansParams
 import com.inty.api.models.api.v1.subscription.SubscriptionListPlansResponse
 import com.inty.api.models.api.v1.subscription.SubscriptionVerifyParams
 import com.inty.api.models.api.v1.subscription.SubscriptionVerifyResponse
-import com.inty.api.models.api.v1.subscription.SubscriptionWebhookParams
-import com.inty.api.models.api.v1.subscription.SubscriptionWebhookResponse
 import com.inty.api.services.blocking.api.v1.subscription.AdminService
 import com.inty.api.services.blocking.api.v1.subscription.AdminServiceImpl
 
@@ -71,13 +69,6 @@ class SubscriptionServiceImpl internal constructor(private val clientOptions: Cl
     ): SubscriptionVerifyResponse =
         // post /api/v1/subscription/verify
         withRawResponse().verify(params, requestOptions).parse()
-
-    override fun webhook(
-        params: SubscriptionWebhookParams,
-        requestOptions: RequestOptions,
-    ): SubscriptionWebhookResponse =
-        // post /api/v1/subscription/webhook
-        withRawResponse().webhook(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         SubscriptionService.WithRawResponse {
@@ -199,34 +190,6 @@ class SubscriptionServiceImpl internal constructor(private val clientOptions: Cl
             return errorHandler.handle(response).parseable {
                 response
                     .use { verifyHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
-        }
-
-        private val webhookHandler: Handler<SubscriptionWebhookResponse> =
-            jsonHandler<SubscriptionWebhookResponse>(clientOptions.jsonMapper)
-
-        override fun webhook(
-            params: SubscriptionWebhookParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<SubscriptionWebhookResponse> {
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.POST)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("api", "v1", "subscription", "webhook")
-                    .apply { params._body()?.let { body(json(clientOptions.jsonMapper, it)) } }
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { webhookHandler.handle(it) }
                     .also {
                         if (requestOptions.responseValidation!!) {
                             it.validate()

@@ -6,6 +6,8 @@ import com.google.errorprone.annotations.MustBeClosed
 import com.inty.api.core.ClientOptions
 import com.inty.api.core.RequestOptions
 import com.inty.api.core.http.HttpResponseFor
+import com.inty.api.models.api.v1.chats.agents.AgentClearMessagesParams
+import com.inty.api.models.api.v1.chats.agents.AgentClearMessagesResponse
 import com.inty.api.models.api.v1.chats.agents.AgentGenerateMessageVoiceParams
 import com.inty.api.models.api.v1.chats.agents.AgentGenerateMessageVoiceResponse
 import com.inty.api.models.api.v1.chats.agents.AgentGetMessagesParams
@@ -28,6 +30,30 @@ interface AgentServiceAsync {
      * The original service is not modified.
      */
     fun withOptions(modifier: (ClientOptions.Builder) -> Unit): AgentServiceAsync
+
+    /**
+     * Clear chat messages by Agent ID, currently used by inty-eval, probably will be used by inty
+     * app as well.
+     */
+    suspend fun clearMessages(
+        agentId: String,
+        params: AgentClearMessagesParams = AgentClearMessagesParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): AgentClearMessagesResponse =
+        clearMessages(params.toBuilder().agentId(agentId).build(), requestOptions)
+
+    /** @see clearMessages */
+    suspend fun clearMessages(
+        params: AgentClearMessagesParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): AgentClearMessagesResponse
+
+    /** @see clearMessages */
+    suspend fun clearMessages(
+        agentId: String,
+        requestOptions: RequestOptions,
+    ): AgentClearMessagesResponse =
+        clearMessages(agentId, AgentClearMessagesParams.none(), requestOptions)
 
     /** Generate voice for a message */
     suspend fun generateMessageVoice(
@@ -119,6 +145,33 @@ interface AgentServiceAsync {
         fun withOptions(
             modifier: (ClientOptions.Builder) -> Unit
         ): AgentServiceAsync.WithRawResponse
+
+        /**
+         * Returns a raw HTTP response for `post /api/v1/chats/agents/{agent_id}/clear-messages`,
+         * but is otherwise the same as [AgentServiceAsync.clearMessages].
+         */
+        @MustBeClosed
+        suspend fun clearMessages(
+            agentId: String,
+            params: AgentClearMessagesParams = AgentClearMessagesParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<AgentClearMessagesResponse> =
+            clearMessages(params.toBuilder().agentId(agentId).build(), requestOptions)
+
+        /** @see clearMessages */
+        @MustBeClosed
+        suspend fun clearMessages(
+            params: AgentClearMessagesParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<AgentClearMessagesResponse>
+
+        /** @see clearMessages */
+        @MustBeClosed
+        suspend fun clearMessages(
+            agentId: String,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<AgentClearMessagesResponse> =
+            clearMessages(agentId, AgentClearMessagesParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `post
