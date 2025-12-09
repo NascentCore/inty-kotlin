@@ -14,8 +14,6 @@ import com.inty.api.models.api.v1.subscription.SubscriptionListPlansParams
 import com.inty.api.models.api.v1.subscription.SubscriptionListPlansResponse
 import com.inty.api.models.api.v1.subscription.SubscriptionVerifyParams
 import com.inty.api.models.api.v1.subscription.SubscriptionVerifyResponse
-import com.inty.api.models.api.v1.subscription.SubscriptionWebhookParams
-import com.inty.api.models.api.v1.subscription.SubscriptionWebhookResponse
 import com.inty.api.services.async.api.v1.subscription.AdminServiceAsync
 
 interface SubscriptionServiceAsync {
@@ -69,16 +67,6 @@ interface SubscriptionServiceAsync {
         params: SubscriptionVerifyParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): SubscriptionVerifyResponse
-
-    /** Google Play Developer Notifications webhook 处理订阅状态变化通知 */
-    suspend fun webhook(
-        params: SubscriptionWebhookParams = SubscriptionWebhookParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): SubscriptionWebhookResponse
-
-    /** @see webhook */
-    suspend fun webhook(requestOptions: RequestOptions): SubscriptionWebhookResponse =
-        webhook(SubscriptionWebhookParams.none(), requestOptions)
 
     /**
      * A view of [SubscriptionServiceAsync] that provides access to raw HTTP responses for each
@@ -157,22 +145,5 @@ interface SubscriptionServiceAsync {
             params: SubscriptionVerifyParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<SubscriptionVerifyResponse>
-
-        /**
-         * Returns a raw HTTP response for `post /api/v1/subscription/webhook`, but is otherwise the
-         * same as [SubscriptionServiceAsync.webhook].
-         */
-        @MustBeClosed
-        suspend fun webhook(
-            params: SubscriptionWebhookParams = SubscriptionWebhookParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<SubscriptionWebhookResponse>
-
-        /** @see webhook */
-        @MustBeClosed
-        suspend fun webhook(
-            requestOptions: RequestOptions
-        ): HttpResponseFor<SubscriptionWebhookResponse> =
-            webhook(SubscriptionWebhookParams.none(), requestOptions)
     }
 }

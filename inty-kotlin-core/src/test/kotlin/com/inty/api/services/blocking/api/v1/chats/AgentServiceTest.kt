@@ -4,6 +4,7 @@ package com.inty.api.services.blocking.api.v1.chats
 
 import com.inty.api.TestServerExtension
 import com.inty.api.client.okhttp.IntyOkHttpClient
+import com.inty.api.models.api.v1.chats.agents.AgentClearMessagesParams
 import com.inty.api.models.api.v1.chats.agents.AgentGenerateMessageVoiceParams
 import com.inty.api.models.api.v1.chats.agents.AgentGetMessagesParams
 import com.inty.api.models.api.v1.chats.agents.AgentUpdateSettingsParams
@@ -13,6 +14,29 @@ import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(TestServerExtension::class)
 internal class AgentServiceTest {
+
+    @Disabled("Prism tests are disabled")
+    @Test
+    fun clearMessages() {
+        val client =
+            IntyOkHttpClient.builder()
+                .baseUrl(TestServerExtension.BASE_URL)
+                .apiKey("My API Key")
+                .build()
+        val agentService = client.api().v1().chats().agents()
+
+        val response =
+            agentService.clearMessages(
+                AgentClearMessagesParams.builder()
+                    .agentId("agent_id")
+                    .messageId(123L)
+                    .requestId("request_id")
+                    .timestamp("2024-01-01T10:00:00Z")
+                    .build()
+            )
+
+        response.validate()
+    }
 
     @Disabled("Prism tests are disabled")
     @Test

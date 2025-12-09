@@ -79,19 +79,4 @@ internal class SubscriptionServiceAsyncTest {
 
         response.validate()
     }
-
-    @Disabled("Prism tests are disabled")
-    @Test
-    suspend fun webhook() {
-        val client =
-            IntyOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
-        val subscriptionServiceAsync = client.api().v1().subscription()
-
-        val response = subscriptionServiceAsync.webhook()
-
-        response.validate()
-    }
 }
