@@ -16,6 +16,8 @@ import com.inty.api.core.http.HttpResponseFor
 import com.inty.api.core.http.json
 import com.inty.api.core.http.parseable
 import com.inty.api.core.prepare
+import com.inty.api.models.api.v1.chats.agents.AgentClearMessagesParams
+import com.inty.api.models.api.v1.chats.agents.AgentClearMessagesResponse
 import com.inty.api.models.api.v1.chats.agents.AgentGenerateMessageVoiceParams
 import com.inty.api.models.api.v1.chats.agents.AgentGenerateMessageVoiceResponse
 import com.inty.api.models.api.v1.chats.agents.AgentGetMessagesParams
@@ -36,6 +38,13 @@ class AgentServiceImpl internal constructor(private val clientOptions: ClientOpt
 
     override fun withOptions(modifier: (ClientOptions.Builder) -> Unit): AgentService =
         AgentServiceImpl(clientOptions.toBuilder().apply(modifier).build())
+
+    override fun clearMessages(
+        params: AgentClearMessagesParams,
+        requestOptions: RequestOptions,
+    ): AgentClearMessagesResponse =
+        // post /api/v1/chats/agents/{agent_id}/clear-messages
+        withRawResponse().clearMessages(params, requestOptions).parse()
 
     override fun generateMessageVoice(
         params: AgentGenerateMessageVoiceParams,
@@ -75,6 +84,44 @@ class AgentServiceImpl internal constructor(private val clientOptions: ClientOpt
             modifier: (ClientOptions.Builder) -> Unit
         ): AgentService.WithRawResponse =
             AgentServiceImpl.WithRawResponseImpl(clientOptions.toBuilder().apply(modifier).build())
+
+        private val clearMessagesHandler: Handler<AgentClearMessagesResponse> =
+            jsonHandler<AgentClearMessagesResponse>(clientOptions.jsonMapper)
+
+        override fun clearMessages(
+            params: AgentClearMessagesParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<AgentClearMessagesResponse> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("agentId", params.agentId())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments(
+                        "api",
+                        "v1",
+                        "chats",
+                        "agents",
+                        params._pathParam(0),
+                        "clear-messages",
+                    )
+                    .body(json(clientOptions.jsonMapper, params._body()))
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response
+                    .use { clearMessagesHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+            }
+        }
 
         private val generateMessageVoiceHandler: Handler<AgentGenerateMessageVoiceResponse> =
             jsonHandler<AgentGenerateMessageVoiceResponse>(clientOptions.jsonMapper)
