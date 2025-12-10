@@ -26,6 +26,7 @@ internal class AgentUpdateParamsTest {
             .characterCardSpec("character_card_spec")
             .characterVersion("character_version")
             .creatorNotes("creator_notes")
+            .energyPoints(1L)
             .extensions(
                 AgentUpdateParams.Extensions.builder()
                     .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -98,6 +99,7 @@ internal class AgentUpdateParamsTest {
                 .characterCardSpec("character_card_spec")
                 .characterVersion("character_version")
                 .creatorNotes("creator_notes")
+                .energyPoints(1L)
                 .extensions(
                     AgentUpdateParams.Extensions.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -158,6 +160,7 @@ internal class AgentUpdateParamsTest {
         assertThat(body.characterCardSpec()).isEqualTo("character_card_spec")
         assertThat(body.characterVersion()).isEqualTo("character_version")
         assertThat(body.creatorNotes()).isEqualTo("creator_notes")
+        assertThat(body.energyPoints()).isEqualTo(1L)
         assertThat(body.extensions())
             .isEqualTo(
                 AgentUpdateParams.Extensions.builder()

@@ -91,6 +91,14 @@ private constructor(
     fun creatorNotes(): String? = body.creatorNotes()
 
     /**
+     * 需要新增的能量点数，会累加到 agent 的积分列中
+     *
+     * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
+     *   responded with an unexpected value).
+     */
+    fun energyPoints(): Long? = body.energyPoints()
+
+    /**
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
      *   responded with an unexpected value).
      */
@@ -298,6 +306,13 @@ private constructor(
      * Unlike [creatorNotes], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _creatorNotes(): JsonField<String> = body._creatorNotes()
+
+    /**
+     * Returns the raw JSON value of [energyPoints].
+     *
+     * Unlike [energyPoints], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _energyPoints(): JsonField<Long> = body._energyPoints()
 
     /**
      * Returns the raw JSON value of [extensions].
@@ -647,6 +662,25 @@ private constructor(
         fun creatorNotes(creatorNotes: JsonField<String>) = apply {
             body.creatorNotes(creatorNotes)
         }
+
+        /** 需要新增的能量点数，会累加到 agent 的积分列中 */
+        fun energyPoints(energyPoints: Long?) = apply { body.energyPoints(energyPoints) }
+
+        /**
+         * Alias for [Builder.energyPoints].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun energyPoints(energyPoints: Long) = energyPoints(energyPoints as Long?)
+
+        /**
+         * Sets [Builder.energyPoints] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.energyPoints] with a well-typed [Long] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun energyPoints(energyPoints: JsonField<Long>) = apply { body.energyPoints(energyPoints) }
 
         fun extensions(extensions: Extensions?) = apply { body.extensions(extensions) }
 
@@ -1060,6 +1094,7 @@ private constructor(
         private val characterCardSpec: JsonField<String>,
         private val characterVersion: JsonField<String>,
         private val creatorNotes: JsonField<String>,
+        private val energyPoints: JsonField<Long>,
         private val extensions: JsonField<Extensions>,
         private val gender: JsonField<String>,
         private val intro: JsonField<String>,
@@ -1114,6 +1149,9 @@ private constructor(
             @JsonProperty("creator_notes")
             @ExcludeMissing
             creatorNotes: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("energy_points")
+            @ExcludeMissing
+            energyPoints: JsonField<Long> = JsonMissing.of(),
             @JsonProperty("extensions")
             @ExcludeMissing
             extensions: JsonField<Extensions> = JsonMissing.of(),
@@ -1174,6 +1212,7 @@ private constructor(
             characterCardSpec,
             characterVersion,
             creatorNotes,
+            energyPoints,
             extensions,
             gender,
             intro,
@@ -1258,6 +1297,14 @@ private constructor(
          *   server responded with an unexpected value).
          */
         fun creatorNotes(): String? = creatorNotes.getNullable("creator_notes")
+
+        /**
+         * 需要新增的能量点数，会累加到 agent 的积分列中
+         *
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun energyPoints(): Long? = energyPoints.getNullable("energy_points")
 
         /**
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -1488,6 +1535,16 @@ private constructor(
         fun _creatorNotes(): JsonField<String> = creatorNotes
 
         /**
+         * Returns the raw JSON value of [energyPoints].
+         *
+         * Unlike [energyPoints], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("energy_points")
+        @ExcludeMissing
+        fun _energyPoints(): JsonField<Long> = energyPoints
+
+        /**
          * Returns the raw JSON value of [extensions].
          *
          * Unlike [extensions], this method doesn't throw if the JSON field has an unexpected type.
@@ -1691,6 +1748,7 @@ private constructor(
             private var characterCardSpec: JsonField<String> = JsonMissing.of()
             private var characterVersion: JsonField<String> = JsonMissing.of()
             private var creatorNotes: JsonField<String> = JsonMissing.of()
+            private var energyPoints: JsonField<Long> = JsonMissing.of()
             private var extensions: JsonField<Extensions> = JsonMissing.of()
             private var gender: JsonField<String> = JsonMissing.of()
             private var intro: JsonField<String> = JsonMissing.of()
@@ -1725,6 +1783,7 @@ private constructor(
                 characterCardSpec = body.characterCardSpec
                 characterVersion = body.characterVersion
                 creatorNotes = body.creatorNotes
+                energyPoints = body.energyPoints
                 extensions = body.extensions
                 gender = body.gender
                 intro = body.intro
@@ -1902,6 +1961,27 @@ private constructor(
              */
             fun creatorNotes(creatorNotes: JsonField<String>) = apply {
                 this.creatorNotes = creatorNotes
+            }
+
+            /** 需要新增的能量点数，会累加到 agent 的积分列中 */
+            fun energyPoints(energyPoints: Long?) = energyPoints(JsonField.ofNullable(energyPoints))
+
+            /**
+             * Alias for [Builder.energyPoints].
+             *
+             * This unboxed primitive overload exists for backwards compatibility.
+             */
+            fun energyPoints(energyPoints: Long) = energyPoints(energyPoints as Long?)
+
+            /**
+             * Sets [Builder.energyPoints] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.energyPoints] with a well-typed [Long] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun energyPoints(energyPoints: JsonField<Long>) = apply {
+                this.energyPoints = energyPoints
             }
 
             fun extensions(extensions: Extensions?) = extensions(JsonField.ofNullable(extensions))
@@ -2219,6 +2299,7 @@ private constructor(
                     characterCardSpec,
                     characterVersion,
                     creatorNotes,
+                    energyPoints,
                     extensions,
                     gender,
                     intro,
@@ -2261,6 +2342,7 @@ private constructor(
             characterCardSpec()
             characterVersion()
             creatorNotes()
+            energyPoints()
             extensions()?.validate()
             gender()
             intro()
@@ -2310,6 +2392,7 @@ private constructor(
                 (if (characterCardSpec.asKnown() == null) 0 else 1) +
                 (if (characterVersion.asKnown() == null) 0 else 1) +
                 (if (creatorNotes.asKnown() == null) 0 else 1) +
+                (if (energyPoints.asKnown() == null) 0 else 1) +
                 (extensions.asKnown()?.validity() ?: 0) +
                 (if (gender.asKnown() == null) 0 else 1) +
                 (if (intro.asKnown() == null) 0 else 1) +
@@ -2348,6 +2431,7 @@ private constructor(
                 characterCardSpec == other.characterCardSpec &&
                 characterVersion == other.characterVersion &&
                 creatorNotes == other.creatorNotes &&
+                energyPoints == other.energyPoints &&
                 extensions == other.extensions &&
                 gender == other.gender &&
                 intro == other.intro &&
@@ -2384,6 +2468,7 @@ private constructor(
                 characterCardSpec,
                 characterVersion,
                 creatorNotes,
+                energyPoints,
                 extensions,
                 gender,
                 intro,
@@ -2412,7 +2497,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{alternateGreetings=$alternateGreetings, avatar=$avatar, background=$background, backgroundAnimated=$backgroundAnimated, backgroundImages=$backgroundImages, category=$category, characterBook=$characterBook, characterCardSpec=$characterCardSpec, characterVersion=$characterVersion, creatorNotes=$creatorNotes, extensions=$extensions, gender=$gender, intro=$intro, llmConfig=$llmConfig, mainPrompt=$mainPrompt, messageExample=$messageExample, metaData=$metaData, modePrompt=$modePrompt, name=$name, opening=$opening, openingAudioUrl=$openingAudioUrl, personality=$personality, photos=$photos, postHistoryInstructions=$postHistoryInstructions, prompt=$prompt, requestId=$requestId, scenario=$scenario, settings=$settings, tags=$tags, visibility=$visibility, voiceId=$voiceId, additionalProperties=$additionalProperties}"
+            "Body{alternateGreetings=$alternateGreetings, avatar=$avatar, background=$background, backgroundAnimated=$backgroundAnimated, backgroundImages=$backgroundImages, category=$category, characterBook=$characterBook, characterCardSpec=$characterCardSpec, characterVersion=$characterVersion, creatorNotes=$creatorNotes, energyPoints=$energyPoints, extensions=$extensions, gender=$gender, intro=$intro, llmConfig=$llmConfig, mainPrompt=$mainPrompt, messageExample=$messageExample, metaData=$metaData, modePrompt=$modePrompt, name=$name, opening=$opening, openingAudioUrl=$openingAudioUrl, personality=$personality, photos=$photos, postHistoryInstructions=$postHistoryInstructions, prompt=$prompt, requestId=$requestId, scenario=$scenario, settings=$settings, tags=$tags, visibility=$visibility, voiceId=$voiceId, additionalProperties=$additionalProperties}"
     }
 
     class CharacterBook

@@ -6,11 +6,14 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.inty.api.core.Enum
 import com.inty.api.core.ExcludeMissing
 import com.inty.api.core.JsonField
 import com.inty.api.core.JsonMissing
 import com.inty.api.core.JsonValue
+import com.inty.api.core.checkKnown
 import com.inty.api.core.checkRequired
+import com.inty.api.core.toImmutable
 import com.inty.api.errors.IntyInvalidDataException
 import java.time.OffsetDateTime
 import java.util.Collections
@@ -25,6 +28,7 @@ private constructor(
     private val createdAt: JsonField<OffsetDateTime>,
     private val isActive: JsonField<Boolean>,
     private val readableId: JsonField<String>,
+    private val actions: JsonField<List<Action>>,
     private val ageGroup: JsonField<String>,
     private val avatar: JsonField<String>,
     private val connectorCount: JsonField<Long>,
@@ -53,6 +57,9 @@ private constructor(
         @JsonProperty("readable_id")
         @ExcludeMissing
         readableId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("actions")
+        @ExcludeMissing
+        actions: JsonField<List<Action>> = JsonMissing.of(),
         @JsonProperty("age_group") @ExcludeMissing ageGroup: JsonField<String> = JsonMissing.of(),
         @JsonProperty("avatar") @ExcludeMissing avatar: JsonField<String> = JsonMissing.of(),
         @JsonProperty("connector_count")
@@ -89,6 +96,7 @@ private constructor(
         createdAt,
         isActive,
         readableId,
+        actions,
         ageGroup,
         avatar,
         connectorCount,
@@ -135,6 +143,12 @@ private constructor(
      *   missing or null (e.g. if the server responded with an unexpected value).
      */
     fun readableId(): String = readableId.getRequired("readable_id")
+
+    /**
+     * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
+     *   responded with an unexpected value).
+     */
+    fun actions(): List<Action>? = actions.getNullable("actions")
 
     /**
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
@@ -259,6 +273,13 @@ private constructor(
      * Unlike [readableId], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("readable_id") @ExcludeMissing fun _readableId(): JsonField<String> = readableId
+
+    /**
+     * Returns the raw JSON value of [actions].
+     *
+     * Unlike [actions], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("actions") @ExcludeMissing fun _actions(): JsonField<List<Action>> = actions
 
     /**
      * Returns the raw JSON value of [ageGroup].
@@ -411,6 +432,7 @@ private constructor(
         private var createdAt: JsonField<OffsetDateTime>? = null
         private var isActive: JsonField<Boolean>? = null
         private var readableId: JsonField<String>? = null
+        private var actions: JsonField<MutableList<Action>>? = null
         private var ageGroup: JsonField<String> = JsonMissing.of()
         private var avatar: JsonField<String> = JsonMissing.of()
         private var connectorCount: JsonField<Long> = JsonMissing.of()
@@ -433,6 +455,7 @@ private constructor(
             createdAt = user.createdAt
             isActive = user.isActive
             readableId = user.readableId
+            actions = user.actions.map { it.toMutableList() }
             ageGroup = user.ageGroup
             avatar = user.avatar
             connectorCount = user.connectorCount
@@ -502,6 +525,31 @@ private constructor(
          * value.
          */
         fun readableId(readableId: JsonField<String>) = apply { this.readableId = readableId }
+
+        fun actions(actions: List<Action>) = actions(JsonField.of(actions))
+
+        /**
+         * Sets [Builder.actions] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.actions] with a well-typed `List<Action>` value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun actions(actions: JsonField<List<Action>>) = apply {
+            this.actions = actions.map { it.toMutableList() }
+        }
+
+        /**
+         * Adds a single [Action] to [actions].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addAction(action: Action) = apply {
+            actions =
+                (actions ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("actions", it).add(action)
+                }
+        }
 
         fun ageGroup(ageGroup: String?) = ageGroup(JsonField.ofNullable(ageGroup))
 
@@ -739,6 +787,7 @@ private constructor(
                 checkRequired("createdAt", createdAt),
                 checkRequired("isActive", isActive),
                 checkRequired("readableId", readableId),
+                (actions ?: JsonMissing.of()).map { it.toImmutable() },
                 ageGroup,
                 avatar,
                 connectorCount,
@@ -769,6 +818,7 @@ private constructor(
         createdAt()
         isActive()
         readableId()
+        actions()?.forEach { it.validate() }
         ageGroup()
         avatar()
         connectorCount()
@@ -805,6 +855,7 @@ private constructor(
             (if (createdAt.asKnown() == null) 0 else 1) +
             (if (isActive.asKnown() == null) 0 else 1) +
             (if (readableId.asKnown() == null) 0 else 1) +
+            (actions.asKnown()?.sumOf { it.validity().toInt() } ?: 0) +
             (if (ageGroup.asKnown() == null) 0 else 1) +
             (if (avatar.asKnown() == null) 0 else 1) +
             (if (connectorCount.asKnown() == null) 0 else 1) +
@@ -820,6 +871,319 @@ private constructor(
             (if (totalPublicAgentsFollows.asKnown() == null) 0 else 1) +
             (if (updatedAt.asKnown() == null) 0 else 1)
 
+    /** 用户行动项 */
+    class Action
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+    private constructor(
+        private val enabled: JsonField<Boolean>,
+        private val type: JsonField<Type>,
+        private val additionalProperties: MutableMap<String, JsonValue>,
+    ) {
+
+        @JsonCreator
+        private constructor(
+            @JsonProperty("enabled") @ExcludeMissing enabled: JsonField<Boolean> = JsonMissing.of(),
+            @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
+        ) : this(enabled, type, mutableMapOf())
+
+        /**
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun enabled(): Boolean = enabled.getRequired("enabled")
+
+        /**
+         * 用户行动类型枚举
+         *
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun type(): Type = type.getRequired("type")
+
+        /**
+         * Returns the raw JSON value of [enabled].
+         *
+         * Unlike [enabled], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("enabled") @ExcludeMissing fun _enabled(): JsonField<Boolean> = enabled
+
+        /**
+         * Returns the raw JSON value of [type].
+         *
+         * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
+
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /**
+             * Returns a mutable builder for constructing an instance of [Action].
+             *
+             * The following fields are required:
+             * ```kotlin
+             * .enabled()
+             * .type()
+             * ```
+             */
+            fun builder() = Builder()
+        }
+
+        /** A builder for [Action]. */
+        class Builder internal constructor() {
+
+            private var enabled: JsonField<Boolean>? = null
+            private var type: JsonField<Type>? = null
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            internal fun from(action: Action) = apply {
+                enabled = action.enabled
+                type = action.type
+                additionalProperties = action.additionalProperties.toMutableMap()
+            }
+
+            fun enabled(enabled: Boolean) = enabled(JsonField.of(enabled))
+
+            /**
+             * Sets [Builder.enabled] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.enabled] with a well-typed [Boolean] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun enabled(enabled: JsonField<Boolean>) = apply { this.enabled = enabled }
+
+            /** 用户行动类型枚举 */
+            fun type(type: Type) = type(JsonField.of(type))
+
+            /**
+             * Sets [Builder.type] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.type] with a well-typed [Type] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun type(type: JsonField<Type>) = apply { this.type = type }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [Action].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             *
+             * The following fields are required:
+             * ```kotlin
+             * .enabled()
+             * .type()
+             * ```
+             *
+             * @throws IllegalStateException if any required field is unset.
+             */
+            fun build(): Action =
+                Action(
+                    checkRequired("enabled", enabled),
+                    checkRequired("type", type),
+                    additionalProperties.toMutableMap(),
+                )
+        }
+
+        private var validated: Boolean = false
+
+        fun validate(): Action = apply {
+            if (validated) {
+                return@apply
+            }
+
+            enabled()
+            type().validate()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: IntyInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        internal fun validity(): Int =
+            (if (enabled.asKnown() == null) 0 else 1) + (type.asKnown()?.validity() ?: 0)
+
+        /** 用户行动类型枚举 */
+        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+            /**
+             * Returns this class instance's raw value.
+             *
+             * This is usually only useful if this instance was deserialized from data that doesn't
+             * match any known member, and you want to know that value. For example, if the SDK is
+             * on an older version than the API, then the API may respond with new members that the
+             * SDK is unaware of.
+             */
+            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+            companion object {
+
+                val REQUEST_FEEDBACK = of("request_feedback")
+
+                fun of(value: String) = Type(JsonField.of(value))
+            }
+
+            /** An enum containing [Type]'s known values. */
+            enum class Known {
+                REQUEST_FEEDBACK
+            }
+
+            /**
+             * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
+             *
+             * An instance of [Type] can contain an unknown value in a couple of cases:
+             * - It was deserialized from data that doesn't match any known member. For example, if
+             *   the SDK is on an older version than the API, then the API may respond with new
+             *   members that the SDK is unaware of.
+             * - It was constructed with an arbitrary value using the [of] method.
+             */
+            enum class Value {
+                REQUEST_FEEDBACK,
+                /** An enum member indicating that [Type] was instantiated with an unknown value. */
+                _UNKNOWN,
+            }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value, or
+             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+             *
+             * Use the [known] method instead if you're certain the value is always known or if you
+             * want to throw for the unknown case.
+             */
+            fun value(): Value =
+                when (this) {
+                    REQUEST_FEEDBACK -> Value.REQUEST_FEEDBACK
+                    else -> Value._UNKNOWN
+                }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value.
+             *
+             * Use the [value] method instead if you're uncertain the value is always known and
+             * don't want to throw for the unknown case.
+             *
+             * @throws IntyInvalidDataException if this class instance's value is a not a known
+             *   member.
+             */
+            fun known(): Known =
+                when (this) {
+                    REQUEST_FEEDBACK -> Known.REQUEST_FEEDBACK
+                    else -> throw IntyInvalidDataException("Unknown Type: $value")
+                }
+
+            /**
+             * Returns this class instance's primitive wire representation.
+             *
+             * This differs from the [toString] method because that method is primarily for
+             * debugging and generally doesn't throw.
+             *
+             * @throws IntyInvalidDataException if this class instance's value does not have the
+             *   expected primitive type.
+             */
+            fun asString(): String =
+                _value().asString() ?: throw IntyInvalidDataException("Value is not a String")
+
+            private var validated: Boolean = false
+
+            fun validate(): Type = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                known()
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: IntyInvalidDataException) {
+                    false
+                }
+
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is Type && value == other.value
+            }
+
+            override fun hashCode() = value.hashCode()
+
+            override fun toString() = value.toString()
+        }
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Action &&
+                enabled == other.enabled &&
+                type == other.type &&
+                additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy { Objects.hash(enabled, type, additionalProperties) }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() =
+            "Action{enabled=$enabled, type=$type, additionalProperties=$additionalProperties}"
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
@@ -831,6 +1195,7 @@ private constructor(
             createdAt == other.createdAt &&
             isActive == other.isActive &&
             readableId == other.readableId &&
+            actions == other.actions &&
             ageGroup == other.ageGroup &&
             avatar == other.avatar &&
             connectorCount == other.connectorCount &&
@@ -855,6 +1220,7 @@ private constructor(
             createdAt,
             isActive,
             readableId,
+            actions,
             ageGroup,
             avatar,
             connectorCount,
@@ -876,5 +1242,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "User{id=$id, authType=$authType, createdAt=$createdAt, isActive=$isActive, readableId=$readableId, ageGroup=$ageGroup, avatar=$avatar, connectorCount=$connectorCount, description=$description, email=$email, followersCount=$followersCount, gender=$gender, isSuperuser=$isSuperuser, nickname=$nickname, phone=$phone, publicAgentsCount=$publicAgentsCount, systemLanguage=$systemLanguage, totalPublicAgentsFollows=$totalPublicAgentsFollows, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
+        "User{id=$id, authType=$authType, createdAt=$createdAt, isActive=$isActive, readableId=$readableId, actions=$actions, ageGroup=$ageGroup, avatar=$avatar, connectorCount=$connectorCount, description=$description, email=$email, followersCount=$followersCount, gender=$gender, isSuperuser=$isSuperuser, nickname=$nickname, phone=$phone, publicAgentsCount=$publicAgentsCount, systemLanguage=$systemLanguage, totalPublicAgentsFollows=$totalPublicAgentsFollows, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
 }
