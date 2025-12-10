@@ -137,6 +137,7 @@ internal class AgentServiceAsyncTest {
                     .characterCardSpec("character_card_spec")
                     .characterVersion("character_version")
                     .creatorNotes("creator_notes")
+                    .energyPoints(1L)
                     .extensions(
                         AgentUpdateParams.Extensions.builder()
                             .putAdditionalProperty("foo", JsonValue.from("bar"))

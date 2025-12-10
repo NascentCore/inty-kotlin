@@ -298,7 +298,16 @@ private constructor(
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
-    /** 清除消息请求 */
+    /**
+     * 清除消息请求（软删除）
+     *
+     * 支持三种模式：
+     * 1. 提供 message_id：清除该ID及其之后的所有消息
+     * 2. 提供 timestamp：清除该时间之后的所有消息
+     * 3. 都不提供：清除全部消息
+     *
+     * 注意：message_id 和 timestamp 不能同时提供
+     */
     class Body
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
