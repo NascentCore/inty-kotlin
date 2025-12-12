@@ -88,6 +88,7 @@ internal class CharacterThemeTest {
                                 .creatorId("creator_id")
                                 .creatorNotes("creator_notes")
                                 .deletedAt(0L)
+                                .energyPoints(0L)
                                 .extensions(
                                     Agent.Extensions.builder()
                                         .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -210,6 +211,7 @@ internal class CharacterThemeTest {
                             .creatorId("creator_id")
                             .creatorNotes("creator_notes")
                             .deletedAt(0L)
+                            .energyPoints(0L)
                             .extensions(
                                 Agent.Extensions.builder()
                                     .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -334,6 +336,7 @@ internal class CharacterThemeTest {
                                 .creatorId("creator_id")
                                 .creatorNotes("creator_notes")
                                 .deletedAt(0L)
+                                .energyPoints(0L)
                                 .extensions(
                                     Agent.Extensions.builder()
                                         .putAdditionalProperty("foo", JsonValue.from("bar"))

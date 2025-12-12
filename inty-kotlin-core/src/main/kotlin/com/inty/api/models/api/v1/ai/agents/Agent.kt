@@ -46,6 +46,7 @@ private constructor(
     private val creatorId: JsonField<String>,
     private val creatorNotes: JsonField<String>,
     private val deletedAt: JsonField<Long>,
+    private val energyPoints: JsonField<Long>,
     private val extensions: JsonField<Extensions>,
     private val followerCount: JsonField<Long>,
     private val intro: JsonField<String>,
@@ -120,6 +121,9 @@ private constructor(
         @ExcludeMissing
         creatorNotes: JsonField<String> = JsonMissing.of(),
         @JsonProperty("deleted_at") @ExcludeMissing deletedAt: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("energy_points")
+        @ExcludeMissing
+        energyPoints: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("extensions")
         @ExcludeMissing
         extensions: JsonField<Extensions> = JsonMissing.of(),
@@ -190,6 +194,7 @@ private constructor(
         creatorId,
         creatorNotes,
         deletedAt,
+        energyPoints,
         extensions,
         followerCount,
         intro,
@@ -362,6 +367,14 @@ private constructor(
      *   responded with an unexpected value).
      */
     fun deletedAt(): Long? = deletedAt.getNullable("deleted_at")
+
+    /**
+     * Agent 当前能量点数，对应数据库 points 列
+     *
+     * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
+     *   responded with an unexpected value).
+     */
+    fun energyPoints(): Long? = energyPoints.getNullable("energy_points")
 
     /**
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
@@ -701,6 +714,15 @@ private constructor(
     @JsonProperty("deleted_at") @ExcludeMissing fun _deletedAt(): JsonField<Long> = deletedAt
 
     /**
+     * Returns the raw JSON value of [energyPoints].
+     *
+     * Unlike [energyPoints], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("energy_points")
+    @ExcludeMissing
+    fun _energyPoints(): JsonField<Long> = energyPoints
+
+    /**
      * Returns the raw JSON value of [extensions].
      *
      * Unlike [extensions], this method doesn't throw if the JSON field has an unexpected type.
@@ -927,6 +949,7 @@ private constructor(
         private var creatorId: JsonField<String> = JsonMissing.of()
         private var creatorNotes: JsonField<String> = JsonMissing.of()
         private var deletedAt: JsonField<Long> = JsonMissing.of()
+        private var energyPoints: JsonField<Long> = JsonMissing.of()
         private var extensions: JsonField<Extensions> = JsonMissing.of()
         private var followerCount: JsonField<Long> = JsonMissing.of()
         private var intro: JsonField<String> = JsonMissing.of()
@@ -975,6 +998,7 @@ private constructor(
             creatorId = agent.creatorId
             creatorNotes = agent.creatorNotes
             deletedAt = agent.deletedAt
+            energyPoints = agent.energyPoints
             extensions = agent.extensions
             followerCount = agent.followerCount
             intro = agent.intro
@@ -1303,6 +1327,18 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun deletedAt(deletedAt: JsonField<Long>) = apply { this.deletedAt = deletedAt }
+
+        /** Agent 当前能量点数，对应数据库 points 列 */
+        fun energyPoints(energyPoints: Long) = energyPoints(JsonField.of(energyPoints))
+
+        /**
+         * Sets [Builder.energyPoints] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.energyPoints] with a well-typed [Long] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun energyPoints(energyPoints: JsonField<Long>) = apply { this.energyPoints = energyPoints }
 
         fun extensions(extensions: Extensions?) = extensions(JsonField.ofNullable(extensions))
 
@@ -1656,6 +1692,7 @@ private constructor(
                 creatorId,
                 creatorNotes,
                 deletedAt,
+                energyPoints,
                 extensions,
                 followerCount,
                 intro,
@@ -1712,6 +1749,7 @@ private constructor(
         creatorId()
         creatorNotes()
         deletedAt()
+        energyPoints()
         extensions()?.validate()
         followerCount()
         intro()
@@ -1774,6 +1812,7 @@ private constructor(
             (if (creatorId.asKnown() == null) 0 else 1) +
             (if (creatorNotes.asKnown() == null) 0 else 1) +
             (if (deletedAt.asKnown() == null) 0 else 1) +
+            (if (energyPoints.asKnown() == null) 0 else 1) +
             (extensions.asKnown()?.validity() ?: 0) +
             (if (followerCount.asKnown() == null) 0 else 1) +
             (if (intro.asKnown() == null) 0 else 1) +
@@ -2628,6 +2667,7 @@ private constructor(
             creatorId == other.creatorId &&
             creatorNotes == other.creatorNotes &&
             deletedAt == other.deletedAt &&
+            energyPoints == other.energyPoints &&
             extensions == other.extensions &&
             followerCount == other.followerCount &&
             intro == other.intro &&
@@ -2678,6 +2718,7 @@ private constructor(
             creatorId,
             creatorNotes,
             deletedAt,
+            energyPoints,
             extensions,
             followerCount,
             intro,
@@ -2707,5 +2748,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Agent{id=$id, createdAt=$createdAt, gender=$gender, name=$name, readableId=$readableId, status=$status, version=$version, alternateGreetings=$alternateGreetings, avatar=$avatar, avatarSize=$avatarSize, background=$background, backgroundAnimated=$backgroundAnimated, backgroundImages=$backgroundImages, backgroundSize=$backgroundSize, category=$category, characterBook=$characterBook, characterCardSpec=$characterCardSpec, characterVersion=$characterVersion, connectorCount=$connectorCount, creator=$creator, creatorId=$creatorId, creatorNotes=$creatorNotes, deletedAt=$deletedAt, extensions=$extensions, followerCount=$followerCount, intro=$intro, isFollowed=$isFollowed, llmConfig=$llmConfig, mainPrompt=$mainPrompt, messageExample=$messageExample, metaData=$metaData, modePrompt=$modePrompt, opening=$opening, openingAudioUrl=$openingAudioUrl, personality=$personality, photos=$photos, postHistoryInstructions=$postHistoryInstructions, prompt=$prompt, scenario=$scenario, settings=$settings, tags=$tags, updatedAt=$updatedAt, user=$user, visibility=$visibility, voiceId=$voiceId, additionalProperties=$additionalProperties}"
+        "Agent{id=$id, createdAt=$createdAt, gender=$gender, name=$name, readableId=$readableId, status=$status, version=$version, alternateGreetings=$alternateGreetings, avatar=$avatar, avatarSize=$avatarSize, background=$background, backgroundAnimated=$backgroundAnimated, backgroundImages=$backgroundImages, backgroundSize=$backgroundSize, category=$category, characterBook=$characterBook, characterCardSpec=$characterCardSpec, characterVersion=$characterVersion, connectorCount=$connectorCount, creator=$creator, creatorId=$creatorId, creatorNotes=$creatorNotes, deletedAt=$deletedAt, energyPoints=$energyPoints, extensions=$extensions, followerCount=$followerCount, intro=$intro, isFollowed=$isFollowed, llmConfig=$llmConfig, mainPrompt=$mainPrompt, messageExample=$messageExample, metaData=$metaData, modePrompt=$modePrompt, opening=$opening, openingAudioUrl=$openingAudioUrl, personality=$personality, photos=$photos, postHistoryInstructions=$postHistoryInstructions, prompt=$prompt, scenario=$scenario, settings=$settings, tags=$tags, updatedAt=$updatedAt, user=$user, visibility=$visibility, voiceId=$voiceId, additionalProperties=$additionalProperties}"
 }

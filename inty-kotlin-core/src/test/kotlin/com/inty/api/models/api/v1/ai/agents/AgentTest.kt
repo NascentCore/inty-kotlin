@@ -72,6 +72,7 @@ internal class AgentTest {
                 .creatorId("creator_id")
                 .creatorNotes("creator_notes")
                 .deletedAt(0L)
+                .energyPoints(0L)
                 .extensions(
                     Agent.Extensions.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -175,6 +176,7 @@ internal class AgentTest {
         assertThat(agent.creatorId()).isEqualTo("creator_id")
         assertThat(agent.creatorNotes()).isEqualTo("creator_notes")
         assertThat(agent.deletedAt()).isEqualTo(0L)
+        assertThat(agent.energyPoints()).isEqualTo(0L)
         assertThat(agent.extensions())
             .isEqualTo(
                 Agent.Extensions.builder()
@@ -281,6 +283,7 @@ internal class AgentTest {
                 .creatorId("creator_id")
                 .creatorNotes("creator_notes")
                 .deletedAt(0L)
+                .energyPoints(0L)
                 .extensions(
                     Agent.Extensions.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
