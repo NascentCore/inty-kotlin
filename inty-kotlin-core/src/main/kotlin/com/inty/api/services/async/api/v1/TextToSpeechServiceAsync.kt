@@ -23,7 +23,7 @@ interface TextToSpeechServiceAsync {
      */
     fun withOptions(modifier: (ClientOptions.Builder) -> Unit): TextToSpeechServiceAsync
 
-    /** 获取 ElevenLabs 可用音色列表，支持搜索和过滤功能 */
+    /** 获取可用音色列表（包含 Gemini TTS 和 ElevenLabs），支持搜索和过滤功能 */
     suspend fun listVoices(
         params: TextToSpeechListVoicesParams = TextToSpeechListVoicesParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
