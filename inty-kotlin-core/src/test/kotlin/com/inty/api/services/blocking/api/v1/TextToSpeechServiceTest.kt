@@ -27,6 +27,7 @@ internal class TextToSpeechServiceTest {
                 TextToSpeechListVoicesParams.builder()
                     .category("category")
                     .pageSize(1L)
+                    .provider("provider")
                     .search("search")
                     .voiceType("voice_type")
                     .build()

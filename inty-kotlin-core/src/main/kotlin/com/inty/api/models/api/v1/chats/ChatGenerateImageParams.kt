@@ -48,6 +48,12 @@ private constructor(
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
      *   responded with an unexpected value).
      */
+    fun model(): String? = body.model()
+
+    /**
+     * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
+     *   responded with an unexpected value).
+     */
     fun requestId(): String? = body.requestId()
 
     /**
@@ -63,6 +69,13 @@ private constructor(
      * Unlike [historyCount], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _historyCount(): JsonField<Long> = body._historyCount()
+
+    /**
+     * Returns the raw JSON value of [model].
+     *
+     * Unlike [model], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _model(): JsonField<String> = body._model()
 
     /**
      * Returns the raw JSON value of [requestId].
@@ -118,6 +131,7 @@ private constructor(
          * Otherwise, it's more convenient to use the top-level setters instead:
          * - [messageId]
          * - [historyCount]
+         * - [model]
          * - [requestId]
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
@@ -149,6 +163,16 @@ private constructor(
          * value.
          */
         fun historyCount(historyCount: JsonField<Long>) = apply { body.historyCount(historyCount) }
+
+        fun model(model: String?) = apply { body.model(model) }
+
+        /**
+         * Sets [Builder.model] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.model] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun model(model: JsonField<String>) = apply { body.model(model) }
 
         fun requestId(requestId: String?) = apply { body.requestId(requestId) }
 
@@ -317,6 +341,7 @@ private constructor(
     private constructor(
         private val messageId: JsonField<Long>,
         private val historyCount: JsonField<Long>,
+        private val model: JsonField<String>,
         private val requestId: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
@@ -329,10 +354,11 @@ private constructor(
             @JsonProperty("history_count")
             @ExcludeMissing
             historyCount: JsonField<Long> = JsonMissing.of(),
+            @JsonProperty("model") @ExcludeMissing model: JsonField<String> = JsonMissing.of(),
             @JsonProperty("request_id")
             @ExcludeMissing
             requestId: JsonField<String> = JsonMissing.of(),
-        ) : this(messageId, historyCount, requestId, mutableMapOf())
+        ) : this(messageId, historyCount, model, requestId, mutableMapOf())
 
         /**
          * @throws IntyInvalidDataException if the JSON field has an unexpected type or is
@@ -345,6 +371,12 @@ private constructor(
          *   server responded with an unexpected value).
          */
         fun historyCount(): Long? = historyCount.getNullable("history_count")
+
+        /**
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun model(): String? = model.getNullable("model")
 
         /**
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -368,6 +400,13 @@ private constructor(
         @JsonProperty("history_count")
         @ExcludeMissing
         fun _historyCount(): JsonField<Long> = historyCount
+
+        /**
+         * Returns the raw JSON value of [model].
+         *
+         * Unlike [model], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("model") @ExcludeMissing fun _model(): JsonField<String> = model
 
         /**
          * Returns the raw JSON value of [requestId].
@@ -406,12 +445,14 @@ private constructor(
 
             private var messageId: JsonField<Long>? = null
             private var historyCount: JsonField<Long> = JsonMissing.of()
+            private var model: JsonField<String> = JsonMissing.of()
             private var requestId: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             internal fun from(body: Body) = apply {
                 messageId = body.messageId
                 historyCount = body.historyCount
+                model = body.model
                 requestId = body.requestId
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
@@ -446,6 +487,17 @@ private constructor(
             fun historyCount(historyCount: JsonField<Long>) = apply {
                 this.historyCount = historyCount
             }
+
+            fun model(model: String?) = model(JsonField.ofNullable(model))
+
+            /**
+             * Sets [Builder.model] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.model] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun model(model: JsonField<String>) = apply { this.model = model }
 
             fun requestId(requestId: String?) = requestId(JsonField.ofNullable(requestId))
 
@@ -493,6 +545,7 @@ private constructor(
                 Body(
                     checkRequired("messageId", messageId),
                     historyCount,
+                    model,
                     requestId,
                     additionalProperties.toMutableMap(),
                 )
@@ -507,6 +560,7 @@ private constructor(
 
             messageId()
             historyCount()
+            model()
             requestId()
             validated = true
         }
@@ -528,6 +582,7 @@ private constructor(
         internal fun validity(): Int =
             (if (messageId.asKnown() == null) 0 else 1) +
                 (if (historyCount.asKnown() == null) 0 else 1) +
+                (if (model.asKnown() == null) 0 else 1) +
                 (if (requestId.asKnown() == null) 0 else 1)
 
         override fun equals(other: Any?): Boolean {
@@ -538,18 +593,19 @@ private constructor(
             return other is Body &&
                 messageId == other.messageId &&
                 historyCount == other.historyCount &&
+                model == other.model &&
                 requestId == other.requestId &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(messageId, historyCount, requestId, additionalProperties)
+            Objects.hash(messageId, historyCount, model, requestId, additionalProperties)
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{messageId=$messageId, historyCount=$historyCount, requestId=$requestId, additionalProperties=$additionalProperties}"
+            "Body{messageId=$messageId, historyCount=$historyCount, model=$model, requestId=$requestId, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

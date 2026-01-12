@@ -95,6 +95,7 @@ internal class ApiResponseListCharacterThemeTest {
                                                 .updatedAt(
                                                     OffsetDateTime.parse("2019-12-27T18:11:19.117Z")
                                                 )
+                                                .userPhoto("user_photo")
                                                 .build()
                                         )
                                         .creatorId("creator_id")
@@ -232,6 +233,7 @@ internal class ApiResponseListCharacterThemeTest {
                                             .updatedAt(
                                                 OffsetDateTime.parse("2019-12-27T18:11:19.117Z")
                                             )
+                                            .userPhoto("user_photo")
                                             .build()
                                     )
                                     .creatorId("creator_id")
@@ -373,6 +375,7 @@ internal class ApiResponseListCharacterThemeTest {
                                                 .updatedAt(
                                                     OffsetDateTime.parse("2019-12-27T18:11:19.117Z")
                                                 )
+                                                .userPhoto("user_photo")
                                                 .build()
                                         )
                                         .creatorId("creator_id")

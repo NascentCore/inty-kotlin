@@ -35,6 +35,7 @@ internal class ProfileServiceAsyncTest {
                     .phone("phone")
                     .requestId("request_id")
                     .systemLanguage("system_language")
+                    .userPhoto("user_photo")
                     .build()
             )
 

@@ -19,6 +19,7 @@ internal class ProfileUpdateParamsTest {
             .phone("phone")
             .requestId("request_id")
             .systemLanguage("system_language")
+            .userPhoto("user_photo")
             .build()
     }
 
@@ -35,6 +36,7 @@ internal class ProfileUpdateParamsTest {
                 .phone("phone")
                 .requestId("request_id")
                 .systemLanguage("system_language")
+                .userPhoto("user_photo")
                 .build()
 
         val body = params._body()
@@ -48,6 +50,7 @@ internal class ProfileUpdateParamsTest {
         assertThat(body.phone()).isEqualTo("phone")
         assertThat(body.requestId()).isEqualTo("request_id")
         assertThat(body.systemLanguage()).isEqualTo("system_language")
+        assertThat(body.userPhoto()).isEqualTo("user_photo")
     }
 
     @Test

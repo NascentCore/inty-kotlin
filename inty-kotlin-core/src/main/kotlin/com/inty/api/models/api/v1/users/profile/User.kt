@@ -43,6 +43,7 @@ private constructor(
     private val systemLanguage: JsonField<String>,
     private val totalPublicAgentsFollows: JsonField<Long>,
     private val updatedAt: JsonField<OffsetDateTime>,
+    private val userPhoto: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -90,6 +91,7 @@ private constructor(
         @JsonProperty("updated_at")
         @ExcludeMissing
         updatedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+        @JsonProperty("user_photo") @ExcludeMissing userPhoto: JsonField<String> = JsonMissing.of(),
     ) : this(
         id,
         authType,
@@ -111,6 +113,7 @@ private constructor(
         systemLanguage,
         totalPublicAgentsFollows,
         updatedAt,
+        userPhoto,
         mutableMapOf(),
     )
 
@@ -236,6 +239,12 @@ private constructor(
      *   responded with an unexpected value).
      */
     fun updatedAt(): OffsetDateTime? = updatedAt.getNullable("updated_at")
+
+    /**
+     * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
+     *   responded with an unexpected value).
+     */
+    fun userPhoto(): String? = userPhoto.getNullable("user_photo")
 
     /**
      * Returns the raw JSON value of [id].
@@ -395,6 +404,13 @@ private constructor(
     @ExcludeMissing
     fun _updatedAt(): JsonField<OffsetDateTime> = updatedAt
 
+    /**
+     * Returns the raw JSON value of [userPhoto].
+     *
+     * Unlike [userPhoto], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("user_photo") @ExcludeMissing fun _userPhoto(): JsonField<String> = userPhoto
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -447,6 +463,7 @@ private constructor(
         private var systemLanguage: JsonField<String> = JsonMissing.of()
         private var totalPublicAgentsFollows: JsonField<Long> = JsonMissing.of()
         private var updatedAt: JsonField<OffsetDateTime> = JsonMissing.of()
+        private var userPhoto: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         internal fun from(user: User) = apply {
@@ -470,6 +487,7 @@ private constructor(
             systemLanguage = user.systemLanguage
             totalPublicAgentsFollows = user.totalPublicAgentsFollows
             updatedAt = user.updatedAt
+            userPhoto = user.userPhoto
             additionalProperties = user.additionalProperties.toMutableMap()
         }
 
@@ -745,6 +763,17 @@ private constructor(
          */
         fun updatedAt(updatedAt: JsonField<OffsetDateTime>) = apply { this.updatedAt = updatedAt }
 
+        fun userPhoto(userPhoto: String?) = userPhoto(JsonField.ofNullable(userPhoto))
+
+        /**
+         * Sets [Builder.userPhoto] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.userPhoto] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun userPhoto(userPhoto: JsonField<String>) = apply { this.userPhoto = userPhoto }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -802,6 +831,7 @@ private constructor(
                 systemLanguage,
                 totalPublicAgentsFollows,
                 updatedAt,
+                userPhoto,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -833,6 +863,7 @@ private constructor(
         systemLanguage()
         totalPublicAgentsFollows()
         updatedAt()
+        userPhoto()
         validated = true
     }
 
@@ -869,7 +900,8 @@ private constructor(
             (if (publicAgentsCount.asKnown() == null) 0 else 1) +
             (if (systemLanguage.asKnown() == null) 0 else 1) +
             (if (totalPublicAgentsFollows.asKnown() == null) 0 else 1) +
-            (if (updatedAt.asKnown() == null) 0 else 1)
+            (if (updatedAt.asKnown() == null) 0 else 1) +
+            (if (userPhoto.asKnown() == null) 0 else 1)
 
     /** 用户行动项 */
     class Action
@@ -1210,6 +1242,7 @@ private constructor(
             systemLanguage == other.systemLanguage &&
             totalPublicAgentsFollows == other.totalPublicAgentsFollows &&
             updatedAt == other.updatedAt &&
+            userPhoto == other.userPhoto &&
             additionalProperties == other.additionalProperties
     }
 
@@ -1235,6 +1268,7 @@ private constructor(
             systemLanguage,
             totalPublicAgentsFollows,
             updatedAt,
+            userPhoto,
             additionalProperties,
         )
     }
@@ -1242,5 +1276,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "User{id=$id, authType=$authType, createdAt=$createdAt, isActive=$isActive, readableId=$readableId, actions=$actions, ageGroup=$ageGroup, avatar=$avatar, connectorCount=$connectorCount, description=$description, email=$email, followersCount=$followersCount, gender=$gender, isSuperuser=$isSuperuser, nickname=$nickname, phone=$phone, publicAgentsCount=$publicAgentsCount, systemLanguage=$systemLanguage, totalPublicAgentsFollows=$totalPublicAgentsFollows, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
+        "User{id=$id, authType=$authType, createdAt=$createdAt, isActive=$isActive, readableId=$readableId, actions=$actions, ageGroup=$ageGroup, avatar=$avatar, connectorCount=$connectorCount, description=$description, email=$email, followersCount=$followersCount, gender=$gender, isSuperuser=$isSuperuser, nickname=$nickname, phone=$phone, publicAgentsCount=$publicAgentsCount, systemLanguage=$systemLanguage, totalPublicAgentsFollows=$totalPublicAgentsFollows, updatedAt=$updatedAt, userPhoto=$userPhoto, additionalProperties=$additionalProperties}"
 }

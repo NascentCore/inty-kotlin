@@ -7,27 +7,31 @@ import com.inty.api.core.http.Headers
 import com.inty.api.core.http.QueryParams
 import java.util.Objects
 
-/** 获取 ElevenLabs 可用音色列表，支持搜索和过滤功能 */
+/** 获取可用音色列表（包含 Gemini TTS 和 ElevenLabs），支持搜索和过滤功能 */
 class TextToSpeechListVoicesParams
 private constructor(
     private val category: String?,
     private val pageSize: Long?,
+    private val provider: String?,
     private val search: String?,
     private val voiceType: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    /** 音色分类过滤 (如: premade, cloned) */
+    /** 音色分类过滤 (如: prebuilt, premade, cloned) */
     fun category(): String? = category
 
     /** 每页返回结果数，默认返回所有音色，最大1000 */
     fun pageSize(): Long? = pageSize
 
+    /** TTS 服务提供商过滤 ("gemini" 或 "elevenlabs"，不传则返回所有) */
+    fun provider(): String? = provider
+
     /** 搜索音色名称关键词 */
     fun search(): String? = search
 
-    /** 音色类型过滤 (如: personal, community) */
+    /** 音色类型过滤 (如: personal, preset) */
     fun voiceType(): String? = voiceType
 
     /** Additional headers to send with the request. */
@@ -53,6 +57,7 @@ private constructor(
 
         private var category: String? = null
         private var pageSize: Long? = null
+        private var provider: String? = null
         private var search: String? = null
         private var voiceType: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
@@ -61,13 +66,14 @@ private constructor(
         internal fun from(textToSpeechListVoicesParams: TextToSpeechListVoicesParams) = apply {
             category = textToSpeechListVoicesParams.category
             pageSize = textToSpeechListVoicesParams.pageSize
+            provider = textToSpeechListVoicesParams.provider
             search = textToSpeechListVoicesParams.search
             voiceType = textToSpeechListVoicesParams.voiceType
             additionalHeaders = textToSpeechListVoicesParams.additionalHeaders.toBuilder()
             additionalQueryParams = textToSpeechListVoicesParams.additionalQueryParams.toBuilder()
         }
 
-        /** 音色分类过滤 (如: premade, cloned) */
+        /** 音色分类过滤 (如: prebuilt, premade, cloned) */
         fun category(category: String?) = apply { this.category = category }
 
         /** 每页返回结果数，默认返回所有音色，最大1000 */
@@ -80,10 +86,13 @@ private constructor(
          */
         fun pageSize(pageSize: Long) = pageSize(pageSize as Long?)
 
+        /** TTS 服务提供商过滤 ("gemini" 或 "elevenlabs"，不传则返回所有) */
+        fun provider(provider: String?) = apply { this.provider = provider }
+
         /** 搜索音色名称关键词 */
         fun search(search: String?) = apply { this.search = search }
 
-        /** 音色类型过滤 (如: personal, community) */
+        /** 音色类型过滤 (如: personal, preset) */
         fun voiceType(voiceType: String?) = apply { this.voiceType = voiceType }
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
@@ -193,6 +202,7 @@ private constructor(
             TextToSpeechListVoicesParams(
                 category,
                 pageSize,
+                provider,
                 search,
                 voiceType,
                 additionalHeaders.build(),
@@ -207,6 +217,7 @@ private constructor(
             .apply {
                 category?.let { put("category", it) }
                 pageSize?.let { put("page_size", it.toString()) }
+                provider?.let { put("provider", it) }
                 search?.let { put("search", it) }
                 voiceType?.let { put("voice_type", it) }
                 putAll(additionalQueryParams)
@@ -221,6 +232,7 @@ private constructor(
         return other is TextToSpeechListVoicesParams &&
             category == other.category &&
             pageSize == other.pageSize &&
+            provider == other.provider &&
             search == other.search &&
             voiceType == other.voiceType &&
             additionalHeaders == other.additionalHeaders &&
@@ -231,6 +243,7 @@ private constructor(
         Objects.hash(
             category,
             pageSize,
+            provider,
             search,
             voiceType,
             additionalHeaders,
@@ -238,5 +251,5 @@ private constructor(
         )
 
     override fun toString() =
-        "TextToSpeechListVoicesParams{category=$category, pageSize=$pageSize, search=$search, voiceType=$voiceType, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "TextToSpeechListVoicesParams{category=$category, pageSize=$pageSize, provider=$provider, search=$search, voiceType=$voiceType, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

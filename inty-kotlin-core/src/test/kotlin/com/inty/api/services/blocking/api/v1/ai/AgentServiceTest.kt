@@ -169,6 +169,7 @@ internal class AgentServiceTest {
                     .addPhoto("string")
                     .postHistoryInstructions("post_history_instructions")
                     .prompt("prompt")
+                    .replaceBackgroundImages(true)
                     .requestId("request_id")
                     .scenario("scenario")
                     .settings(
