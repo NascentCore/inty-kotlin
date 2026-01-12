@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.27.0 (2026-01-12)
+
+Full Changelog: [v0.26.0...v0.27.0](https://github.com/NascentCore/inty-kotlin/compare/v0.26.0...v0.27.0)
+
+### Features
+
+* **api:** manual updates ([c176a6e](https://github.com/NascentCore/inty-kotlin/commit/c176a6e531097dd2071b5c42db247d1c9be6e3fb))
+* **client:** add `HttpRequest#url()` method ([33d3216](https://github.com/NascentCore/inty-kotlin/commit/33d32167a435e93fe9563fab94d56a7f5d41f315))
+* **client:** allow configuring dispatcher executor service ([23670ae](https://github.com/NascentCore/inty-kotlin/commit/23670aeb18d4f0f69c9a7ae3e7f344c0e3f79964))
+
+
+### Chores
+
+* **internal:** codegen related update ([ef22770](https://github.com/NascentCore/inty-kotlin/commit/ef227701ad541f4cffd7c7517df96aba970f1461))
+* **internal:** codegen related update ([cf4e0eb](https://github.com/NascentCore/inty-kotlin/commit/cf4e0ebfaeb65729e8ff06aa2f47c11c93183509))
+* **internal:** codegen related update ([7a388b4](https://github.com/NascentCore/inty-kotlin/commit/7a388b4a1c1dba1a02db99ead15305f79617882d))
+* **internal:** codegen related update ([15d85ae](https://github.com/NascentCore/inty-kotlin/commit/15d85ae283e8ca71c5f9ea720cf959f7eeded3a6))
+* **internal:** codegen related update ([dbd831c](https://github.com/NascentCore/inty-kotlin/commit/dbd831c0bb362f10dc22036d075f531e310cb987))
+* **internal:** codegen related update ([8602867](https://github.com/NascentCore/inty-kotlin/commit/86028674454760ee70987c071d053f4d3170bbbd))
+
 ## 0.26.0 (2025-12-12)
 
 Full Changelog: [v0.25.0...v0.26.0](https://github.com/NascentCore/inty-kotlin/compare/v0.25.0...v0.26.0)
