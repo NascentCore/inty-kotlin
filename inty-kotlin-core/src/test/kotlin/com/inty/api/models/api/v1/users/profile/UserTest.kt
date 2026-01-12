@@ -39,6 +39,7 @@ internal class UserTest {
                 .systemLanguage("system_language")
                 .totalPublicAgentsFollows(0L)
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .userPhoto("user_photo")
                 .build()
 
         assertThat(user.id()).isEqualTo("id")
@@ -64,6 +65,7 @@ internal class UserTest {
         assertThat(user.systemLanguage()).isEqualTo("system_language")
         assertThat(user.totalPublicAgentsFollows()).isEqualTo(0L)
         assertThat(user.updatedAt()).isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+        assertThat(user.userPhoto()).isEqualTo("user_photo")
     }
 
     @Test
@@ -96,6 +98,7 @@ internal class UserTest {
                 .systemLanguage("system_language")
                 .totalPublicAgentsFollows(0L)
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .userPhoto("user_photo")
                 .build()
 
         val roundtrippedUser =

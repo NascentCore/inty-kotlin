@@ -451,6 +451,8 @@ private constructor(
             private val imageUrl: JsonField<String>,
             private val messageId: JsonField<Long>,
             private val prompt: JsonField<String>,
+            private val generationTimeMs: JsonField<Long>,
+            private val model: JsonField<String>,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
 
@@ -465,8 +467,22 @@ private constructor(
                 @JsonProperty("message_id")
                 @ExcludeMissing
                 messageId: JsonField<Long> = JsonMissing.of(),
-                @JsonProperty("prompt") @ExcludeMissing prompt: JsonField<String> = JsonMissing.of(),
-            ) : this(imageMetadata, imageUrl, messageId, prompt, mutableMapOf())
+                @JsonProperty("prompt")
+                @ExcludeMissing
+                prompt: JsonField<String> = JsonMissing.of(),
+                @JsonProperty("generation_time_ms")
+                @ExcludeMissing
+                generationTimeMs: JsonField<Long> = JsonMissing.of(),
+                @JsonProperty("model") @ExcludeMissing model: JsonField<String> = JsonMissing.of(),
+            ) : this(
+                imageMetadata,
+                imageUrl,
+                messageId,
+                prompt,
+                generationTimeMs,
+                model,
+                mutableMapOf(),
+            )
 
             /**
              * @throws IntyInvalidDataException if the JSON field has an unexpected type or is
@@ -495,6 +511,18 @@ private constructor(
              *   value).
              */
             fun prompt(): String = prompt.getRequired("prompt")
+
+            /**
+             * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if
+             *   the server responded with an unexpected value).
+             */
+            fun generationTimeMs(): Long? = generationTimeMs.getNullable("generation_time_ms")
+
+            /**
+             * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if
+             *   the server responded with an unexpected value).
+             */
+            fun model(): String? = model.getNullable("model")
 
             /**
              * Returns the raw JSON value of [imageMetadata].
@@ -530,6 +558,23 @@ private constructor(
              * Unlike [prompt], this method doesn't throw if the JSON field has an unexpected type.
              */
             @JsonProperty("prompt") @ExcludeMissing fun _prompt(): JsonField<String> = prompt
+
+            /**
+             * Returns the raw JSON value of [generationTimeMs].
+             *
+             * Unlike [generationTimeMs], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("generation_time_ms")
+            @ExcludeMissing
+            fun _generationTimeMs(): JsonField<Long> = generationTimeMs
+
+            /**
+             * Returns the raw JSON value of [model].
+             *
+             * Unlike [model], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("model") @ExcludeMissing fun _model(): JsonField<String> = model
 
             @JsonAnySetter
             private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -567,6 +612,8 @@ private constructor(
                 private var imageUrl: JsonField<String>? = null
                 private var messageId: JsonField<Long>? = null
                 private var prompt: JsonField<String>? = null
+                private var generationTimeMs: JsonField<Long> = JsonMissing.of()
+                private var model: JsonField<String> = JsonMissing.of()
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 internal fun from(chatImageGenerationResponse: ChatImageGenerationResponse) =
@@ -575,6 +622,8 @@ private constructor(
                         imageUrl = chatImageGenerationResponse.imageUrl
                         messageId = chatImageGenerationResponse.messageId
                         prompt = chatImageGenerationResponse.prompt
+                        generationTimeMs = chatImageGenerationResponse.generationTimeMs
+                        model = chatImageGenerationResponse.model
                         additionalProperties =
                             chatImageGenerationResponse.additionalProperties.toMutableMap()
                     }
@@ -626,6 +675,39 @@ private constructor(
                  */
                 fun prompt(prompt: JsonField<String>) = apply { this.prompt = prompt }
 
+                fun generationTimeMs(generationTimeMs: Long?) =
+                    generationTimeMs(JsonField.ofNullable(generationTimeMs))
+
+                /**
+                 * Alias for [Builder.generationTimeMs].
+                 *
+                 * This unboxed primitive overload exists for backwards compatibility.
+                 */
+                fun generationTimeMs(generationTimeMs: Long) =
+                    generationTimeMs(generationTimeMs as Long?)
+
+                /**
+                 * Sets [Builder.generationTimeMs] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.generationTimeMs] with a well-typed [Long] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun generationTimeMs(generationTimeMs: JsonField<Long>) = apply {
+                    this.generationTimeMs = generationTimeMs
+                }
+
+                fun model(model: String?) = model(JsonField.ofNullable(model))
+
+                /**
+                 * Sets [Builder.model] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.model] with a well-typed [String] value instead.
+                 * This method is primarily for setting the field to an undocumented or not yet
+                 * supported value.
+                 */
+                fun model(model: JsonField<String>) = apply { this.model = model }
+
                 fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                     this.additionalProperties.clear()
                     putAllAdditionalProperties(additionalProperties)
@@ -669,6 +751,8 @@ private constructor(
                         checkRequired("imageUrl", imageUrl),
                         checkRequired("messageId", messageId),
                         checkRequired("prompt", prompt),
+                        generationTimeMs,
+                        model,
                         additionalProperties.toMutableMap(),
                     )
             }
@@ -684,6 +768,8 @@ private constructor(
                 imageUrl()
                 messageId()
                 prompt()
+                generationTimeMs()
+                model()
                 validated = true
             }
 
@@ -705,7 +791,9 @@ private constructor(
                 (imageMetadata.asKnown()?.validity() ?: 0) +
                     (if (imageUrl.asKnown() == null) 0 else 1) +
                     (if (messageId.asKnown() == null) 0 else 1) +
-                    (if (prompt.asKnown() == null) 0 else 1)
+                    (if (prompt.asKnown() == null) 0 else 1) +
+                    (if (generationTimeMs.asKnown() == null) 0 else 1) +
+                    (if (model.asKnown() == null) 0 else 1)
 
             class ImageMetadata
             @JsonCreator
@@ -823,17 +911,27 @@ private constructor(
                     imageUrl == other.imageUrl &&
                     messageId == other.messageId &&
                     prompt == other.prompt &&
+                    generationTimeMs == other.generationTimeMs &&
+                    model == other.model &&
                     additionalProperties == other.additionalProperties
             }
 
             private val hashCode: Int by lazy {
-                Objects.hash(imageMetadata, imageUrl, messageId, prompt, additionalProperties)
+                Objects.hash(
+                    imageMetadata,
+                    imageUrl,
+                    messageId,
+                    prompt,
+                    generationTimeMs,
+                    model,
+                    additionalProperties,
+                )
             }
 
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "ChatImageGenerationResponse{imageMetadata=$imageMetadata, imageUrl=$imageUrl, messageId=$messageId, prompt=$prompt, additionalProperties=$additionalProperties}"
+                "ChatImageGenerationResponse{imageMetadata=$imageMetadata, imageUrl=$imageUrl, messageId=$messageId, prompt=$prompt, generationTimeMs=$generationTimeMs, model=$model, additionalProperties=$additionalProperties}"
         }
 
         class UsageLimitExceeded

@@ -195,6 +195,14 @@ private constructor(
     @Deprecated("deprecated") fun prompt(): String? = body.prompt()
 
     /**
+     * 是否替换 background_images 列表。为 True 时完全替换，为 False 或 None 时追加
+     *
+     * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
+     *   responded with an unexpected value).
+     */
+    fun replaceBackgroundImages(): Boolean? = body.replaceBackgroundImages()
+
+    /**
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
      *   responded with an unexpected value).
      */
@@ -419,6 +427,14 @@ private constructor(
      * Unlike [prompt], this method doesn't throw if the JSON field has an unexpected type.
      */
     @Deprecated("deprecated") fun _prompt(): JsonField<String> = body._prompt()
+
+    /**
+     * Returns the raw JSON value of [replaceBackgroundImages].
+     *
+     * Unlike [replaceBackgroundImages], this method doesn't throw if the JSON field has an
+     * unexpected type.
+     */
+    fun _replaceBackgroundImages(): JsonField<Boolean> = body._replaceBackgroundImages()
 
     /**
      * Returns the raw JSON value of [requestId].
@@ -863,6 +879,30 @@ private constructor(
         @Deprecated("deprecated")
         fun prompt(prompt: JsonField<String>) = apply { body.prompt(prompt) }
 
+        /** 是否替换 background_images 列表。为 True 时完全替换，为 False 或 None 时追加 */
+        fun replaceBackgroundImages(replaceBackgroundImages: Boolean?) = apply {
+            body.replaceBackgroundImages(replaceBackgroundImages)
+        }
+
+        /**
+         * Alias for [Builder.replaceBackgroundImages].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun replaceBackgroundImages(replaceBackgroundImages: Boolean) =
+            replaceBackgroundImages(replaceBackgroundImages as Boolean?)
+
+        /**
+         * Sets [Builder.replaceBackgroundImages] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.replaceBackgroundImages] with a well-typed [Boolean]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun replaceBackgroundImages(replaceBackgroundImages: JsonField<Boolean>) = apply {
+            body.replaceBackgroundImages(replaceBackgroundImages)
+        }
+
         fun requestId(requestId: String?) = apply { body.requestId(requestId) }
 
         /**
@@ -1110,6 +1150,7 @@ private constructor(
         private val photos: JsonField<List<String>>,
         private val postHistoryInstructions: JsonField<String>,
         private val prompt: JsonField<String>,
+        private val replaceBackgroundImages: JsonField<Boolean>,
         private val requestId: JsonField<String>,
         private val scenario: JsonField<String>,
         private val settings: JsonField<Settings>,
@@ -1187,6 +1228,9 @@ private constructor(
             @ExcludeMissing
             postHistoryInstructions: JsonField<String> = JsonMissing.of(),
             @JsonProperty("prompt") @ExcludeMissing prompt: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("replace_background_images")
+            @ExcludeMissing
+            replaceBackgroundImages: JsonField<Boolean> = JsonMissing.of(),
             @JsonProperty("request_id")
             @ExcludeMissing
             requestId: JsonField<String> = JsonMissing.of(),
@@ -1228,6 +1272,7 @@ private constructor(
             photos,
             postHistoryInstructions,
             prompt,
+            replaceBackgroundImages,
             requestId,
             scenario,
             settings,
@@ -1402,6 +1447,15 @@ private constructor(
          *   server responded with an unexpected value).
          */
         @Deprecated("deprecated") fun prompt(): String? = prompt.getNullable("prompt")
+
+        /**
+         * 是否替换 background_images 列表。为 True 时完全替换，为 False 或 None 时追加
+         *
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun replaceBackgroundImages(): Boolean? =
+            replaceBackgroundImages.getNullable("replace_background_images")
 
         /**
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -1674,6 +1728,16 @@ private constructor(
         fun _prompt(): JsonField<String> = prompt
 
         /**
+         * Returns the raw JSON value of [replaceBackgroundImages].
+         *
+         * Unlike [replaceBackgroundImages], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("replace_background_images")
+        @ExcludeMissing
+        fun _replaceBackgroundImages(): JsonField<Boolean> = replaceBackgroundImages
+
+        /**
          * Returns the raw JSON value of [requestId].
          *
          * Unlike [requestId], this method doesn't throw if the JSON field has an unexpected type.
@@ -1764,6 +1828,7 @@ private constructor(
             private var photos: JsonField<MutableList<String>>? = null
             private var postHistoryInstructions: JsonField<String> = JsonMissing.of()
             private var prompt: JsonField<String> = JsonMissing.of()
+            private var replaceBackgroundImages: JsonField<Boolean> = JsonMissing.of()
             private var requestId: JsonField<String> = JsonMissing.of()
             private var scenario: JsonField<String> = JsonMissing.of()
             private var settings: JsonField<Settings> = JsonMissing.of()
@@ -1799,6 +1864,7 @@ private constructor(
                 photos = body.photos.map { it.toMutableList() }
                 postHistoryInstructions = body.postHistoryInstructions
                 prompt = body.prompt
+                replaceBackgroundImages = body.replaceBackgroundImages
                 requestId = body.requestId
                 scenario = body.scenario
                 settings = body.settings
@@ -2181,6 +2247,29 @@ private constructor(
             @Deprecated("deprecated")
             fun prompt(prompt: JsonField<String>) = apply { this.prompt = prompt }
 
+            /** 是否替换 background_images 列表。为 True 时完全替换，为 False 或 None 时追加 */
+            fun replaceBackgroundImages(replaceBackgroundImages: Boolean?) =
+                replaceBackgroundImages(JsonField.ofNullable(replaceBackgroundImages))
+
+            /**
+             * Alias for [Builder.replaceBackgroundImages].
+             *
+             * This unboxed primitive overload exists for backwards compatibility.
+             */
+            fun replaceBackgroundImages(replaceBackgroundImages: Boolean) =
+                replaceBackgroundImages(replaceBackgroundImages as Boolean?)
+
+            /**
+             * Sets [Builder.replaceBackgroundImages] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.replaceBackgroundImages] with a well-typed [Boolean]
+             * value instead. This method is primarily for setting the field to an undocumented or
+             * not yet supported value.
+             */
+            fun replaceBackgroundImages(replaceBackgroundImages: JsonField<Boolean>) = apply {
+                this.replaceBackgroundImages = replaceBackgroundImages
+            }
+
             fun requestId(requestId: String?) = requestId(JsonField.ofNullable(requestId))
 
             /**
@@ -2315,6 +2404,7 @@ private constructor(
                     (photos ?: JsonMissing.of()).map { it.toImmutable() },
                     postHistoryInstructions,
                     prompt,
+                    replaceBackgroundImages,
                     requestId,
                     scenario,
                     settings,
@@ -2358,6 +2448,7 @@ private constructor(
             photos()
             postHistoryInstructions()
             prompt()
+            replaceBackgroundImages()
             requestId()
             scenario()
             settings()?.validate()
@@ -2408,6 +2499,7 @@ private constructor(
                 (photos.asKnown()?.size ?: 0) +
                 (if (postHistoryInstructions.asKnown() == null) 0 else 1) +
                 (if (prompt.asKnown() == null) 0 else 1) +
+                (if (replaceBackgroundImages.asKnown() == null) 0 else 1) +
                 (if (requestId.asKnown() == null) 0 else 1) +
                 (if (scenario.asKnown() == null) 0 else 1) +
                 (settings.asKnown()?.validity() ?: 0) +
@@ -2447,6 +2539,7 @@ private constructor(
                 photos == other.photos &&
                 postHistoryInstructions == other.postHistoryInstructions &&
                 prompt == other.prompt &&
+                replaceBackgroundImages == other.replaceBackgroundImages &&
                 requestId == other.requestId &&
                 scenario == other.scenario &&
                 settings == other.settings &&
@@ -2484,6 +2577,7 @@ private constructor(
                 photos,
                 postHistoryInstructions,
                 prompt,
+                replaceBackgroundImages,
                 requestId,
                 scenario,
                 settings,
@@ -2497,7 +2591,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{alternateGreetings=$alternateGreetings, avatar=$avatar, background=$background, backgroundAnimated=$backgroundAnimated, backgroundImages=$backgroundImages, category=$category, characterBook=$characterBook, characterCardSpec=$characterCardSpec, characterVersion=$characterVersion, creatorNotes=$creatorNotes, energyPoints=$energyPoints, extensions=$extensions, gender=$gender, intro=$intro, llmConfig=$llmConfig, mainPrompt=$mainPrompt, messageExample=$messageExample, metaData=$metaData, modePrompt=$modePrompt, name=$name, opening=$opening, openingAudioUrl=$openingAudioUrl, personality=$personality, photos=$photos, postHistoryInstructions=$postHistoryInstructions, prompt=$prompt, requestId=$requestId, scenario=$scenario, settings=$settings, tags=$tags, visibility=$visibility, voiceId=$voiceId, additionalProperties=$additionalProperties}"
+            "Body{alternateGreetings=$alternateGreetings, avatar=$avatar, background=$background, backgroundAnimated=$backgroundAnimated, backgroundImages=$backgroundImages, category=$category, characterBook=$characterBook, characterCardSpec=$characterCardSpec, characterVersion=$characterVersion, creatorNotes=$creatorNotes, energyPoints=$energyPoints, extensions=$extensions, gender=$gender, intro=$intro, llmConfig=$llmConfig, mainPrompt=$mainPrompt, messageExample=$messageExample, metaData=$metaData, modePrompt=$modePrompt, name=$name, opening=$opening, openingAudioUrl=$openingAudioUrl, personality=$personality, photos=$photos, postHistoryInstructions=$postHistoryInstructions, prompt=$prompt, replaceBackgroundImages=$replaceBackgroundImages, requestId=$requestId, scenario=$scenario, settings=$settings, tags=$tags, visibility=$visibility, voiceId=$voiceId, additionalProperties=$additionalProperties}"
     }
 
     class CharacterBook

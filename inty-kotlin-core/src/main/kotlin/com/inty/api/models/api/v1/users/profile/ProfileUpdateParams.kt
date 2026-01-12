@@ -82,6 +82,12 @@ private constructor(
     fun systemLanguage(): String? = body.systemLanguage()
 
     /**
+     * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
+     *   responded with an unexpected value).
+     */
+    fun userPhoto(): String? = body.userPhoto()
+
+    /**
      * Returns the raw JSON value of [ageGroup].
      *
      * Unlike [ageGroup], this method doesn't throw if the JSON field has an unexpected type.
@@ -143,6 +149,13 @@ private constructor(
      * Unlike [systemLanguage], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _systemLanguage(): JsonField<String> = body._systemLanguage()
+
+    /**
+     * Returns the raw JSON value of [userPhoto].
+     *
+     * Unlike [userPhoto], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _userPhoto(): JsonField<String> = body._userPhoto()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -284,6 +297,17 @@ private constructor(
         fun systemLanguage(systemLanguage: JsonField<String>) = apply {
             body.systemLanguage(systemLanguage)
         }
+
+        fun userPhoto(userPhoto: String?) = apply { body.userPhoto(userPhoto) }
+
+        /**
+         * Sets [Builder.userPhoto] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.userPhoto] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun userPhoto(userPhoto: JsonField<String>) = apply { body.userPhoto(userPhoto) }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
@@ -434,6 +458,7 @@ private constructor(
         private val phone: JsonField<String>,
         private val requestId: JsonField<String>,
         private val systemLanguage: JsonField<String>,
+        private val userPhoto: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -458,6 +483,9 @@ private constructor(
             @JsonProperty("system_language")
             @ExcludeMissing
             systemLanguage: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("user_photo")
+            @ExcludeMissing
+            userPhoto: JsonField<String> = JsonMissing.of(),
         ) : this(
             ageGroup,
             avatar,
@@ -468,6 +496,7 @@ private constructor(
             phone,
             requestId,
             systemLanguage,
+            userPhoto,
             mutableMapOf(),
         )
 
@@ -526,6 +555,12 @@ private constructor(
          *   server responded with an unexpected value).
          */
         fun systemLanguage(): String? = systemLanguage.getNullable("system_language")
+
+        /**
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun userPhoto(): String? = userPhoto.getNullable("user_photo")
 
         /**
          * Returns the raw JSON value of [ageGroup].
@@ -595,6 +630,13 @@ private constructor(
         @ExcludeMissing
         fun _systemLanguage(): JsonField<String> = systemLanguage
 
+        /**
+         * Returns the raw JSON value of [userPhoto].
+         *
+         * Unlike [userPhoto], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("user_photo") @ExcludeMissing fun _userPhoto(): JsonField<String> = userPhoto
+
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
             additionalProperties.put(key, value)
@@ -625,6 +667,7 @@ private constructor(
             private var phone: JsonField<String> = JsonMissing.of()
             private var requestId: JsonField<String> = JsonMissing.of()
             private var systemLanguage: JsonField<String> = JsonMissing.of()
+            private var userPhoto: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             internal fun from(body: Body) = apply {
@@ -637,6 +680,7 @@ private constructor(
                 phone = body.phone
                 requestId = body.requestId
                 systemLanguage = body.systemLanguage
+                userPhoto = body.userPhoto
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
@@ -745,6 +789,17 @@ private constructor(
                 this.systemLanguage = systemLanguage
             }
 
+            fun userPhoto(userPhoto: String?) = userPhoto(JsonField.ofNullable(userPhoto))
+
+            /**
+             * Sets [Builder.userPhoto] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.userPhoto] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun userPhoto(userPhoto: JsonField<String>) = apply { this.userPhoto = userPhoto }
+
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -780,6 +835,7 @@ private constructor(
                     phone,
                     requestId,
                     systemLanguage,
+                    userPhoto,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -800,6 +856,7 @@ private constructor(
             phone()
             requestId()
             systemLanguage()
+            userPhoto()
             validated = true
         }
 
@@ -826,7 +883,8 @@ private constructor(
                 (if (nickname.asKnown() == null) 0 else 1) +
                 (if (phone.asKnown() == null) 0 else 1) +
                 (if (requestId.asKnown() == null) 0 else 1) +
-                (if (systemLanguage.asKnown() == null) 0 else 1)
+                (if (systemLanguage.asKnown() == null) 0 else 1) +
+                (if (userPhoto.asKnown() == null) 0 else 1)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -843,6 +901,7 @@ private constructor(
                 phone == other.phone &&
                 requestId == other.requestId &&
                 systemLanguage == other.systemLanguage &&
+                userPhoto == other.userPhoto &&
                 additionalProperties == other.additionalProperties
         }
 
@@ -857,6 +916,7 @@ private constructor(
                 phone,
                 requestId,
                 systemLanguage,
+                userPhoto,
                 additionalProperties,
             )
         }
@@ -864,7 +924,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{ageGroup=$ageGroup, avatar=$avatar, description=$description, email=$email, gender=$gender, nickname=$nickname, phone=$phone, requestId=$requestId, systemLanguage=$systemLanguage, additionalProperties=$additionalProperties}"
+            "Body{ageGroup=$ageGroup, avatar=$avatar, description=$description, email=$email, gender=$gender, nickname=$nickname, phone=$phone, requestId=$requestId, systemLanguage=$systemLanguage, userPhoto=$userPhoto, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

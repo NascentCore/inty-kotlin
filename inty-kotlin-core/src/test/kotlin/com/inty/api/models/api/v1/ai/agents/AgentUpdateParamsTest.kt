@@ -58,6 +58,7 @@ internal class AgentUpdateParamsTest {
             .addPhoto("string")
             .postHistoryInstructions("post_history_instructions")
             .prompt("prompt")
+            .replaceBackgroundImages(true)
             .requestId("request_id")
             .scenario("scenario")
             .settings(
@@ -131,6 +132,7 @@ internal class AgentUpdateParamsTest {
                 .addPhoto("string")
                 .postHistoryInstructions("post_history_instructions")
                 .prompt("prompt")
+                .replaceBackgroundImages(true)
                 .requestId("request_id")
                 .scenario("scenario")
                 .settings(
@@ -195,6 +197,7 @@ internal class AgentUpdateParamsTest {
         assertThat(body.photos()).containsExactly("string")
         assertThat(body.postHistoryInstructions()).isEqualTo("post_history_instructions")
         assertThat(body.prompt()).isEqualTo("prompt")
+        assertThat(body.replaceBackgroundImages()).isEqualTo(true)
         assertThat(body.requestId()).isEqualTo("request_id")
         assertThat(body.scenario()).isEqualTo("scenario")
         assertThat(body.settings())

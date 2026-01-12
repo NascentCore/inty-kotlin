@@ -13,6 +13,7 @@ internal class ChatGenerateImageParamsTest {
             .agentId("agent_id")
             .messageId(0L)
             .historyCount(0L)
+            .model("model")
             .requestId("request_id")
             .build()
     }
@@ -33,6 +34,7 @@ internal class ChatGenerateImageParamsTest {
                 .agentId("agent_id")
                 .messageId(0L)
                 .historyCount(0L)
+                .model("model")
                 .requestId("request_id")
                 .build()
 
@@ -40,6 +42,7 @@ internal class ChatGenerateImageParamsTest {
 
         assertThat(body.messageId()).isEqualTo(0L)
         assertThat(body.historyCount()).isEqualTo(0L)
+        assertThat(body.model()).isEqualTo("model")
         assertThat(body.requestId()).isEqualTo("request_id")
     }
 

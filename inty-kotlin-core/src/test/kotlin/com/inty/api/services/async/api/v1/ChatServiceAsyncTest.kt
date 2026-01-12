@@ -110,6 +110,7 @@ internal class ChatServiceAsyncTest {
                     .agentId("agent_id")
                     .messageId(0L)
                     .historyCount(0L)
+                    .model("model")
                     .requestId("request_id")
                     .build()
             )
