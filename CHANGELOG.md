@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.27.1 (2026-01-13)
+
+Full Changelog: [v0.27.0...v0.27.1](https://github.com/NascentCore/inty-kotlin/compare/v0.27.0...v0.27.1)
+
+### Chores
+
+* **internal:** refactor build files to support future stainless package uploads ([252082f](https://github.com/NascentCore/inty-kotlin/commit/252082f41fc5f3d28fac13a29a6cb5e6ce8a32a7))
+
 ## 0.27.0 (2026-01-12)
 
 Full Changelog: [v0.26.0...v0.27.0](https://github.com/NascentCore/inty-kotlin/compare/v0.26.0...v0.27.0)
