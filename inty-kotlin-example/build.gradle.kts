@@ -4,7 +4,8 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":inty-kotlin"))
+    implementation(project(":inty-kotlin-core"))
+    implementation(project(":inty-kotlin-client-okhttp"))
 }
 
 application {
