@@ -36,6 +36,12 @@ private constructor(
      */
     fun code(): Long? = code.getNullable("code")
 
+    /**
+     * This arbitrary value can be deserialized into a custom type using the `convert` method:
+     * ```kotlin
+     * val myObject: MyClass = reportCreateResponse.data().convert(MyClass::class.java)
+     * ```
+     */
     @JsonProperty("data") @ExcludeMissing fun _data(): JsonValue = data
 
     /**
