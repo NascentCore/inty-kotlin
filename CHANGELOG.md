@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.27.1 (2026-01-28)
+
+Full Changelog: [v0.27.0...v0.27.1](https://github.com/NascentCore/inty-kotlin/compare/v0.27.0...v0.27.1)
+
+### Bug Fixes
+
+* **client:** disallow coercion from float to int ([bc334a4](https://github.com/NascentCore/inty-kotlin/commit/bc334a43d9c077fabd014a800690213b4540dcf5))
+* **client:** disallow coercion from float to int ([734ad5d](https://github.com/NascentCore/inty-kotlin/commit/734ad5d5e61e3be856802fc79d762a0806b026fd))
+* date time deserialization leniency ([43a67d1](https://github.com/NascentCore/inty-kotlin/commit/43a67d16af13a122a0a53e36df365592d4f8dc89))
+* date time deserialization leniency ([40bf810](https://github.com/NascentCore/inty-kotlin/commit/40bf810e8459afb16015134d2cc381937bbe1ce2))
+
+
+### Chores
+
+* **internal:** refactor build files to support future stainless package uploads ([252082f](https://github.com/NascentCore/inty-kotlin/commit/252082f41fc5f3d28fac13a29a6cb5e6ce8a32a7))
+* **internal:** refactor build files to support future stainless package uploads ([de82efe](https://github.com/NascentCore/inty-kotlin/commit/de82efe6e780f4324d4d7dd1c4db1feb0cc4369f))
+* **internal:** update `actions/checkout` version ([01633f1](https://github.com/NascentCore/inty-kotlin/commit/01633f107c71e06c2df6a5f2d20f97345e7eb118))
+* **internal:** update `actions/checkout` version ([5dc2e0c](https://github.com/NascentCore/inty-kotlin/commit/5dc2e0cd9fef4d2ad31c188d56d38afb414eb682))
+* **internal:** version bump ([2b67fa3](https://github.com/NascentCore/inty-kotlin/commit/2b67fa36f0fe8701d05bcd05b75d87fad2bb71b5))
+* test on Jackson 2.14.0 to avoid encountering FasterXML/jackson-databind[#3240](https://github.com/NascentCore/inty-kotlin/issues/3240) in tests ([43a67d1](https://github.com/NascentCore/inty-kotlin/commit/43a67d16af13a122a0a53e36df365592d4f8dc89))
+* test on Jackson 2.14.0 to avoid encountering FasterXML/jackson-databind[#3240](https://github.com/NascentCore/inty-kotlin/issues/3240) in tests ([40bf810](https://github.com/NascentCore/inty-kotlin/commit/40bf810e8459afb16015134d2cc381937bbe1ce2))
+
 ## 0.27.0 (2026-01-12)
 
 Full Changelog: [v0.26.0...v0.27.0](https://github.com/NascentCore/inty-kotlin/compare/v0.26.0...v0.27.0)
