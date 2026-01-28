@@ -18,12 +18,12 @@ kotlin {
     compilerOptions {
         freeCompilerArgs = listOf(
             "-Xjvm-default=all",
-            "-Xjdk-release=1.8",
+            "-Xjdk-release=11",
             // Suppress deprecation warnings because we may still reference and test deprecated members.
             // TODO: Replace with `-Xsuppress-warning=DEPRECATION` once we use Kotlin compiler 2.1.0+.
             "-nowarn",
         )
-        jvmTarget.set(JvmTarget.JVM_1_8)
+        jvmTarget.set(JvmTarget.JVM_11)
         languageVersion.set(KotlinVersion.KOTLIN_1_8)
         apiVersion.set(KotlinVersion.KOTLIN_1_8)
         coreLibrariesVersion = "1.8.0"
@@ -37,7 +37,7 @@ tasks.withType<Test>().configureEach {
 
 val ktfmt by configurations.creating
 dependencies {
-    ktfmt("com.facebook:ktfmt:0.56")
+    ktfmt("com.facebook:ktfmt:0.59")
 }
 
 fun registerKtfmt(

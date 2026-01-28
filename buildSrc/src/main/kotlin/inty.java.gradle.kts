@@ -18,13 +18,13 @@ java {
         languageVersion.set(JavaLanguageVersion.of(21))
     }
 
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 }
 
 tasks.withType<JavaCompile>().configureEach {
     options.compilerArgs.add("-Werror")
-    options.release.set(8)
+    options.release.set(11)
 }
 
 tasks.named<Jar>("javadocJar") {
@@ -54,7 +54,7 @@ tasks.withType<Test>().configureEach {
 
 val palantir by configurations.creating
 dependencies {
-    palantir("com.palantir.javaformat:palantir-java-format:2.73.0")
+    palantir("com.palantir.javaformat:palantir-java-format:2.81.0")
 }
 
 fun registerPalantir(
