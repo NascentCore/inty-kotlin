@@ -64,9 +64,9 @@ private constructor(
     private val prompt: JsonField<String>,
     private val scenario: JsonField<String>,
     private val settings: JsonField<Settings>,
+    private val source: JsonField<Source>,
     private val tags: JsonField<List<String>>,
     private val updatedAt: JsonField<Long>,
-    private val user: JsonField<String>,
     private val visibility: JsonField<AgentVisibility>,
     private val voiceId: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
@@ -163,9 +163,9 @@ private constructor(
         @JsonProperty("prompt") @ExcludeMissing prompt: JsonField<String> = JsonMissing.of(),
         @JsonProperty("scenario") @ExcludeMissing scenario: JsonField<String> = JsonMissing.of(),
         @JsonProperty("settings") @ExcludeMissing settings: JsonField<Settings> = JsonMissing.of(),
+        @JsonProperty("source") @ExcludeMissing source: JsonField<Source> = JsonMissing.of(),
         @JsonProperty("tags") @ExcludeMissing tags: JsonField<List<String>> = JsonMissing.of(),
         @JsonProperty("updated_at") @ExcludeMissing updatedAt: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("user") @ExcludeMissing user: JsonField<String> = JsonMissing.of(),
         @JsonProperty("visibility")
         @ExcludeMissing
         visibility: JsonField<AgentVisibility> = JsonMissing.of(),
@@ -212,9 +212,9 @@ private constructor(
         prompt,
         scenario,
         settings,
+        source,
         tags,
         updatedAt,
-        user,
         visibility,
         voiceId,
         mutableMapOf(),
@@ -496,6 +496,14 @@ private constructor(
     fun settings(): Settings? = settings.getNullable("settings")
 
     /**
+     * AI 角色来源
+     *
+     * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
+     *   responded with an unexpected value).
+     */
+    fun source(): Source? = source.getNullable("source")
+
+    /**
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
      *   responded with an unexpected value).
      */
@@ -506,12 +514,6 @@ private constructor(
      *   responded with an unexpected value).
      */
     fun updatedAt(): Long? = updatedAt.getNullable("updated_at")
-
-    /**
-     * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
-     *   responded with an unexpected value).
-     */
-    fun user(): String? = user.getNullable("user")
 
     /**
      * AI 角色可见性
@@ -856,6 +858,13 @@ private constructor(
     @JsonProperty("settings") @ExcludeMissing fun _settings(): JsonField<Settings> = settings
 
     /**
+     * Returns the raw JSON value of [source].
+     *
+     * Unlike [source], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("source") @ExcludeMissing fun _source(): JsonField<Source> = source
+
+    /**
      * Returns the raw JSON value of [tags].
      *
      * Unlike [tags], this method doesn't throw if the JSON field has an unexpected type.
@@ -868,13 +877,6 @@ private constructor(
      * Unlike [updatedAt], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("updated_at") @ExcludeMissing fun _updatedAt(): JsonField<Long> = updatedAt
-
-    /**
-     * Returns the raw JSON value of [user].
-     *
-     * Unlike [user], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("user") @ExcludeMissing fun _user(): JsonField<String> = user
 
     /**
      * Returns the raw JSON value of [visibility].
@@ -967,9 +969,9 @@ private constructor(
         private var prompt: JsonField<String> = JsonMissing.of()
         private var scenario: JsonField<String> = JsonMissing.of()
         private var settings: JsonField<Settings> = JsonMissing.of()
+        private var source: JsonField<Source> = JsonMissing.of()
         private var tags: JsonField<MutableList<String>>? = null
         private var updatedAt: JsonField<Long> = JsonMissing.of()
-        private var user: JsonField<String> = JsonMissing.of()
         private var visibility: JsonField<AgentVisibility> = JsonMissing.of()
         private var voiceId: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -1016,9 +1018,9 @@ private constructor(
             prompt = agent.prompt
             scenario = agent.scenario
             settings = agent.settings
+            source = agent.source
             tags = agent.tags.map { it.toMutableList() }
             updatedAt = agent.updatedAt
-            user = agent.user
             visibility = agent.visibility
             voiceId = agent.voiceId
             additionalProperties = agent.additionalProperties.toMutableMap()
@@ -1557,6 +1559,17 @@ private constructor(
          */
         fun settings(settings: JsonField<Settings>) = apply { this.settings = settings }
 
+        /** AI 角色来源 */
+        fun source(source: Source?) = source(JsonField.ofNullable(source))
+
+        /**
+         * Sets [Builder.source] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.source] with a well-typed [Source] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun source(source: JsonField<Source>) = apply { this.source = source }
+
         fun tags(tags: List<String>?) = tags(JsonField.ofNullable(tags))
 
         /**
@@ -1595,16 +1608,6 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun updatedAt(updatedAt: JsonField<Long>) = apply { this.updatedAt = updatedAt }
-
-        fun user(user: String?) = user(JsonField.ofNullable(user))
-
-        /**
-         * Sets [Builder.user] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.user] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
-        fun user(user: JsonField<String>) = apply { this.user = user }
 
         /** AI 角色可见性 */
         fun visibility(visibility: AgentVisibility) = visibility(JsonField.of(visibility))
@@ -1710,9 +1713,9 @@ private constructor(
                 prompt,
                 scenario,
                 settings,
+                source,
                 (tags ?: JsonMissing.of()).map { it.toImmutable() },
                 updatedAt,
-                user,
                 visibility,
                 voiceId,
                 additionalProperties.toMutableMap(),
@@ -1767,9 +1770,9 @@ private constructor(
         prompt()
         scenario()
         settings()?.validate()
+        source()?.validate()
         tags()
         updatedAt()
-        user()
         visibility()?.validate()
         voiceId()
         validated = true
@@ -1830,9 +1833,9 @@ private constructor(
             (if (prompt.asKnown() == null) 0 else 1) +
             (if (scenario.asKnown() == null) 0 else 1) +
             (settings.asKnown()?.validity() ?: 0) +
+            (source.asKnown()?.validity() ?: 0) +
             (tags.asKnown()?.size ?: 0) +
             (if (updatedAt.asKnown() == null) 0 else 1) +
-            (if (user.asKnown() == null) 0 else 1) +
             (visibility.asKnown()?.validity() ?: 0) +
             (if (voiceId.asKnown() == null) 0 else 1)
 
@@ -2638,6 +2641,131 @@ private constructor(
         override fun toString() = "Settings{additionalProperties=$additionalProperties}"
     }
 
+    /** AI 角色来源 */
+    class Source @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            val USER_CREATED = of("USER_CREATED")
+
+            val AUTO_GENERATED = of("AUTO_GENERATED")
+
+            fun of(value: String) = Source(JsonField.of(value))
+        }
+
+        /** An enum containing [Source]'s known values. */
+        enum class Known {
+            USER_CREATED,
+            AUTO_GENERATED,
+        }
+
+        /**
+         * An enum containing [Source]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [Source] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            USER_CREATED,
+            AUTO_GENERATED,
+            /** An enum member indicating that [Source] was instantiated with an unknown value. */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                USER_CREATED -> Value.USER_CREATED
+                AUTO_GENERATED -> Value.AUTO_GENERATED
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws IntyInvalidDataException if this class instance's value is a not a known member.
+         */
+        fun known(): Known =
+            when (this) {
+                USER_CREATED -> Known.USER_CREATED
+                AUTO_GENERATED -> Known.AUTO_GENERATED
+                else -> throw IntyInvalidDataException("Unknown Source: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws IntyInvalidDataException if this class instance's value does not have the
+         *   expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString() ?: throw IntyInvalidDataException("Value is not a String")
+
+        private var validated: Boolean = false
+
+        fun validate(): Source = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: IntyInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Source && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
@@ -2685,9 +2813,9 @@ private constructor(
             prompt == other.prompt &&
             scenario == other.scenario &&
             settings == other.settings &&
+            source == other.source &&
             tags == other.tags &&
             updatedAt == other.updatedAt &&
-            user == other.user &&
             visibility == other.visibility &&
             voiceId == other.voiceId &&
             additionalProperties == other.additionalProperties
@@ -2736,9 +2864,9 @@ private constructor(
             prompt,
             scenario,
             settings,
+            source,
             tags,
             updatedAt,
-            user,
             visibility,
             voiceId,
             additionalProperties,
@@ -2748,5 +2876,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Agent{id=$id, createdAt=$createdAt, gender=$gender, name=$name, readableId=$readableId, status=$status, version=$version, alternateGreetings=$alternateGreetings, avatar=$avatar, avatarSize=$avatarSize, background=$background, backgroundAnimated=$backgroundAnimated, backgroundImages=$backgroundImages, backgroundSize=$backgroundSize, category=$category, characterBook=$characterBook, characterCardSpec=$characterCardSpec, characterVersion=$characterVersion, connectorCount=$connectorCount, creator=$creator, creatorId=$creatorId, creatorNotes=$creatorNotes, deletedAt=$deletedAt, energyPoints=$energyPoints, extensions=$extensions, followerCount=$followerCount, intro=$intro, isFollowed=$isFollowed, llmConfig=$llmConfig, mainPrompt=$mainPrompt, messageExample=$messageExample, metaData=$metaData, modePrompt=$modePrompt, opening=$opening, openingAudioUrl=$openingAudioUrl, personality=$personality, photos=$photos, postHistoryInstructions=$postHistoryInstructions, prompt=$prompt, scenario=$scenario, settings=$settings, tags=$tags, updatedAt=$updatedAt, user=$user, visibility=$visibility, voiceId=$voiceId, additionalProperties=$additionalProperties}"
+        "Agent{id=$id, createdAt=$createdAt, gender=$gender, name=$name, readableId=$readableId, status=$status, version=$version, alternateGreetings=$alternateGreetings, avatar=$avatar, avatarSize=$avatarSize, background=$background, backgroundAnimated=$backgroundAnimated, backgroundImages=$backgroundImages, backgroundSize=$backgroundSize, category=$category, characterBook=$characterBook, characterCardSpec=$characterCardSpec, characterVersion=$characterVersion, connectorCount=$connectorCount, creator=$creator, creatorId=$creatorId, creatorNotes=$creatorNotes, deletedAt=$deletedAt, energyPoints=$energyPoints, extensions=$extensions, followerCount=$followerCount, intro=$intro, isFollowed=$isFollowed, llmConfig=$llmConfig, mainPrompt=$mainPrompt, messageExample=$messageExample, metaData=$metaData, modePrompt=$modePrompt, opening=$opening, openingAudioUrl=$openingAudioUrl, personality=$personality, photos=$photos, postHistoryInstructions=$postHistoryInstructions, prompt=$prompt, scenario=$scenario, settings=$settings, source=$source, tags=$tags, updatedAt=$updatedAt, visibility=$visibility, voiceId=$voiceId, additionalProperties=$additionalProperties}"
 }

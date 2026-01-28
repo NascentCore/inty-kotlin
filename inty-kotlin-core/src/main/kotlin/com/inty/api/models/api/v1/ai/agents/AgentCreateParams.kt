@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.inty.api.core.Enum
 import com.inty.api.core.ExcludeMissing
 import com.inty.api.core.JsonField
 import com.inty.api.core.JsonMissing
@@ -213,6 +214,14 @@ private constructor(
      *   responded with an unexpected value).
      */
     fun settings(): Settings? = body.settings()
+
+    /**
+     * AI 角色来源
+     *
+     * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
+     *   responded with an unexpected value).
+     */
+    fun source(): Source? = body.source()
 
     /**
      * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the server
@@ -435,6 +444,13 @@ private constructor(
      * Unlike [settings], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _settings(): JsonField<Settings> = body._settings()
+
+    /**
+     * Returns the raw JSON value of [source].
+     *
+     * Unlike [source], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _source(): JsonField<Source> = body._source()
 
     /**
      * Returns the raw JSON value of [tags].
@@ -879,6 +895,17 @@ private constructor(
          */
         fun settings(settings: JsonField<Settings>) = apply { body.settings(settings) }
 
+        /** AI 角色来源 */
+        fun source(source: Source?) = apply { body.source(source) }
+
+        /**
+         * Sets [Builder.source] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.source] with a well-typed [Source] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun source(source: JsonField<Source>) = apply { body.source(source) }
+
         fun tags(tags: List<String>?) = apply { body.tags(tags) }
 
         /**
@@ -1108,6 +1135,7 @@ private constructor(
         private val requestId: JsonField<String>,
         private val scenario: JsonField<String>,
         private val settings: JsonField<Settings>,
+        private val source: JsonField<Source>,
         private val tags: JsonField<List<String>>,
         private val visibility: JsonField<AgentVisibility>,
         private val voiceId: JsonField<String>,
@@ -1188,6 +1216,7 @@ private constructor(
             @JsonProperty("settings")
             @ExcludeMissing
             settings: JsonField<Settings> = JsonMissing.of(),
+            @JsonProperty("source") @ExcludeMissing source: JsonField<Source> = JsonMissing.of(),
             @JsonProperty("tags") @ExcludeMissing tags: JsonField<List<String>> = JsonMissing.of(),
             @JsonProperty("visibility")
             @ExcludeMissing
@@ -1222,6 +1251,7 @@ private constructor(
             requestId,
             scenario,
             settings,
+            source,
             tags,
             visibility,
             voiceId,
@@ -1415,6 +1445,14 @@ private constructor(
          *   server responded with an unexpected value).
          */
         fun settings(): Settings? = settings.getNullable("settings")
+
+        /**
+         * AI 角色来源
+         *
+         * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun source(): Source? = source.getNullable("source")
 
         /**
          * @throws IntyInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -1680,6 +1718,13 @@ private constructor(
         @JsonProperty("settings") @ExcludeMissing fun _settings(): JsonField<Settings> = settings
 
         /**
+         * Returns the raw JSON value of [source].
+         *
+         * Unlike [source], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("source") @ExcludeMissing fun _source(): JsonField<Source> = source
+
+        /**
          * Returns the raw JSON value of [tags].
          *
          * Unlike [tags], this method doesn't throw if the JSON field has an unexpected type.
@@ -1759,6 +1804,7 @@ private constructor(
             private var requestId: JsonField<String> = JsonMissing.of()
             private var scenario: JsonField<String> = JsonMissing.of()
             private var settings: JsonField<Settings> = JsonMissing.of()
+            private var source: JsonField<Source> = JsonMissing.of()
             private var tags: JsonField<MutableList<String>>? = null
             private var visibility: JsonField<AgentVisibility> = JsonMissing.of()
             private var voiceId: JsonField<String> = JsonMissing.of()
@@ -1793,6 +1839,7 @@ private constructor(
                 requestId = body.requestId
                 scenario = body.scenario
                 settings = body.settings
+                source = body.source
                 tags = body.tags.map { it.toMutableList() }
                 visibility = body.visibility
                 voiceId = body.voiceId
@@ -2190,6 +2237,18 @@ private constructor(
              */
             fun settings(settings: JsonField<Settings>) = apply { this.settings = settings }
 
+            /** AI 角色来源 */
+            fun source(source: Source?) = source(JsonField.ofNullable(source))
+
+            /**
+             * Sets [Builder.source] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.source] with a well-typed [Source] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun source(source: JsonField<Source>) = apply { this.source = source }
+
             fun tags(tags: List<String>?) = tags(JsonField.ofNullable(tags))
 
             /**
@@ -2300,6 +2359,7 @@ private constructor(
                     requestId,
                     scenario,
                     settings,
+                    source,
                     (tags ?: JsonMissing.of()).map { it.toImmutable() },
                     visibility,
                     voiceId,
@@ -2342,6 +2402,7 @@ private constructor(
             requestId()
             scenario()
             settings()?.validate()
+            source()?.validate()
             tags()
             visibility()?.validate()
             voiceId()
@@ -2391,6 +2452,7 @@ private constructor(
                 (if (requestId.asKnown() == null) 0 else 1) +
                 (if (scenario.asKnown() == null) 0 else 1) +
                 (settings.asKnown()?.validity() ?: 0) +
+                (source.asKnown()?.validity() ?: 0) +
                 (tags.asKnown()?.size ?: 0) +
                 (visibility.asKnown()?.validity() ?: 0) +
                 (if (voiceId.asKnown() == null) 0 else 1)
@@ -2429,6 +2491,7 @@ private constructor(
                 requestId == other.requestId &&
                 scenario == other.scenario &&
                 settings == other.settings &&
+                source == other.source &&
                 tags == other.tags &&
                 visibility == other.visibility &&
                 voiceId == other.voiceId &&
@@ -2465,6 +2528,7 @@ private constructor(
                 requestId,
                 scenario,
                 settings,
+                source,
                 tags,
                 visibility,
                 voiceId,
@@ -2475,7 +2539,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{gender=$gender, name=$name, alternateGreetings=$alternateGreetings, avatar=$avatar, background=$background, backgroundAnimated=$backgroundAnimated, backgroundImages=$backgroundImages, category=$category, characterBook=$characterBook, characterCardSpec=$characterCardSpec, characterVersion=$characterVersion, creatorNotes=$creatorNotes, extensions=$extensions, intro=$intro, llmConfig=$llmConfig, mainPrompt=$mainPrompt, messageExample=$messageExample, metaData=$metaData, modePrompt=$modePrompt, opening=$opening, openingAudioUrl=$openingAudioUrl, personality=$personality, photos=$photos, postHistoryInstructions=$postHistoryInstructions, prompt=$prompt, requestId=$requestId, scenario=$scenario, settings=$settings, tags=$tags, visibility=$visibility, voiceId=$voiceId, additionalProperties=$additionalProperties}"
+            "Body{gender=$gender, name=$name, alternateGreetings=$alternateGreetings, avatar=$avatar, background=$background, backgroundAnimated=$backgroundAnimated, backgroundImages=$backgroundImages, category=$category, characterBook=$characterBook, characterCardSpec=$characterCardSpec, characterVersion=$characterVersion, creatorNotes=$creatorNotes, extensions=$extensions, intro=$intro, llmConfig=$llmConfig, mainPrompt=$mainPrompt, messageExample=$messageExample, metaData=$metaData, modePrompt=$modePrompt, opening=$opening, openingAudioUrl=$openingAudioUrl, personality=$personality, photos=$photos, postHistoryInstructions=$postHistoryInstructions, prompt=$prompt, requestId=$requestId, scenario=$scenario, settings=$settings, source=$source, tags=$tags, visibility=$visibility, voiceId=$voiceId, additionalProperties=$additionalProperties}"
     }
 
     class CharacterBook
@@ -2767,6 +2831,131 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() = "Settings{additionalProperties=$additionalProperties}"
+    }
+
+    /** AI 角色来源 */
+    class Source @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            val USER_CREATED = of("USER_CREATED")
+
+            val AUTO_GENERATED = of("AUTO_GENERATED")
+
+            fun of(value: String) = Source(JsonField.of(value))
+        }
+
+        /** An enum containing [Source]'s known values. */
+        enum class Known {
+            USER_CREATED,
+            AUTO_GENERATED,
+        }
+
+        /**
+         * An enum containing [Source]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [Source] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            USER_CREATED,
+            AUTO_GENERATED,
+            /** An enum member indicating that [Source] was instantiated with an unknown value. */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                USER_CREATED -> Value.USER_CREATED
+                AUTO_GENERATED -> Value.AUTO_GENERATED
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws IntyInvalidDataException if this class instance's value is a not a known member.
+         */
+        fun known(): Known =
+            when (this) {
+                USER_CREATED -> Known.USER_CREATED
+                AUTO_GENERATED -> Known.AUTO_GENERATED
+                else -> throw IntyInvalidDataException("Unknown Source: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws IntyInvalidDataException if this class instance's value does not have the
+         *   expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString() ?: throw IntyInvalidDataException("Value is not a String")
+
+        private var validated: Boolean = false
+
+        fun validate(): Source = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: IntyInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Source && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
     }
 
     override fun equals(other: Any?): Boolean {
